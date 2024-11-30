@@ -1,17 +1,22 @@
 #include <gtest/gtest.h>
-#include "../src/Include/ConsoleMenu.h"
+#include "../src/Include/HelpCommand.h"
 #include <memory>
 
-// Genric parsing test
-TEST(HelpCommandTest, Ex1) {
-    std::istringstream simulatedInput("command arg1 arg2"); // Redirecting the stdin for the test
-    std::cin.rdbuf(simulatedInput.rdbuf());
+// Generic parsing test
+TEST(HelpCommandTest, ExecuteCommandOutput) {
+    std::ostringstream capturedOutput;
+    std::streambuf* originalCoutBuffer = std::cout.rdbuf(capturedOutput.rdbuf());  // Redirect std::cout to capture the output
 
-    std::unique_ptr<ConsoleMenu> menu = std::make_unique<ConsoleMenu>();
+    std::unique_ptr<HelpCommand> helpCommand = std::make_unique<HelpCommand>();
+    
+    helpCommand->execute("");
 
-    std::vector<std::string> result = menu->nextCommand();
+    std::cout.rdbuf(originalCoutBuffer); // Reset changes regarding cout
 
-    std::vector<std::string> expected = {"command", " arg1 arg2"};
+    std::string expectedOutput =
+        "add [userid] [movieid1] [movieid2] …\n"
+        "recommend [userid] [movieid]\n"
+        "help\n";
 
-    EXPECT_EQ(result, expected); // Checking the expected output
+    EXPECT_EQ(capturedOutput.str(), expectedOutput);
 }
