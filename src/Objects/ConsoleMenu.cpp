@@ -18,6 +18,6 @@ std::vector<std::string> ConsoleMenu::nextCommand() {
 }
 
 // Displaying an error
-void displayError(std::string error) {
+void ConsoleMenu::displayError(std::string error) {
     std::cout << error << std::endl;
 }
