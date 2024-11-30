@@ -1,6 +1,6 @@
 #pragma once
 
-#include <stdio.h>
+#include <iostream>
 #include <sstream>
 
 #include "ICommand.h"
