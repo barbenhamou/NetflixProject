@@ -1,4 +1,5 @@
 #include "IMenu.h"
+#include <iostream>
 
 // This class represents the terminal's menu
 class ConsoleMenu : public IMenu {
