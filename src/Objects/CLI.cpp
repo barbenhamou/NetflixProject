@@ -12,7 +12,7 @@ void CLI::run() {
         try {
             this->commands[command]->execute(data); // Executing the function in generic form
         } catch (...) {
-            this->menu->displayError("CLI detected an error"); // In case of an error
+            this->menu->displayError(""); // In case of an error
         }
     }
 }
