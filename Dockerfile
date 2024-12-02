@@ -33,4 +33,4 @@ RUN cmake ..
 RUN make
 
 # Run the tests
-CMD ./HelpCommandTest
+CMD ["./Tests"]

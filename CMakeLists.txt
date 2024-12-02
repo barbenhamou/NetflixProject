@@ -15,17 +15,23 @@ include_directories(
 
 # Add the executable for ConsoleMenuTest
 add_executable(
-    HelpCommandTest
+    Tests    
+    Tests/FileStorageTest.cpp
+    Tests/MovieTests.cpp
     Tests/ConsoleMenuTest.cpp       # Test file for ConsoleMenu
     Tests/HelpCommandTest.cpp
     src/Objects/ConsoleMenu.cpp     # Source files for ConsoleMenu
     src/Objects/CLI.cpp             # Source files for CLI
+    src/Objects/Movie.cpp
+    src/Objects/User.cpp
     src/Functionality/HelpCommand.cpp
+    src/FileHandling/FileStorage.cpp
+
 )
 
 # Link GoogleTest and pthread libraries to the ConsoleMenuTest executable
 target_link_libraries(
-    HelpCommandTest
+    Tests
     ${GTEST_LIBRARIES}
     pthread
 )
@@ -39,5 +45,15 @@ add_test(
 add_test(
     NAME ConsoleMenuTest
     COMMAND ConsoleMenuTest
+)
+
+add_test(
+    NAME MovieTests
+    COMMAND MovieTests
+)
+
+add_test(
+    NAME FileStorageTest
+    COMMAND FileStorageTest
 )
 
