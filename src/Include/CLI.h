@@ -6,6 +6,7 @@
 
 #include "ICommand.h"
 #include "IMenu.h"
+#include "MovieUser.h"
 
 // An object which represents the CLI
 class CLI {
