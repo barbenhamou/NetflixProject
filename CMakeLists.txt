@@ -18,14 +18,15 @@ add_executable(
     Tests    
     Tests/FileStorageTest.cpp
     Tests/MovieTests.cpp
+    Tests/AddTests.cpp
     Tests/ConsoleMenuTest.cpp       # Test file for ConsoleMenu
     Tests/HelpCommandTest.cpp
-    Tests/MovieTests.cpp
     src/Objects/ConsoleMenu.cpp     # Source files for ConsoleMenu
     src/Objects/CLI.cpp             # Source files for CLI
     src/Objects/Movie.cpp
     src/Objects/User.cpp
     src/Functionality/HelpCommand.cpp
+    src/Functionality/AddCommand.cpp
     src/FileHandling/FileStorage.cpp
 
 )

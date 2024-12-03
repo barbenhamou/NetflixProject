@@ -3,7 +3,7 @@
 #include <cstdlib>
 #include <ctime>
 #include "Tests.h"
-
+#include "../src/Include/AddCommand.h"
 #include "../src/Include/MovieUser.h"
 
 TEST(AddFunctionTests, RandomizedUserAndMovieIds) {
