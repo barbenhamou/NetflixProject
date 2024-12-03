@@ -58,3 +58,7 @@ add_test(
     COMMAND FileStorageTest
 )
 
+add_test(
+    NAME AddFunctionTests
+    COMMAND AddFunctionTests
+)
