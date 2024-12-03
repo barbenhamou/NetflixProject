@@ -16,10 +16,10 @@ include_directories(
 # Add the executable for ConsoleMenuTest
 add_executable(
     Tests    
-    Tests/FileStorageTest.cpp
+    Tests/FileStorageTests.cpp
     Tests/MovieTests.cpp
-    Tests/ConsoleMenuTest.cpp       # Test file for ConsoleMenu
-    Tests/HelpCommandTest.cpp
+    Tests/ConsoleMenuTests.cpp       # Test file for ConsoleMenu
+    Tests/HelpCommandTests.cpp
     Tests/MovieTests.cpp
     src/Objects/ConsoleMenu.cpp     # Source files for ConsoleMenu
     src/Objects/CLI.cpp             # Source files for CLI
