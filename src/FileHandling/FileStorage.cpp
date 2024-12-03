@@ -11,7 +11,7 @@ FileStorage::FileStorage(const std::string& file) : fileName(file) {
         }
     }
 }
-
+// Spltiting the line into 2 parts. one part the user and the other one a vector of all the movies.
 std::vector<std::string> FileStorage::split(const std::string& str, char delimiter) {
     std::vector<std::string> tokens;
     std::string token;
@@ -21,7 +21,7 @@ std::vector<std::string> FileStorage::split(const std::string& str, char delimit
     }
     return tokens;
 }
-
+// The funcion checks if the user is indise the file if he is, it will return a vector of his movies otherwise it will return a empty vector. 
 std::vector<int> FileStorage::isUserInFile(int userId) {
     std::ifstream fileIn(fileName);
     if (!fileIn) return {};
@@ -50,7 +50,8 @@ std::vector<int> FileStorage::isUserInFile(int userId) {
 
     return {}; // Return an empty list if the user is not found
 }
-
+// The function recives a user and a vector of movies if the user is already in the file it will just update his list of movies
+//if not it will create the user and enter him to the file with all the movies the fucntion got in the vector.
 void FileStorage::updateUserInFile(int userId, std::vector<int>& updatedMovies) {
     std::ifstream fileIn(fileName);
     std::ofstream fileOut("temp.txt"); // Temporary file for storing updated content
