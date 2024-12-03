@@ -18,8 +18,11 @@ add_executable(
     HelpCommandTest
     Tests/ConsoleMenuTest.cpp       # Test file for ConsoleMenu
     Tests/HelpCommandTest.cpp
+    Tests/MovieTests.cpp
     src/Objects/ConsoleMenu.cpp     # Source files for ConsoleMenu
     src/Objects/CLI.cpp             # Source files for CLI
+    src/Objects/User.cpp
+    src/Objects/Movie.cpp
     src/Functionality/HelpCommand.cpp
 )
 
@@ -41,3 +44,7 @@ add_test(
     COMMAND ConsoleMenuTest
 )
 
+add_test(
+    NAME MovieTest
+    COMMAND MovieTest
+)
