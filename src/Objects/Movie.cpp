@@ -19,11 +19,37 @@ int Movie::getId() const {
 }
 
 std::vector<Movie*> Movie::intersection(std::vector<Movie*> A, std::vector<Movie*> B) {
-    return {};
+    std::vector<Movie*> intersection;
+    for (Movie* a : A) {
+        for (Movie* b : B) {
+            if (a->getId() == b->getId()) {
+                intersection.push_back(a);
+                break;
+            }
+        }
+    }
+
+    return intersection;
 }
 
 std::vector<Movie*> Movie::relativeComplement(std::vector<Movie*> A, std::vector<Movie*> B) {
-    return {};
+    std::vector<Movie*> relComp;
+    bool match;
+    for (Movie* a : A) {
+        match = 0;
+        for(Movie* b : B) {
+            if (a->getId() == b->getId()) {
+                match = true;
+                break;
+            }
+        }
+
+        // don't add objects that are in both vectors
+        if (match) continue;
+        relComp.push_back(a);
+    }
+
+    return relComp;
 }
 
 int Movie::findMovie(int id) {

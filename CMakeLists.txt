@@ -20,6 +20,7 @@ add_executable(
     Tests/MovieTests.cpp
     Tests/ConsoleMenuTest.cpp       # Test file for ConsoleMenu
     Tests/HelpCommandTest.cpp
+    Tests/MovieTests.cpp
     src/Objects/ConsoleMenu.cpp     # Source files for ConsoleMenu
     src/Objects/CLI.cpp             # Source files for CLI
     src/Objects/Movie.cpp
