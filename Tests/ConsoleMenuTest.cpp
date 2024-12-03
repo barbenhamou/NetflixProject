@@ -16,7 +16,3 @@ TEST(ConsoleMenuTest, NextCommandGnericForm) {
     EXPECT_EQ(result, expected); // Checking the expected output
 }
 
-int main(int argc, char **argv) {
-    ::testing::InitGoogleTest(&argc, argv);
-    return RUN_ALL_TESTS();
-}
