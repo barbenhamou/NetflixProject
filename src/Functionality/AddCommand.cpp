@@ -98,7 +98,7 @@ void AddCommand::execute(std::string command) {
     int userId = extractedNumbers[0];
     std::vector<int> watchedMovies(extractedNumbers.begin() + 1, extractedNumbers.end());
 
-    FileStorage fileStorage("../data/user_data.txt");
+    FileStorage fileStorage("./data/user_data.txt");
     fileStorage.updateUserInFile(userId, watchedMovies);
 
     AddCommand::add(userId, watchedMovies);
