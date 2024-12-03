@@ -12,13 +12,13 @@ TEST(RecommendationTests, SortByRelevance) {
 
     // all different relevance values
     std::vector<int> relevance = {6, 5, 7, 1, 0};
-    /* Something like sortedMovies = sortByRelevance(relevance, movies)*/
+    auto sortedMovies = RecommendCommand::sortByRelevance(relevance, movies);
     std::vector<Movie*> expected = {movie3, movie1, movie2, movie4, movie5};
     EXPECT_EQ(compareVec(sortedMovies, expected), true);
 
     // some equal relevance values
     relevance = {5, 4, 5, 6, 6};
-    /* Something like sortedMovies = sortByRelevance(relevance, movies)*/
+    sortedMovies = RecommendCommand::sortByRelevance(relevance, movies);
     expected = {movie5, movie4, movie1, movie3, movie2};
     EXPECT_EQ(compareVec(sortedMovies, expected), true);
 
