@@ -13,6 +13,7 @@ void CLI::run() {
         data = input[1];
         
         try {
+            if (this->commands.find(command) == this->commands.end()) continue;
             this->commands[command]->execute(data); // Executing the function in generic form
         } catch (...) {
             this->menu->displayError(""); // In case of an error
