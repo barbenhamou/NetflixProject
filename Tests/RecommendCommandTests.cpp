@@ -30,6 +30,9 @@ TEST(RecommendationTests, SortByRelevance) {
 }
 
 TEST(RecommendationTests, Recommend) {
+    allUsers.clear();
+    allMovies.clear();
+
     std::vector<std::pair<int, std::vector<int>>> data = {
         {1, {100, 101, 102, 103}},
         {2, {101, 102, 104, 105, 106}},

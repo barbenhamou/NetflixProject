@@ -23,6 +23,7 @@ void createTestFile() {
 
 TEST(FileStorageTest, IsUserInFile) {
     createTestFile();
+    std::srand(std::random_device()());
 
     FileStorage storage(TEST_FILE);
 
@@ -61,15 +62,17 @@ TEST(FileStorageTest, IsUserInFile) {
 }
 
 TEST(FileStorageTest, UpdateUserInFileNew) {
-    FileStorage storage(TEST_FILE);
+    std::srand(std::random_device()());
 
     int numUpdates = randInt(10, 30);
 
     for (int i = 0; i < numUpdates; i++) {
+        FileStorage storage(TEST_FILE);
         int userId = randInt(10 * i, 10 * (i + 1) - 1); // using i as to not get the same id twice
         
         int numNewMovies = randInt(1, 7);
         std::vector<int> newMovies;
+
         for (int j = 0; j < numNewMovies; j++) {
             newMovies.push_back(randInt(10 * j, 10 * (j + 1) - 1));
         }
@@ -79,9 +82,9 @@ TEST(FileStorageTest, UpdateUserInFileNew) {
         std::vector<int> updatedMovies = storage.isUserInFile(userId);
 
         EXPECT_EQ(updatedMovies, newMovies);
-    }
 
-    remove(TEST_FILE);
+        remove(TEST_FILE);
+    }
 }
 
 // Function to get a random user ID from the file
@@ -120,6 +123,7 @@ int randomUser(const std::string& fileName) {
 
 // test adding movies to already existing users
 TEST(FileStorageTest, UpdateUserInFileExisting) {
+    std::srand(std::random_device()());
     createTestFile();
 
     FileStorage storage(TEST_FILE);
@@ -157,11 +161,12 @@ TEST(FileStorageTest, UpdateUserInFileExisting) {
 }
 
 TEST(FileStorageTest, UpdateUserInFileEdge) {
-    FileStorage storage(TEST_FILE);
+    std::srand(std::random_device()());
 
     // Add to the same user the same movie twice (in 2 additions)
     int numUpdates = randInt(10, 30);
     for (int i = 0; i < numUpdates; i++) {
+        FileStorage storage(TEST_FILE);
         int userId = randInt(1, 50);
 
         // 1st add
@@ -188,7 +193,6 @@ TEST(FileStorageTest, UpdateUserInFileEdge) {
             newMoviesSet.insert(movieId);
         }
         newMovies.push_back(twiceMovieId);
-        newMoviesSet.insert(twiceMovieId);
 
         storage.updateUserInFile(userId, newMovies);
 
@@ -199,11 +203,13 @@ TEST(FileStorageTest, UpdateUserInFileEdge) {
         }
 
         EXPECT_EQ(afterSet, newMoviesSet);
+        remove(TEST_FILE);
     }
 
     // Add to the same user the same movie twice (at the same time)
     numUpdates = randInt(10, 30);
     for (int i = 0; i < numUpdates; i++) {
+        FileStorage storage(TEST_FILE);
         int userId = randInt(1, 50);
 
         int numNewMovies = randInt(1, 7);
@@ -219,7 +225,6 @@ TEST(FileStorageTest, UpdateUserInFileEdge) {
             newMoviesSet.insert(movieId);
             if (j == randIndex) {
                 newMovies.push_back(twiceMovieId);
-                newMoviesSet.insert(twiceMovieId);
             }
         }
 
@@ -232,9 +237,8 @@ TEST(FileStorageTest, UpdateUserInFileEdge) {
         }
 
         EXPECT_EQ(afterSet, newMoviesSet);
+        remove(TEST_FILE);
     }
-
-    remove(TEST_FILE);
 }
 
 int main(int argc, char **argv) {
