@@ -49,9 +49,80 @@ std::vector<Movie*> RecommendCommand::sortByRelevance(std::vector<int> relevance
 }
 
 std::vector<Movie*> RecommendCommand::recommend(User* user, Movie* movie) {
+    std::vector<Movie*> irrelevantMovies = user->getMovies();
+    irrelevantMovies.push_back(movie);
 
+    std::vector<Movie*> allMoviesRaw;
+    for (const auto& movie : allMovies) {
+        allMoviesRaw.push_back(movie.get());
+    }
+
+    // relevantMovies = allMovies\user.getMovies so we don't recommend movies that user already watched
+    std::vector<Movie*> relevantMovies = Movie::relativeComplement(allMoviesRaw, irrelevantMovies);
+    
+    int movieCount = relevantMovies.size();
+    int userCount = (movie->getUsers()).size();
+
+    // count how many movies in common does the user have with all the users that watched the movie
+    std::vector<int> moviesInCommon(userCount, 0);
+    for (int i = 0; i < userCount; i++) {
+        // make sure that we don't count user's shared movies with itself in case that user watched movie
+        if (movie->getUsers()[i]->getId() == user->getId()) continue;
+
+        moviesInCommon[i] = Movie::intersection(movie->getUsers()[i]->getMovies(), user->getMovies()).size();
+    }
+    
+    // final relevance values of each movie in relevantMovies
+    std::vector<int> relevanceValues(movieCount, 0);
+    bool isRelevant;
+    int i,j;
+    for (i = 0; i < movieCount; i++) {
+        for (j = 0; j < userCount; j++) {
+            isRelevant = 0;
+            for (const auto& relevantUser : relevantMovies[i]->getUsers()) {
+                if (movie->getUsers()[j]->getId() == relevantUser->getId()) {
+                    isRelevant = 1;
+                }
+            }
+            if (isRelevant) {
+                relevanceValues[i] += moviesInCommon[j];
+            }
+        }
+    }
+
+    return RecommendCommand::sortByRelevance(relevanceValues, relevantMovies);
 }
 
 void RecommendCommand::execute(std::string command) {
+    // match numbers with potential spaces before and after them
+    std::regex pattern(R"(\s*(\d+)\s*)");
+    std::smatch match;
+    // vector for the numbers in the command
+    std::vector<int> extractedNumbers;
+    std::string::const_iterator searchStart(command.cbegin());
 
+    while (std::regex_search(searchStart, command.cend(), match, pattern)) {
+        // Extract the number as an integer (if not a number, ignore command)
+        try {
+            extractedNumbers.push_back(std::stoi(match[1].str()));
+        } catch (...) {return;}
+        // Move the search start past this match
+        searchStart = match.suffix().first;
+    }
+
+    // Ensure we have one user ID and one movie ID (else ignore)
+    if (extractedNumbers.size() != 2) return;
+
+    // get user and movie index in the global list (if non-existant, ignore)
+    int userIndex = User::findUser(extractedNumbers[0]);
+    if (userIndex == -1) return;
+    int movieIndex = Movie::findMovie(extractedNumbers[1]);
+    if (movieIndex == -1) return;
+
+    User* user = allUsers[userIndex].get();
+    Movie* movie = allMovies[movieIndex].get();
+
+    std::vector<Movie*> recommendations = RecommendCommand::recommend(user, movie);
+
+    RecommendCommand::printRecommendations(recommendations);
 }

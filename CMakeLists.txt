@@ -18,14 +18,19 @@ add_executable(
     Tests    
     Tests/FileStorageTests.cpp
     Tests/MovieTests.cpp
-    Tests/ConsoleMenuTests.cpp       # Test file for ConsoleMenu
+    Tests/ConsoleMenuTests.cpp
     Tests/HelpCommandTests.cpp
     Tests/MovieTests.cpp
-    src/Objects/ConsoleMenu.cpp     # Source files for ConsoleMenu
-    src/Objects/CLI.cpp             # Source files for CLI
+    Tests/RecommendCommandTests.cpp
+
+    src/Objects/ConsoleMenu.cpp
+    src/Objects/CLI.cpp
     src/Objects/Movie.cpp
     src/Objects/User.cpp
+
     src/Functionality/HelpCommand.cpp
+    src/Functionality/RecommendCommand.cpp
+
     src/FileHandling/FileStorage.cpp
 
 )
@@ -61,4 +66,9 @@ add_test(
 add_test(
     NAME AddFunctionTests
     COMMAND AddFunctionTests
+)
+
+add_test(
+    NAME RecommendationTests
+    COMMAND RecommendationTests
 )
