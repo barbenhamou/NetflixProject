@@ -7,7 +7,7 @@ FileStorage::FileStorage(const std::string& file) : fileName(file) {
         // If the file doesn't exist, create it
         std::ofstream outfile(fileName);
         if (!outfile) {
-            std::cerr << "Error creating file!" << std::endl;
+            return;
         }
     }
 }
@@ -136,6 +136,6 @@ void FileStorage::updateUserInFile(int userId, std::vector<int>& updatedMovies) 
         remove(fileName.c_str());
         rename("temp.txt", fileName.c_str());
     } else {
-        std::cerr << "Error: Could not open file for reading or writing." << std::endl;
+        return;
     }
 }
