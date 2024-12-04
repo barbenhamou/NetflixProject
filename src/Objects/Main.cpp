@@ -1,4 +1,4 @@
-#include "../Include/CLI.h"
+#include "../Include/App.h"
 
 // Main function to check and parse the command
 int main() {
@@ -16,6 +16,6 @@ int main() {
     commands["add"] = add;
     commands["recommend"] = recommend;
 
-    CLI cli(menu, commands);
-    cli.run();
+    App app(menu, commands);
+    app.run();
 }

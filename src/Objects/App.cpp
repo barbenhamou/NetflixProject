@@ -1,9 +1,9 @@
-#include "../Include/CLI.h"
+#include "../Include/App.h"
 
 std::vector<std::unique_ptr<Movie>> allMovies = {};
 std::vector<std::unique_ptr<User>> allUsers = {};
 
-void CLI::run() {
+void App::run() {
     std::vector<std::string> input = {}; // User Input
     std::string command, data; // Result of parsing the user input
 
