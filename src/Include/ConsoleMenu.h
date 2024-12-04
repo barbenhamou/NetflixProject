@@ -1,3 +1,5 @@
+#pragma once
+
 #include "IMenu.h"
 #include <iostream>
 

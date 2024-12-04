@@ -22,6 +22,7 @@ add_executable(
     Tests/HelpCommandTests.cpp
     Tests/AddCommandTests.cpp    
     Tests/RecommendCommandTests.cpp
+    Tests/EndToEndTests.cpp
 
     src/Objects/ConsoleMenu.cpp
     src/Objects/CLI.cpp
@@ -72,4 +73,9 @@ add_test(
 add_test(
     NAME RecommendationTests
     COMMAND RecommendationTests
+)
+
+add_test(
+    NAME EndToEnd
+    COMMAND EndToEnd
 )

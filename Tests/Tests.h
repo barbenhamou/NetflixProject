@@ -11,6 +11,7 @@
 #include <random>
 
 #include "../src/Include/MovieUser.h"
+#include "../src/Include/CLI.h"
 
 #define TEST_FILE "../data/test_user_data.txt"
 
