@@ -8,6 +8,7 @@
 #include <memory>
 #include <iostream>
 #include <unordered_set>
+#include <random>
 
 #include "../src/Include/MovieUser.h"
 

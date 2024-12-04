@@ -15,12 +15,12 @@ include_directories(
 
 # Add the executable for ConsoleMenuTest
 add_executable(
-    Tests    
+    Tests
     Tests/FileStorageTests.cpp
-    Tests/MovieTests.cpp
     Tests/ConsoleMenuTests.cpp
-    Tests/HelpCommandTests.cpp
     Tests/MovieTests.cpp
+    Tests/HelpCommandTests.cpp
+    Tests/AddCommandTests.cpp    
     Tests/RecommendCommandTests.cpp
 
     src/Objects/ConsoleMenu.cpp
@@ -45,13 +45,13 @@ target_link_libraries(
 
 # Register the test with CTest
 add_test(
-    NAME HelpCommandTest
-    COMMAND HelpCommandTest
+    NAME ConsoleMenuTest
+    COMMAND ConsoleMenuTest
 )
 
 add_test(
-    NAME ConsoleMenuTest
-    COMMAND ConsoleMenuTest
+    NAME FileStorageTest
+    COMMAND FileStorageTest
 )
 
 add_test(
@@ -60,8 +60,8 @@ add_test(
 )
 
 add_test(
-    NAME FileStorageTest
-    COMMAND FileStorageTest
+    NAME HelpCommandTest
+    COMMAND HelpCommandTest
 )
 
 add_test(

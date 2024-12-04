@@ -1,0 +1,22 @@
+# Use a GCC-based image for building
+FROM gcc:latest
+
+# Install required packages
+RUN apt-get update && apt-get install -y \
+    git \
+    && apt-get clean
+
+# Set the working directory for the build
+WORKDIR /usr/src/project
+
+# Copy the entire project to the container
+COPY . .
+
+# Run the Makefile to build the project
+RUN make
+
+# Ensure the executable is ready to run
+RUN chmod +x ./run
+
+# Run the project
+CMD ["./run"]
