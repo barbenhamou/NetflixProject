@@ -1,6 +1,5 @@
-#include <gtest/gtest.h>
+#include "Tests.h"
 #include "../src/Include/HelpCommand.h"
-#include <memory>
 
 // Generic parsing test
 TEST(HelpCommandTest, ExecuteCommandOutput) {

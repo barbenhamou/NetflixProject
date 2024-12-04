@@ -10,13 +10,13 @@ TEST(RecommendationTests, SortByRelevance) {
     Movie* movie5 = new Movie(99);
     std::vector<Movie*> movies = {movie1, movie2, movie3, movie4, movie5};
 
-    // all different relevance values
+    // All different relevance values
     std::vector<int> relevance = {6, 5, 7, 1, 0};
     auto sortedMovies = RecommendCommand::sortByRelevance(relevance, movies);
     std::vector<Movie*> expected = {movie3, movie1, movie2, movie4, movie5};
     EXPECT_EQ(compareVec(sortedMovies, expected), true);
 
-    // some equal relevance values
+    // Some equal relevance values
     relevance = {5, 4, 5, 6, 6};
     sortedMovies = RecommendCommand::sortByRelevance(relevance, movies);
     expected = {movie5, movie4, movie1, movie3, movie2};
@@ -63,11 +63,12 @@ TEST(RecommendationTests, Recommend) {
     std::vector<int> recommendations;
 
     for (int i = 0; i < testCases.size(); i++) {
+        // Command syntax: recommend [user] [movie]
         user = allUsers[User::findUser(std::get<0>(testCases[i]))].get();
         movie = allMovies[Movie::findMovie(std::get<1>(testCases[i]))].get();
         
         expected = std::get<2>(testCases[i]);
         recommendations = RecommendCommand::printRecommendations(RecommendCommand::recommend(user, movie));
-        if (i == 0) EXPECT_EQ(recommendations, expected);
+        EXPECT_EQ(recommendations, expected);
     }
 }

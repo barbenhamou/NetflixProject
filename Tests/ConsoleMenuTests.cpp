@@ -1,6 +1,5 @@
-#include <gtest/gtest.h>
+#include "Tests.h"
 #include "../src/Include/ConsoleMenu.h"
-#include <memory>
 
 // Genric parsing test
 TEST(ConsoleMenuTest, NextCommandGnericForm) {
@@ -15,4 +14,3 @@ TEST(ConsoleMenuTest, NextCommandGnericForm) {
 
     EXPECT_EQ(result, expected); // Checking the expected output
 }
-

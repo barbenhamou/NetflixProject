@@ -1,7 +1,3 @@
-#include <vector>
-#include <memory>
-#include <cstdlib>
-#include <ctime>
 #include "Tests.h"
 
 #include "../src/Include/MovieUser.h"

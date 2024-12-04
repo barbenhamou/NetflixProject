@@ -1,13 +1,4 @@
 #include "Tests.h"
-#include "../src/Include/MovieUser.h"
-
-bool compareVec(std::vector<Movie*> a, std::vector<Movie*> b) {
-    if (a.size() != b.size()) return false;
-    for (int i = 0; i < a.size(); i++) {
-        if (a[i]->getId() != b[i]->getId()) return false;
-    }
-    return true;
-}
 
 std::vector<std::vector<Movie*>> generateTwoVectors(int num, int size) {
     std::vector<Movie*> vector1, vector2;
