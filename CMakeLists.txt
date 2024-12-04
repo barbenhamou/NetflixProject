@@ -28,6 +28,7 @@ add_executable(
     src/Objects/Movie.cpp
     src/Objects/User.cpp
 
+    src/Functionality/AddCommand.cpp
     src/Functionality/HelpCommand.cpp
     src/Functionality/RecommendCommand.cpp
 
