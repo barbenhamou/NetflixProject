@@ -4,21 +4,22 @@
 
 TEST(AddFunctionTests, RandomizedUserAndMovieIds) {
     // Seed the random number generator
-    std::srand(std::time(nullptr));
+    std::srand(std::random_device()());
 
+    int testCount = randInt(10, 30);
     for (int testRun = 0; testRun < 20; ++testRun) {
         // Clear global lists before each test run
         allMovies.clear();
         allUsers.clear();
 
         // Generate a random user ID
-        int newUserId = std::rand() % 1000 + 1; // Random ID between 1 and 1000
+        int newUserId = randInt(1, 100);
 
         // Generate a random number of movies and their IDs
-        int numMovies = std::rand() % 10 + 1; // Random number of movies between 1 and 10
+        int numMovies = randInt(1, 10);
         std::vector<int> newMovieIds;
         for (int i = 0; i < numMovies; ++i) {
-            newMovieIds.push_back(std::rand() % 1000 + 1); // Random movie IDs between 1 and 1000
+            newMovieIds.push_back(randInt(1, 100));
         }
 
         // Call add function

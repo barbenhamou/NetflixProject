@@ -40,15 +40,15 @@ TEST(MovieTest, Intersection) {
 
         auto intersectionResult = Movie::intersection(vectors[0], vectors[1]);
 
-        EXPECT_EQ(compareVec(correct, intersectionResult), true);
+        ASSERT_TRUE(compareVec(correct, intersectionResult));
     }
 
     // Edge cases - intersection with empty sets
     auto empty1 = Movie::intersection({}, vectors[1]);
-    EXPECT_EQ(compareVec(empty1, {}), true);
+    ASSERT_TRUE(compareVec(empty1, {}));
 
     auto empty2 = Movie::intersection(vectors[0], {});
-    EXPECT_EQ(compareVec(empty2, {}), true);
+    ASSERT_TRUE(compareVec(empty2, {}));
 }
 
 TEST(MovieTest, RelativeComplement) {
@@ -76,14 +76,14 @@ TEST(MovieTest, RelativeComplement) {
         auto result1 = Movie::relativeComplement(vectors[0], vectors[1]);
         auto result2 = Movie::relativeComplement(vectors[1], vectors[0]);
 
-        EXPECT_EQ(compareVec(correct1, result1), true);
-        EXPECT_EQ(compareVec(correct2, result2), true);
+        ASSERT_TRUE(compareVec(correct1, result1));
+        ASSERT_TRUE(compareVec(correct2, result2));
     }
 
     // Edge cases: A\B - 1. B=emptySet 2. A=emptySet
     auto empty = Movie::relativeComplement({}, vectors[1]);
-    EXPECT_EQ(compareVec(empty, {}), true);
+    ASSERT_TRUE(compareVec(empty, {}));
 
     auto full = Movie::relativeComplement(vectors[0], {});
-    EXPECT_EQ(compareVec(full, vectors[0]), true);
+    ASSERT_TRUE(compareVec(full, vectors[0]));
 }

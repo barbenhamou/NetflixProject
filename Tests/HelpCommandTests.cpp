@@ -13,7 +13,7 @@ TEST(HelpCommandTest, ExecuteCommandOutput) {
     std::cout.rdbuf(originalCoutBuffer); // Reset changes regarding cout
 
     std::string expectedOutput =
-        "add [userid] [movieid1] [movieid2] …\n"
+        "add [userid] [movieid1] [movieid2] ...\n"
         "recommend [userid] [movieid]\n"
         "help\n";
 

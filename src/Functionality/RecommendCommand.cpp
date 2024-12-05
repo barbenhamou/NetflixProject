@@ -103,7 +103,7 @@ std::vector<Movie*> RecommendCommand::recommend(User* user, Movie* movie) {
 
 void RecommendCommand::execute(std::string command) {
     // Match numbers with potential spaces before and after them
-    std::vector<int> extractedNumbers = ICommand::parseCommand(command, R"(\s*(\d+)\s*)");
+    auto extractedNumbers = ICommand::parseCommand(command, R"(\s*(\d+)\s*)");
 
     // Ensure we have one user ID and one movie ID (else ignore)
     if (extractedNumbers.size() != 2) return;

@@ -57,11 +57,16 @@ TEST(EndToEnd, EndToEndTest) {
         output = ::testing::internal::GetCapturedStdout();
 
         if (command == "help") {
-            EXPECT_EQ(output,"add [userid] [movieid1] [movieid2] …\nrecommend [userid] [movieid]\nhelp\n");
+            EXPECT_EQ(output,"add [userid] [movieid1] [movieid2] ...\nrecommend [userid] [movieid]\nhelp\n");
         } else if (command == "add") {
             EXPECT_EQ(output,"");
         } else if (command == "recommend") {
             EXPECT_EQ(output,"105 106 111 110 112 113 107 108 109 114\n");
         }
     }
+    
+    delete menu;
+    delete help;
+    delete add;
+    delete recommend;
 }
