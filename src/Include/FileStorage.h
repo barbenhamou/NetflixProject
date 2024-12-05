@@ -1,5 +1,7 @@
 #pragma once
+
 #include <unordered_map>
+#include <unordered_set>
 #include <string>
 #include <vector>
 #include <memory>
@@ -11,23 +13,27 @@
 
 #include "MovieUser.h"
 #include "IStorage.h"
-#include <algorithm>
 
 class FileStorage : public IStorage {
     private:
-        std::string fileName;  // The name of the file where user data is stored
+        // The name of the file where the data is stored
+        std::string fileName;
 
     public:
         // Constructor: takes the filename where user data will be saved/loaded
         FileStorage(const std::string& file);
 
-        // The function recives a user and a vector of movies if the user is already in the file it will just update his list of movies
-        //if not it will create the user and enter him to the file with all the movies the fucntion got in the vector.
-        void updateUserInFile(int userId, std::vector<int>& updatedMovies);
+        // Adds movies to the user's watched list, but in the file and not the variables. If the user
+        // doesn't exist, it creates it
+        void updateUserInFile(int userId, std::vector<int>& moviesToAdd);
 
-        // The funcion checks if the user is indise the file if he is, it will return a vector of his movies otherwise it will return a empty vector. 
+        // Checks if the user exists in the file. If so, it will return a vector of its watched
+        // movies (otherwise an empty vector)
         std::vector<int> isUserInFile(int userId);
 
-        // Spltiting the line into 2 parts. one part the user and the other one a vector of all the movies.
-        static std::vector<std::string> split(const std::string& str, char delimiter);  
+        // Splits `str` into parts seperated by `delimiter`
+        static std::vector<std::string> split(const std::string& str, char delimiter);
+
+        // Returns a set of the movies excluding watched movies and duplicates 
+        std::vector<int> filterMoviesToAdd(int userId, const std::vector<int>& moviesToAdd);
 };

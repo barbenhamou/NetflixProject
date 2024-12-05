@@ -5,10 +5,9 @@
 
 #include "ICommand.h"
 
-// The class responsible for the Help command
+// A command to display all available commands. Syntax: `help`
 class HelpCommand : public ICommand {
     public:
-        // The implemntation of the Help command
-        void execute(std::string command);
+        void execute(std::string command) override;
 };
 
