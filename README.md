@@ -4,9 +4,12 @@ This is a Netflix project for the course "Advanced System programming" in Bar-Il
 ## Running the project
 This project uses Docker for easy building.
 
-To run the project, run these two commands:
+To compile the project, run this command (it might take a while):
 ```bash
 docker build -f Dockerfile.run -t img .
+```
+To run the project, run this:
+```bash
 docker run -it --name app img
 ```
 and then you will be able to enter your input.
@@ -30,7 +33,7 @@ docker rm app
 ### Running our tests
 We wrote some tests for the project.
 
-To run the project's tests, run this:
+To run the tests, run these two commands:
 ```bash
 docker build -f Dockerfile.tests -t tests .
 docker run tests

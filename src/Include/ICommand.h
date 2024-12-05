@@ -6,13 +6,13 @@
 #include "MovieUser.h"
 #include "FileStorage.h"
 
-// An interface which all the commands will inherit from
+// An interface which all the commands will implement
 class ICommand {
     public:
         // All commands will override this function have their own implementation
         virtual void execute(std::string command) = 0;
         
-        // The function who parse the command and return the arguments that follow according to the given pattern
+        // Parses the command's arguments and returns them according to the given pattern
         static std::vector<int> parseCommand(std::string command, std::string inputPattern) {
             std::regex pattern(inputPattern);
             std::smatch match;
