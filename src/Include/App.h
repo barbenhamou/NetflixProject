@@ -14,14 +14,14 @@
 #include "RecommendCommand.h"
 
 // An object which represents the CLI
-class CLI {
+class App {
     private:
         IMenu* menu;
         std::map<std::string, ICommand*> commands;
 
     public:
         // Constructor for the CLI
-        CLI(IMenu* menu,  std::map<std::string, ICommand*> commands) : menu(menu), commands(commands) {};
+        App(IMenu* menu,  std::map<std::string, ICommand*> commands) : menu(menu), commands(commands) {};
 
         // The function which initate the CLI activity
         void run();

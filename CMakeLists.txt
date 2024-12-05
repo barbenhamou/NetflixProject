@@ -25,7 +25,7 @@ add_executable(
     Tests/EndToEndTests.cpp
 
     src/Objects/ConsoleMenu.cpp
-    src/Objects/CLI.cpp
+    src/Objects/App.cpp
     src/Objects/Movie.cpp
     src/Objects/User.cpp
 
