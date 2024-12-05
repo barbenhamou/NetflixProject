@@ -53,7 +53,7 @@ TEST(FileStorageTest, IsUserInFile) {
         if (userFound) {
             EXPECT_EQ(result, expectedMovies);
         } else {
-            EXPECT_EQ(true, result.empty());
+            ASSERT_TRUE(result.empty());
         }
         file.close();
     }

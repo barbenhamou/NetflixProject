@@ -4,19 +4,24 @@ std::vector<std::unique_ptr<Movie>> allMovies = {};
 std::vector<std::unique_ptr<User>> allUsers = {};
 
 void App::run() {
-    std::vector<std::string> input = {}; // User Input
-    std::string command, data; // Result of parsing the user input
+    std::vector<std::string> input = {};
+    std::string command, data;
 
+    // The app never stops
     while(true) {
+        // Get command and arguments
         input = this->menu->nextCommand();
         command = input[0];
         data = input[1];
         
         try {
+            // Ignore invalid commands
             if (this->commands.find(command) == this->commands.end()) continue;
-            this->commands[command]->execute(data); // Executing the function in generic form
+            // Execute the command
+            this->commands[command]->execute(data);
         } catch (...) {
-            this->menu->displayError(""); // In case of an error
+            // Currenty no error message is needed
+            this->menu->displayError("");
         }
     }
 }

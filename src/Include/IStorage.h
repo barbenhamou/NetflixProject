@@ -3,6 +3,6 @@
 // Interface for storage mechanisms (e.g., file, database, etc.)
 class IStorage {
     public:
-        // Virtual destructor for proper cleanup in derived classes
+        // Destructor for proper cleanup
         virtual ~IStorage() = default;
 };

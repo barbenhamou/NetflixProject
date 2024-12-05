@@ -1,23 +1,22 @@
 #include "../Include/ConsoleMenu.h"
 
-// The next command will input a command from the user and analyze it
 std::vector<std::string> ConsoleMenu::nextCommand() {
-    std::vector<std::string> returnObj = {};
     std::string command, input;
 
-    std::getline(std::cin, input); // Inputing from cin
+    // Get a command from stdin
+    std::getline(std::cin, input);
 
-    std::istringstream ss(input); // Initializing stream
+    // Initialize a stream
+    std::istringstream ss(input);
 
-    ss >> command; // Getting the first word
+    // Get the first word
+    ss >> command;
 
-    returnObj.push_back(command);
-    returnObj.push_back(input.substr(command.size())); // Creating the vector to return
-
-    return returnObj;
+    // return the command and its arguments
+    return {command, input.substr(command.size())};
 }
 
-// Displaying an error
 void ConsoleMenu::displayError(std::string error) {
+    // Print the error to stdout
     std::cout << error << std::endl;
 }
