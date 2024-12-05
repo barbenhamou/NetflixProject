@@ -15,7 +15,7 @@ docker run -it --name app img
 and then you will be able to enter your input.
 `app` is the name of the Docker container, and `img` is the name of the image.
 
-If you want to stop the program, run this:
+If you want to stop the program, run this (from a different terminal):
 ```bash
 docker stop app
 ```
@@ -42,7 +42,7 @@ docker run tests
 ## Usage
 When running the project, a command-line interface starts. It supports 3 commands:
 ### Add
-**Syntax:** `add [userid] [movieid1] [movieid2] ...`
+**Syntax:** `add [userid] [movieid1] [movieid2] ...` (supports multiple spaces)
 
 Adds movies to a user's watched list. The user and movie IDs don't have to already exist in the system for you to use them in the command (this command also adds them to the database if they haven't already been added).
 
