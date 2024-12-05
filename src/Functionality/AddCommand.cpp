@@ -24,14 +24,14 @@ void AddCommand::add(int userId, std::vector<int> movieIds) {
         movieWatched = false;
 
         // Check if the user already has the movie
-        for (const auto& movie : allUsers[userIndex].get()->getMovies()) {
+        for (const auto& movie : allUsers[userIndex]->getMovies()) {
             if (movie->getId() == movieId) {
                 userWatched = true;
             }
         }
         
         // Check if the movie already has the user
-        for (const auto& user : allMovies[movieIndex].get()->getUsers()) {
+        for (const auto& user : allMovies[movieIndex]->getUsers()) {
             if (user->getId() == userId) {
                 movieWatched = true;
             }
@@ -44,7 +44,7 @@ void AddCommand::add(int userId, std::vector<int> movieIds) {
 
         // Add the user to the movie's watchers list
         if (!movieWatched) {
-            allMovies[movieIndex].get()->addUser(allUsers[userIndex].get());
+            allMovies[movieIndex]->addUser(allUsers[userIndex].get());
         }
     }
 }
