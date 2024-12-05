@@ -59,6 +59,7 @@ Each user is assigned a "Movies in Common" (MiC) value - how many movies both th
 Displays all available commands and their syntax.
 
 <br>
+
 **Note:** Invalid command/syntax will be ignored.
 
 ## Run Example
