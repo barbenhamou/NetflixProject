@@ -8,6 +8,7 @@ std::vector<int> RecommendCommand::printRecommendations(std::vector<Movie*> reco
     for (int i = 0; i < recCount; i++) {
         std::cout << recommendations[i]->getId();
         movieIds.push_back(recommendations[i]->getId());
+
         // Print space or newline
         if (i == recCount - 1) {
             std::cout << std::endl;
@@ -25,6 +26,7 @@ bool RecommendCommand::compareMovies(std::pair<int, Movie*> pair1, std::pair<int
     if (pair1.first != pair2.first) {
         return pair1.first < pair2.first;
     }
+
     // Or ID in increasing order
     return pair1.second->getId() > pair2.second->getId();
 }
@@ -37,6 +39,7 @@ std::vector<Movie*> RecommendCommand::sortByRelevance(std::vector<int> relevance
         moviesWithRelevance.push_back({relevanceValues[i], relevantMovies[i]});
     }
 
+    // Sorting the vector
     std::sort(moviesWithRelevance.begin(), moviesWithRelevance.end(), RecommendCommand::compareMovies);
     std::vector<Movie*> sortedMovies;
     
@@ -45,13 +48,19 @@ std::vector<Movie*> RecommendCommand::sortByRelevance(std::vector<int> relevance
         sortedMovies.insert(sortedMovies.begin(), moviesWithRelevance[i].second);
     
     }
+
     return sortedMovies;
 }
 
 std::vector<Movie*> RecommendCommand::recommend(User* user, Movie* movie) {
     std::vector<Movie*> irrelevantMovies = user->getMovies();
-    irrelevantMovies.push_back(movie);
 
+    // Make sure irrelavnt movies only appear once
+    if (std::find(irrelevantMovies.begin(), irrelevantMovies.end(), movie) == irrelevantMovies.end()) {
+        irrelevantMovies.push_back(movie);
+    }
+    
+    // unique_ptr -> raw pointer
     std::vector<Movie*> allMoviesRaw;
     for (const auto& movie : allMovies) {
         allMoviesRaw.push_back(movie.get());
@@ -63,7 +72,7 @@ std::vector<Movie*> RecommendCommand::recommend(User* user, Movie* movie) {
     int movieCount = relevantMovies.size();
     int userCount = (movie->getUsers()).size();
 
-    // count how many movies in common does the user have with all the users that watched the movie
+    // Count how many movies in common (MiC) does the user have with all the users that watched the movie
     std::vector<int> moviesInCommon(userCount, 0);
     for (int i = 0; i < userCount; i++) {
         // make sure that we don't count user's shared movies with itself in case that user watched movie
@@ -72,48 +81,34 @@ std::vector<Movie*> RecommendCommand::recommend(User* user, Movie* movie) {
         moviesInCommon[i] = Movie::intersection(movie->getUsers()[i]->getMovies(), user->getMovies()).size();
     }
     
-    // final relevance values of each movie in relevantMovies
+    // Final relevance values of each movie in relevantMovies
     std::vector<int> relevanceValues(movieCount, 0);
-    bool isRelevant;
     int i,j;
+
     for (i = 0; i < movieCount; i++) {
+        // Find all users who watched both the current relevant movie and the inputted movie, and add their MiC value 
         for (j = 0; j < userCount; j++) {
-            isRelevant = 0;
             for (const auto& relevantUser : relevantMovies[i]->getUsers()) {
                 if (movie->getUsers()[j]->getId() == relevantUser->getId()) {
-                    isRelevant = 1;
+                    relevanceValues[i] += moviesInCommon[j];
+                    break;
                 }
-            }
-            if (isRelevant) {
-                relevanceValues[i] += moviesInCommon[j];
             }
         }
     }
 
+    // Print the recommendations according tot their relevance
     return RecommendCommand::sortByRelevance(relevanceValues, relevantMovies);
 }
 
 void RecommendCommand::execute(std::string command) {
-    // match numbers with potential spaces before and after them
-    std::regex pattern(R"(\s*(\d+)\s*)");
-    std::smatch match;
-    // vector for the numbers in the command
-    std::vector<int> extractedNumbers;
-    std::string::const_iterator searchStart(command.cbegin());
-
-    while (std::regex_search(searchStart, command.cend(), match, pattern)) {
-        // Extract the number as an integer (if not a number, ignore command)
-        try {
-            extractedNumbers.push_back(std::stoi(match[1].str()));
-        } catch (...) {return;}
-        // Move the search start past this match
-        searchStart = match.suffix().first;
-    }
+    // Match numbers with potential spaces before and after them
+    std::vector<int> extractedNumbers = ICommand::parseCommand(command, R"(\s*(\d+)\s*)");
 
     // Ensure we have one user ID and one movie ID (else ignore)
     if (extractedNumbers.size() != 2) return;
 
-    // get user and movie index in the global list (if non-existant, ignore)
+    // Get user and movie index in the global list (if non-existant, ignore)
     int userIndex = User::findUser(extractedNumbers[0]);
     if (userIndex == -1) return;
     int movieIndex = Movie::findMovie(extractedNumbers[1]);
