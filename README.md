@@ -40,13 +40,11 @@ docker run tests
 ```
 
 ## Usage
-When running the project, a Command-Line Interface starts. It supports 3 commands:
+When running the project, a command-line interface starts. It supports 3 commands:
 ### Add
 **Syntax:** `add [userid] [movieid1] [movieid2] ...`
 
 Adds movies to a user's watched list. The user and movie IDs don't have to already exist in the system for you to use them in the command (this command also adds them to the database if they haven't already been added).
-
-**Note:** The data is saved from run to run.
 
 ### Recommend
 **Syntax:** `recommend [userid] [movieid]`
@@ -60,11 +58,14 @@ Each user is assigned a "Movies in Common" (MiC) value - how many movies both th
 
 Displays all available commands and their syntax.
 
-Invalid command/syntax will be ignored.
+<br>
+**Note:** Invalid command/syntax will be ignored.
 
 ## Run Example
-Here is an example of how the project compiles and runs:
+Here is an example of how the project compiles and runs:<br>
+
 ![Run Example](RunExample.png)
 
-Here is an example of how the tests run:
+Here is an example of how the tests run:<br>
+
 ![Tests Run](TestsRun.png)
