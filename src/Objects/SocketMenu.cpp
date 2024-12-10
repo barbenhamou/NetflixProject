@@ -2,7 +2,7 @@
 
 SocketMenu::SocketMenu(int clientSocket) : clientSocket(clientSocket) {}
 
-int SocketMenu::nextCommand() {
+std::vector<std::string> SocketMenu::nextCommand() {
     return 0;
 }
 

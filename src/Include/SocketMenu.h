@@ -11,7 +11,7 @@ class SocketMenu : public IMenu {
         // Constructor
         SocketMenu(int clientSocket);
 
-        int nextCommand() override;
+        std::vector<std::string> nextCommand() override;
 
         void displayError(std::string error) override;
 

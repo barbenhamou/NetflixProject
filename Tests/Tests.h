@@ -3,15 +3,21 @@
 #include <gtest/gtest.h>
 #include <fstream>
 #include <cstdlib>
+#include <cstring>
 #include <ctime>
 #include <vector>
 #include <memory>
 #include <iostream>
 #include <unordered_set>
 #include <random>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <thread>
+#include <unistd.h>
 
 #include "../src/Include/MovieUser.h"
 #include "../src/Include/App.h"
+#include "../src/Include/SocketMenu.h"
 
 #define TEST_FILE "../data/test_user_data.txt"
 
@@ -28,4 +34,56 @@ inline bool compareVec(std::vector<Movie*> a, std::vector<Movie*> b) {
         if (a[i]->getId() != b[i]->getId()) return false;
     }
     return true;
+}
+
+int simulateServer(int port) {
+    int server_sock = socket(AF_INET, SOCK_STREAM, 0);
+
+    if (server_socket < 0) {
+       perror("error creating socket");
+       exit(-1);
+    }
+
+    struct sockaddr_in server_addr;
+
+    memset(&server_addr, 0, sizeof(server_addr));
+
+    server_addr.sin_family = AF_INET;
+    server_addr.sin_addr.s_addr = INADDR_ANY;
+    server_addr.sin_port = htons(port);
+
+    if (bind(server_addr, (struct sockaddr*)&server_addr, sizeof(server_addr)) < 0) {
+        perror("error binding socket");
+        close(server_addr);
+        exit(-1);
+    }
+
+    if (listen(server_addr, 1) < 0) {
+        perror("error listening socket");
+        close(server_addr);
+        exit(-1);
+    }
+
+    return server_sock;
+}
+
+int simulateClient(int port) {
+    int client_sock = socket(AF_INET, SOCK_STREAM, 0);
+    if (client_socket < 0) {
+        perror("error creating socket");
+        exit(-1);
+    }
+
+    struct sockaddr_in server_addr;
+    server_addr.sin_family = AF_INET;
+    server_addr.sin_addr.s_addr = inet_addr("127.0.0.1");
+    server_addr.sin_port = htons(port);
+
+    if (connect(client_sock, (struct sockaddr*)&server_addr, sizeof(server_addr)) < 0) {
+        perror("error connecting");
+        close(client_socket);
+        exit(-1);
+    }
+
+    return client_socket;
 }
