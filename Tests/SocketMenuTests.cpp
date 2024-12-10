@@ -17,10 +17,9 @@ TEST(SocketMenuTest, TestNextCommand) {
 
     std::vector<std::string> res = menu.nextCommand();
 
-    ASSERT_EQ(result.size(), 3);
+    ASSERT_EQ(result.size(), 2);
     EXPECT_EQ(result[0], "command");
-    EXPECT_EQ(result[1], "arg1");
-    EXPECT_EQ(result[2], "arg2");
+    EXPECT_EQ(result[1], "arg1 arg2");
 
     close(client_sock);
     close(test_sock);
