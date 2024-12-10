@@ -16,6 +16,7 @@ include_directories(
 # Add the executable for ConsoleMenuTest
 add_executable(
     Tests
+    Tests/SocketMenuTest.cpp
     Tests/FileStorageTests.cpp
     Tests/ConsoleMenuTests.cpp
     Tests/MovieTests.cpp
@@ -24,6 +25,7 @@ add_executable(
     Tests/RecommendCommandTests.cpp
     Tests/EndToEndTests.cpp
 
+    src/Objects/SocketMenu.cpp
     src/Objects/ConsoleMenu.cpp
     src/Objects/App.cpp
     src/Objects/Movie.cpp
@@ -78,4 +80,9 @@ add_test(
 add_test(
     NAME EndToEnd
     COMMAND EndToEnd
+)
+
+add_test(
+    NAME SocketMenuTest
+    COMMAND SocketMenuTest
 )
