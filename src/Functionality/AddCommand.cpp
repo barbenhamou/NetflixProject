@@ -82,12 +82,12 @@ void AddCommand::initGlobals(const std::string& fileName) {
     inputFile.close();
 }
 
+
 void AddCommand::execute(std::string command) {
     // Match numbers with potential spaces before and after them
     auto extractedNumbers = ICommand::parseCommand(command, R"(\s*(\d+)\s*)");
 
     // Ensure we have at least one user ID and one movie ID (else ignore)
-    if (extractedNumbers.size() < 2) return;
 
     // The first number is the user ID, the rest are movie IDs
     int userId = extractedNumbers[0];
@@ -97,4 +97,30 @@ void AddCommand::execute(std::string command) {
     fileStorage.updateUserInFile(userId, watchedMovies);
 
     AddCommand::add(userId, watchedMovies);
+}
+
+
+bool AddCommand :: isValidCommand(const std::string& command, int functionality){
+     // Match numbers with potential spaces before and after them
+    auto extractedNumbers = ICommand::parseCommand(command, R"(\s*(\d+)\s*)");
+
+    // Ensure we have at least one user ID and one movie ID (else ignore)
+    if (extractedNumbers.size() < 2){
+        ICommand ::setStatus(404);
+        return false;
+    } 
+
+    // The first number is the user ID, the rest are movie IDs
+    int userId = extractedNumbers[0];
+    FileStorage fileStorage("data/user_data.txt");
+    if (functionality == 1 && !(fileStorage.isUserInFile(userId).empty())){
+        ICommand ::setStatus(401);    
+        return false;
+    }
+    if(functionality==2 && fileStorage.isUserInFile(userId).empty()){
+        ICommand ::setStatus(401);
+        return false;
+    }
+    return true;
+
 }
