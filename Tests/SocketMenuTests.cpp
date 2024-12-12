@@ -1,7 +1,7 @@
 #include "Tests.h"
 
 TEST(SocketMenuTest, TestNextCommand) {
-    const int port = 5555;
+    const int port = randomPort();
 
     int server_sock = simulateServer(port);
 
@@ -12,14 +12,16 @@ TEST(SocketMenuTest, TestNextCommand) {
 
     SocketMenu menu(test_sock);
 
-    std::string msg ="command arg1 arg2\n";
+    std::string msg = "command arg1 arg2\n";
+    uint32_t msg_size = htonl(msg.size());
+    send(client_sock, &msg_size, sizeof(msg_size), 0);
     send(client_sock, msg.c_str(), msg.size(), 0);
 
     std::vector<std::string> res = menu.nextCommand();
 
-    ASSERT_EQ(result.size(), 2);
-    EXPECT_EQ(result[0], "command");
-    EXPECT_EQ(result[1], "arg1 arg2");
+    ASSERT_EQ(res.size(), 2);
+    EXPECT_EQ(res[0], "command");
+    EXPECT_EQ(res[1], " arg1 arg2\n");
 
     close(client_sock);
     close(test_sock);
@@ -38,14 +40,18 @@ TEST(SocketMenuTest, TestDisplayError) {
 
     SocketMenu menu(test_sock);
 
-    std::string msg ="command arg1 arg2\n";
+    std::string msg = "command arg1 arg2\n";
     menu.displayError(msg);
 
+    uint32_t recved_size;
+    recv(client_sock, &recved_size, sizeof(recved_size), 0);
+    recved_size = ntohl(recved_size);
+
     char data[4096] = { 0 };
-    int recved = recv(client_sock, data, sizeof(data) - 1, 0);
+    int recved = recv(client_sock, data, recved_size, 0);
 
     ASSERT_GT(recved, 0);
-    EXPECT_EQ(std::string(data), msg + "\n");
+    EXPECT_EQ(std::string(data, recved), msg);
 
     close(client_sock);
     close(test_sock);

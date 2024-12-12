@@ -3,25 +3,49 @@
 SocketMenu::SocketMenu(int clientSocket) : clientSocket(clientSocket) {}
 
 std::vector<std::string> SocketMenu::nextCommand() {
-    char input[4096] = { 0 };
+    try {
+        // Receive the size of the incoming data first
+        uint32_t size = 0;
+        int bytes_recved = recv(this->clientSocket, &size, sizeof(size), 0);
 
-    int bytes_recved = recv(this->clientSocket, input, sizeof(input) - 1, 0);
+        if (bytes_recved != sizeof(size) || size <= 0) {
+            close(clientSocket);  // Close the socket on error
+            return {};
+        }
 
-    if (bytes_received <= 0) {
-        close(clientSocket);
+        size = ntohl(size);  // Convert size from network byte order to host byte order
+
+        // Buffer to receive the data
+        std::vector<char> buffer(size + 1, '\0'); // +1 for null terminator
+        bytes_recved = recv(this->clientSocket, buffer.data(), size, 0);
+
+        if (bytes_recved != size) {  // handle exception if not all bytes are received
+            close(clientSocket);
+            return {};
+        }
+
+        std::string data(buffer.data());  // Convert received data to a string
+
+        // Parse the command
+        std::istringstream ss(data);
+        std::string command;
+        ss >> command;
+
+        // Return the command and its arguments
+        return {command, data.substr(command.size())};
+    } catch (...) {
+        close(clientSocket);  // Ensure socket closure on error
         return {};
     }
-
-    // Initialize a stream
-    std::istringstream ss(input);
-
-    // Get the first word
-    ss >> command;
-
-    // return the command and its arguments
-    return {command, input.substr(command.size())};
 }
 
 void SocketMenu::displayError(std::string error) {
-    send(this->clientSocket, error.c_str(), error.size(), 0);
+    try {
+        // Send the size of the error message first
+        uint32_t size = htonl(error.size());
+        send(this->clientSocket, &size, sizeof(size), 0);
+
+        // Send the actual error message
+        send(this->clientSocket, error.c_str(), error.size(), 0);
+    } catch (...) {}
 }
