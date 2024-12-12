@@ -12,6 +12,7 @@
 #include <random>
 #include <sys/socket.h>
 #include <netinet/in.h>
+#include <arpa/inet.h>
 #include <thread>
 #include <unistd.h>
 
@@ -36,10 +37,17 @@ inline bool compareVec(std::vector<Movie*> a, std::vector<Movie*> b) {
     return true;
 }
 
-int simulateServer(int port) {
+inline int randomPort() {
+    const int minPort = 1024;  // Avoid system-reserved ports
+    const int maxPort = 65535;
+    std::srand(std::time(nullptr));
+    return std::rand() % (maxPort - minPort + 1) + minPort;
+}
+
+inline int simulateServer(int port) {
     int server_sock = socket(AF_INET, SOCK_STREAM, 0);
 
-    if (server_socket < 0) {
+    if (server_sock < 0) {
        perror("error creating socket");
        exit(-1);
     }
@@ -52,24 +60,24 @@ int simulateServer(int port) {
     server_addr.sin_addr.s_addr = INADDR_ANY;
     server_addr.sin_port = htons(port);
 
-    if (bind(server_addr, (struct sockaddr*)&server_addr, sizeof(server_addr)) < 0) {
+    if (bind(server_sock, (struct sockaddr*)&server_addr, sizeof(server_addr)) < 0) {
         perror("error binding socket");
-        close(server_addr);
+        close(server_sock);
         exit(-1);
     }
 
-    if (listen(server_addr, 1) < 0) {
+    if (listen(server_sock, 1) < 0) {
         perror("error listening socket");
-        close(server_addr);
+        close(server_sock);
         exit(-1);
     }
 
     return server_sock;
 }
 
-int simulateClient(int port) {
+inline int simulateClient(int port) {
     int client_sock = socket(AF_INET, SOCK_STREAM, 0);
-    if (client_socket < 0) {
+    if (client_sock < 0) {
         perror("error creating socket");
         exit(-1);
     }
@@ -81,9 +89,9 @@ int simulateClient(int port) {
 
     if (connect(client_sock, (struct sockaddr*)&server_addr, sizeof(server_addr)) < 0) {
         perror("error connecting");
-        close(client_socket);
+        close(client_sock);
         exit(-1);
     }
 
-    return client_socket;
+    return client_sock;
 }

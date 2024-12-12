@@ -16,7 +16,7 @@ include_directories(
 # Add the executable for ConsoleMenuTest
 add_executable(
     Tests
-    Tests/SocketMenuTest.cpp
+    Tests/SocketMenuTests.cpp
     Tests/FileStorageTests.cpp
     Tests/ConsoleMenuTests.cpp
     Tests/MovieTests.cpp

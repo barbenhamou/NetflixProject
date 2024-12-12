@@ -19,4 +19,4 @@ class SocketMenu : public IMenu {
         ~SocketMenu() {
             close(this->clientSocket);
         }
-}
+};
