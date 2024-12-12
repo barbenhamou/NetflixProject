@@ -17,6 +17,8 @@ include_directories(
 add_executable(
     Tests
     Tests/SocketMenuTests.cpp
+    Tests/PatchCommandTests.cpp
+    Tests/PostCommandTests.cpp
     Tests/FileStorageTests.cpp
     Tests/ConsoleMenuTests.cpp
     Tests/MovieTests.cpp
@@ -85,4 +87,14 @@ add_test(
 add_test(
     NAME SocketMenuTest
     COMMAND SocketMenuTest
+)
+
+add_test(
+    NAME PatchFunctionTests
+    COMMAND PatchFunctionTests
+)
+
+add_test(
+    NAME PostFunctionTests
+    COMMAND PostFunctionTests
 )
