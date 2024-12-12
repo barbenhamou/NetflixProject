@@ -12,6 +12,8 @@
 #include "AddCommand.h"
 #include "HelpCommand.h"
 #include "RecommendCommand.h"
+#include "../Include/PostCommand.h"
+#include "../Include/PatchCommand.h"
 
 // An object which represents the main interface of the app
 class App {
