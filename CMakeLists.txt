@@ -16,6 +16,9 @@ include_directories(
 # Add the executable for ConsoleMenuTest
 add_executable(
     Tests
+    Tests/SocketMenuTests.cpp
+    Tests/PatchCommandTests.cpp
+    Tests/PostCommandTests.cpp
     Tests/FileStorageTests.cpp
     Tests/ConsoleMenuTests.cpp
     Tests/MovieTests.cpp
@@ -24,6 +27,7 @@ add_executable(
     Tests/RecommendCommandTests.cpp
     Tests/EndToEndTests.cpp
 
+    src/Objects/SocketMenu.cpp
     src/Objects/ConsoleMenu.cpp
     src/Objects/App.cpp
     src/Objects/Movie.cpp
@@ -32,9 +36,9 @@ add_executable(
     src/Functionality/AddCommand.cpp
     src/Functionality/HelpCommand.cpp
     src/Functionality/RecommendCommand.cpp
-
+    src/Functionality/PostCommand.cpp
     src/FileHandling/FileStorage.cpp
-
+    src/Functionality/PatchCommand.cpp
 )
 
 # Link GoogleTest and pthread libraries to the ConsoleMenuTest executable
@@ -78,4 +82,19 @@ add_test(
 add_test(
     NAME EndToEnd
     COMMAND EndToEnd
+)
+
+add_test(
+    NAME SocketMenuTest
+    COMMAND SocketMenuTest
+)
+
+add_test(
+    NAME PatchFunctionTests
+    COMMAND PatchFunctionTests
+)
+
+add_test(
+    NAME PostFunctionTests
+    COMMAND PostFunctionTests
 )

@@ -4,6 +4,9 @@
 #include <string>
 #include <sstream>
 #include <vector>
+#include <netinet/in.h>
+#include <cstring>
+#include <unistd.h>
 
 // An interface for different menu interfaces
 class IMenu {
