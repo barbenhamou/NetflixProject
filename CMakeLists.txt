@@ -24,8 +24,8 @@ add_executable(
     Tests/AddCommandTests.cpp    
     Tests/RecommendCommandTests.cpp
     Tests/EndToEndTests.cpp
-    Tests/PostCommandTests.cpp
-    Tests/PatchCommandTests.cpp
+
+    src/Objects/SocketMenu.cpp
     src/Objects/ConsoleMenu.cpp
     src/Objects/App.cpp
     src/Objects/Movie.cpp
@@ -81,11 +81,8 @@ add_test(
     NAME EndToEnd
     COMMAND EndToEnd
 )
+
 add_test(
-    NAME PostFunctionTests
-    COMMAND RandomizedUserAndMovieId
-)
-add_test(
-    NAME PatchFunctionTests
-    COMMAND RandomizedUseresAndMovieId
+    NAME SocketMenuTest
+    COMMAND SocketMenuTest
 )
