@@ -37,8 +37,9 @@ add_executable(
     src/Functionality/HelpCommand.cpp
     src/Functionality/GetCommand.cpp
     src/Functionality/PostCommand.cpp
-    src/FileHandling/FileStorage.cpp
     src/Functionality/PatchCommand.cpp
+    
+    src/FileHandling/FileStorage.cpp
 )
 
 # Link GoogleTest and pthread libraries to the ConsoleMenuTest executable
