@@ -1,6 +1,7 @@
 #include "Tests.h"
 #include "../src/Include/AddCommand.h"
 #include "../src/Include/MovieUser.h"
+#include "../src/Include/Globals.h"
 
 TEST(AddFunctionTests, RandomizedUserAndMovieIds) {
     // Seed the random number generator

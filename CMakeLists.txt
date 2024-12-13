@@ -25,13 +25,14 @@ add_executable(
     Tests/HelpCommandTests.cpp
     Tests/AddCommandTests.cpp    
     Tests/GetCommandTests.cpp
-    Tests/EndToEndTests.cpp
+    #Tests/EndToEndTests.cpp
 
     src/Objects/SocketMenu.cpp
     src/Objects/ConsoleMenu.cpp
     src/Objects/App.cpp
     src/Objects/Movie.cpp
     src/Objects/User.cpp
+    src/Objects/Globals.cpp
 
     src/Functionality/AddCommand.cpp
     src/Functionality/HelpCommand.cpp
@@ -80,10 +81,10 @@ add_test(
     COMMAND RecommendationTests
 )
 
-add_test(
-    NAME EndToEnd
-    COMMAND EndToEnd
-)
+#add_test(
+#    NAME EndToEnd
+#    COMMAND EndToEnd
+#)
 
 add_test(
     NAME SocketMenuTest

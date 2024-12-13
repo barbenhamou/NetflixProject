@@ -3,19 +3,16 @@
 
 // Generic parsing test
 TEST(HelpCommandTest, ExecuteCommandOutput) {
-    std::ostringstream capturedOutput;
-    std::streambuf* originalCoutBuffer = std::cout.rdbuf(capturedOutput.rdbuf());  // Redirect std::cout to capture the output
-
     std::unique_ptr<HelpCommand> helpCommand = std::make_unique<HelpCommand>();
     
-    helpCommand->execute("");
-
-    std::cout.rdbuf(originalCoutBuffer); // Reset changes regarding cout
+    std::string output = helpCommand->execute("");
 
     std::string expectedOutput =
-        "add [userid] [movieid1] [movieid2] ...\n"
-        "recommend [userid] [movieid]\n"
+        "DELETE, arguments: [userid] [movieid1] [movieid2] ...\n"
+        "GET, arguments: [userid] [movieid]\n"
+        "PATCH, arguments: [userid] [movieid1] [movieid2] ...\n"
+        "POST, arguments: [userid] [movieid1] [movieid2] ...\n"
         "help\n";
 
-    EXPECT_EQ(capturedOutput.str(), expectedOutput);
+    EXPECT_EQ(output, expectedOutput);
 }
