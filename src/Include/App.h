@@ -7,11 +7,10 @@
 #include <string>
 #include <vector>
 
-#include "MovieUser.h"
 #include "ConsoleMenu.h"
 #include "AddCommand.h"
 #include "HelpCommand.h"
-#include "RecommendCommand.h"
+#include "GetCommand.h"
 #include "../Include/PostCommand.h"
 #include "../Include/PatchCommand.h"
 

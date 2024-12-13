@@ -8,6 +8,6 @@
 // A command to display all available commands. Syntax: `help`
 class HelpCommand : public ICommand {
     public:
-        void execute(std::string command) override;
+        std::string execute(std::string command) override;
 };
 

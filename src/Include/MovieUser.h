@@ -2,7 +2,6 @@
 
 #include <vector>
 #include <string>
-#include <memory>
 
 class Movie;
 
@@ -57,7 +56,3 @@ class Movie {
         // Returns the index of the movie in the global vector allMovies, or -1 if it isn't there
         static int findMovie(int id);
 };
-
-// Global vectors to hold all user and movie objects
-extern std::vector<std::unique_ptr<Movie>> allMovies;
-extern std::vector<std::unique_ptr<User>> allUsers;

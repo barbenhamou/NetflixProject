@@ -1,4 +1,5 @@
 #include "../Include/AddCommand.h"
+#include "../Include/Globals.h"
 
 void AddCommand::add(int userId, std::vector<int> movieIds) {
     int userIndex = User::findUser(userId);
@@ -82,45 +83,49 @@ void AddCommand::initGlobals(const std::string& fileName) {
     inputFile.close();
 }
 
-
-void AddCommand::execute(std::string command) {
+std::string AddCommand::executeSpecificAdd(const std::string& command, Functionality func){
     // Match numbers with potential spaces before and after them
     auto extractedNumbers = ICommand::parseCommand(command, R"(\s*(\d+)\s*)");
 
-    // Ensure we have at least one user ID and one movie ID (else ignore)
+    // Ensure we have at least one user ID and one movie ID
+    if (extractedNumbers.size() < 2){
+        ICommand::setStatus(BadRequest);
+    } 
 
     // The first number is the user ID, the rest are movie IDs
     int userId = extractedNumbers[0];
     std::vector<int> watchedMovies(extractedNumbers.begin() + 1, extractedNumbers.end());
 
     FileStorage fileStorage("data/user_data.txt");
+
+    // Decide if execution is possible
+    switch(func) {
+        case POST:
+            if (!(fileStorage.isUserInFile(userId).empty())) {
+                ICommand::setStatus(NotFound);
+                return "";
+            }
+
+            ICommand::setStatus(Created);
+            break;
+
+        case PATCH:
+            if (fileStorage.isUserInFile(userId).empty()) {
+                ICommand::setStatus(NotFound);
+                return "";
+            }
+
+            ICommand::setStatus(NoContent);
+            break;
+
+        default:
+            ICommand::setStatus(BadRequest);
+            return "";
+    }
+
     fileStorage.updateUserInFile(userId, watchedMovies);
 
     AddCommand::add(userId, watchedMovies);
-}
 
-
-bool AddCommand :: isValidCommand(const std::string& command, int functionality){
-     // Match numbers with potential spaces before and after them
-    auto extractedNumbers = ICommand::parseCommand(command, R"(\s*(\d+)\s*)");
-
-    // Ensure we have at least one user ID and one movie ID (else ignore)
-    if (extractedNumbers.size() < 2){
-        ICommand ::setStatus(404);
-        return false;
-    } 
-
-    // The first number is the user ID, the rest are movie IDs
-    int userId = extractedNumbers[0];
-    FileStorage fileStorage("data/user_data.txt");
-    if (functionality == 1 && !(fileStorage.isUserInFile(userId).empty())){
-        ICommand ::setStatus(401);    
-        return false;
-    }
-    if(functionality==2 && fileStorage.isUserInFile(userId).empty()){
-        ICommand ::setStatus(401);
-        return false;
-    }
-    return true;
-
+    return "";
 }

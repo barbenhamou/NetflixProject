@@ -46,7 +46,7 @@ When running the project, a command-line interface starts. It supports 3 command
 
 Adds movies to a user's watched list. The user and movie IDs don't have to already exist in the system for you to use them in the command (this command also adds them to the database if they haven't already been added).
 
-### Recommend
+### Get
 **Syntax:** `recommend [userid] [movieid]`
 
 This command recommends up to 10 movies to the specified user (`userid`) based on the specified movie (`movieid`). The recommendation algorithm calculates a relevance value to each movie, excluding movies that the user already watched and the specified `movieid`. The IDs of the most relevant movies are printed in descending order of relevance.

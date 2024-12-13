@@ -21,7 +21,7 @@ add_executable(
     Tests/MovieTests.cpp
     Tests/HelpCommandTests.cpp
     Tests/AddCommandTests.cpp    
-    Tests/RecommendCommandTests.cpp
+    Tests/GetCommandTests.cpp
     Tests/EndToEndTests.cpp
     Tests/PostCommandTests.cpp
     Tests/PatchCommandTests.cpp
@@ -32,7 +32,7 @@ add_executable(
 
     src/Functionality/AddCommand.cpp
     src/Functionality/HelpCommand.cpp
-    src/Functionality/RecommendCommand.cpp
+    src/Functionality/GetCommand.cpp
     src/Functionality/PostCommand.cpp
     src/FileHandling/FileStorage.cpp
     src/Functionality/PatchCommand.cpp

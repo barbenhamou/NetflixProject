@@ -9,21 +9,21 @@ int main() {
     IMenu* menu = new ConsoleMenu();
 
     ICommand* help = new HelpCommand();
-    ICommand* Post = new PostCommand();
-    ICommand* Patch = new PatchCommand();
-    ICommand* recommend = new RecommendCommand();
+    ICommand* post = new PostCommand();
+    ICommand* patch = new PatchCommand();
+    ICommand* get = new GetCommand();
     
     // Define the commands
     commands["help"] = help;
-    commands["Post"] = Post;
-    commands["recommend"] = recommend;
-    commands["Patch"] =Patch ;
+    commands["POST"] = post;
+    commands["GET"] = get;
+    commands["PATCH"] = patch;
     App app(menu, commands);
     app.run();
 
     delete menu;
     delete help;
-    delete Post;
-    delete Patch;
-    delete recommend;
+    delete post;
+    delete patch;
+    delete get;
 }

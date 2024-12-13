@@ -1,4 +1,5 @@
 #include "../Include/MovieUser.h"
+#include "../Include/Globals.h"
 
 User::User(int id) : id(id) {}
 

@@ -7,5 +7,5 @@
 class PatchCommand : public AddCommand {
 public:
     // Overrides the execute function to handle patch user commands.
-    void execute(std::string command) override;
+    std::string execute(std::string command) override;
 };
