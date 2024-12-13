@@ -19,6 +19,7 @@
 #include "../src/Include/MovieUser.h"
 #include "../src/Include/App.h"
 #include "../src/Include/SocketMenu.h"
+#include "../src/Include/Globals.h"
 
 #define TEST_FILE "../data/test_user_data.txt"
 
