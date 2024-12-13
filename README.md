@@ -40,14 +40,24 @@ docker run tests
 ```
 
 ## Usage
-When running the project, a command-line interface starts. It supports 3 commands:
-### Add
-**Syntax:** `add [userid] [movieid1] [movieid2] ...` (supports multiple spaces)
+When running the project, a command-line interface starts. It supports 5 commands:
+### POST
+**Syntax:** `POST [userid] [movieid1] [movieid2] ...` (supports multiple spaces)
 
-Adds movies to a user's watched list. The user and movie IDs don't have to already exist in the system for you to use them in the command (this command also adds them to the database if they haven't already been added).
+Creates a user and adds movies to the user's watched list. The user must not already exist in the system for you to use this command on them. The movies can be either new or existing.
 
-### Recommend
-**Syntax:** `recommend [userid] [movieid]`
+### PATCH
+**Syntax:** `PATCH [userid] [movieid1] [movieid2] ...` (supports multiple spaces)
+
+Adds movies to an existing user's watched list. The user must already exist in the system for you to use this command on them. The movies can be either new or existing.
+
+### DELETE
+**Syntax:** `DELETE [userid] [movieid1] [movieid2] ...` (supports multiple spaces)
+
+Deletes movies from an existing user's watched list.
+
+### GET
+**Syntax:** `GET [userid] [movieid]`
 
 This command recommends up to 10 movies to the specified user (`userid`) based on the specified movie (`movieid`). The recommendation algorithm calculates a relevance value to each movie, excluding movies that the user already watched and the specified `movieid`. The IDs of the most relevant movies are printed in descending order of relevance.
 #### The Algoritm:
@@ -59,8 +69,6 @@ Each user is assigned a "Movies in Common" (MiC) value - how many movies both th
 Displays all available commands and their syntax.
 
 <br>
-
-**Note:** Invalid command/syntax will be ignored.
 
 ## Run Example
 Here is an example of how the project compiles and runs:<br>

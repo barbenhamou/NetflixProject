@@ -1,4 +1,5 @@
 #include "../Include/FileStorage.h"
+#include "../Include/Globals.h"
 
 FileStorage::FileStorage(const std::string& file) : fileName(file) {
     std::ifstream infile(fileName);

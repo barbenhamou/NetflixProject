@@ -1,5 +1,5 @@
 #include "Tests.h"
-#include "../src/Include/RecommendCommand.h"
+#include "../src/Include/GetCommand.h"
 #include "../src/Include/AddCommand.h"
 
 TEST(RecommendationTests, SortByRelevance) {
@@ -12,13 +12,13 @@ TEST(RecommendationTests, SortByRelevance) {
 
     // All different relevance values
     std::vector<int> relevance = {6, 5, 7, 1, 0};
-    auto sortedMovies = RecommendCommand::sortByRelevance(relevance, movies);
+    auto sortedMovies = GetCommand::sortByRelevance(relevance, movies);
     std::vector<Movie*> expected = {movie3, movie1, movie2, movie4, movie5};
     ASSERT_TRUE(compareVec(sortedMovies, expected));
 
     // Some equal relevance values
     relevance = {5, 4, 5, 6, 6};
-    sortedMovies = RecommendCommand::sortByRelevance(relevance, movies);
+    sortedMovies = GetCommand::sortByRelevance(relevance, movies);
     expected = {movie5, movie4, movie1, movie3, movie2};
     ASSERT_TRUE(compareVec(sortedMovies, expected));
 
@@ -71,7 +71,7 @@ TEST(RecommendationTests, Recommend) {
         movie = allMovies[Movie::findMovie(std::get<1>(testCases[i]))].get();
         
         expected = std::get<2>(testCases[i]);
-        recommendations = RecommendCommand::printRecommendations(RecommendCommand::recommend(user, movie));
+        recommendations = GetCommand::printRecommendations(GetCommand::recommend(user, movie));
         EXPECT_EQ(recommendations, expected);
     }
 }

@@ -1,19 +1,9 @@
 #include "../Include/App.h"
-
-std::vector<std::unique_ptr<Movie>> allMovies = {};
-std::vector<std::unique_ptr<User>> allUsers = {};
-// Global dictionary (map) for HTTP status codes and their descriptions
-std::map<int, std::string> statusCodes = {
-    {201, "201 Created"},
-    {204, "204 No Content"},
-    {200, "200 Ok"},
-    {404, "404 Not Found"},
-    {401, "401 Bad Request"}
-};
+#include "../Include/Globals.h"
 
 void App::run() {
     std::vector<std::string> input = {};
-    std::string command, data;
+    std::string command, data, output;
 
     // The app never stops
     while(true) {
@@ -25,9 +15,15 @@ void App::run() {
         try {
             // Ignore invalid commands
             if (this->commands.find(command) == this->commands.end()) continue;
+
             // Execute the command
-            this->commands[command]->execute(data);
-            std:: cout<< statusCodes[commands[command]->getStatus()];
+            output = this->commands[command]->execute(data);
+
+            // Send the status code of the command's execution
+            std::cout << statusCodes[commands[command]->getStatus()];
+            
+            // Send the command's output
+            std::cout << output;
         } catch (...) {
             // Currenty no error message is needed
             this->menu->displayError("");

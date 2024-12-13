@@ -9,7 +9,7 @@ TEST(EndToEnd, EndToEndTest) {
 
     ICommand* help = new HelpCommand();
     ICommand* add = new AddCommand();
-    ICommand* recommend = new RecommendCommand();
+    ICommand* recommend = new GetCommand();
 
     commands["help"] = help;
     commands["add"] = add;

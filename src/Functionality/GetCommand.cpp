@@ -1,27 +1,27 @@
-#include "../Include/RecommendCommand.h"
+#include "../Include/GetCommand.h"
+#include "../Include/Globals.h"
 
-std::vector<int> RecommendCommand::printRecommendations(std::vector<Movie*> recommendations) {
+std::string GetCommand::printRecommendations(std::vector<Movie*> recommendations) {
     // In case there are not enough movies in the system
     int recCount = std::min(NUM_OF_RECOMMENDATIONS, (int)recommendations.size());
-    std::vector<int> movieIds;
+    std::string output;
 
     for (int i = 0; i < recCount; i++) {
         std::cout << recommendations[i]->getId();
-        movieIds.push_back(recommendations[i]->getId());
+        output += std::to_string(recommendations[i]->getId());
 
-        // Print space or newline
+        // Add space or nothing
         if (i == recCount - 1) {
-            std::cout << std::endl;
-            return movieIds;
+            return output;
         }
         std::cout << " ";
     }
 
     // If this line is reached, recCount is 0 so there are no movies to recommend
-    return {};
+    return "";
 }
 
-bool RecommendCommand::compareMovies(std::pair<int, Movie*> pair1, std::pair<int, Movie*> pair2) {
+bool GetCommand::compareMovies(std::pair<int, Movie*> pair1, std::pair<int, Movie*> pair2) {
     // Relevance in decreasing order
     if (pair1.first != pair2.first) {
         return pair1.first < pair2.first;
@@ -31,7 +31,7 @@ bool RecommendCommand::compareMovies(std::pair<int, Movie*> pair1, std::pair<int
     return pair1.second->getId() > pair2.second->getId();
 }
 
-std::vector<Movie*> RecommendCommand::sortByRelevance(std::vector<int> relevanceValues, std::vector<Movie*> relevantMovies) {
+std::vector<Movie*> GetCommand::sortByRelevance(std::vector<int> relevanceValues, std::vector<Movie*> relevantMovies) {
     std::vector<std::pair<int, Movie*>> moviesWithRelevance;
 
     // Couple together each movie and its relevance value
@@ -40,7 +40,7 @@ std::vector<Movie*> RecommendCommand::sortByRelevance(std::vector<int> relevance
     }
 
     // Sorting the vector
-    std::sort(moviesWithRelevance.begin(), moviesWithRelevance.end(), RecommendCommand::compareMovies);
+    std::sort(moviesWithRelevance.begin(), moviesWithRelevance.end(), GetCommand::compareMovies);
     std::vector<Movie*> sortedMovies;
     
     // Decouple to get a vector of the sorted movies
@@ -52,7 +52,7 @@ std::vector<Movie*> RecommendCommand::sortByRelevance(std::vector<int> relevance
     return sortedMovies;
 }
 
-std::vector<Movie*> RecommendCommand::recommend(User* user, Movie* movie) {
+std::vector<Movie*> GetCommand::recommend(User* user, Movie* movie) {
     std::vector<Movie*> irrelevantMovies = user->getMovies();
 
     // Make sure irrelavnt movies only appear once
@@ -98,26 +98,31 @@ std::vector<Movie*> RecommendCommand::recommend(User* user, Movie* movie) {
     }
 
     // Print the recommendations according tot their relevance
-    return RecommendCommand::sortByRelevance(relevanceValues, relevantMovies);
+    return GetCommand::sortByRelevance(relevanceValues, relevantMovies);
 }
 
-void RecommendCommand::execute(std::string command) {
+std::string GetCommand::execute(std::string command) {
     // Match numbers with potential spaces before and after them
     auto extractedNumbers = ICommand::parseCommand(command, R"(\s*(\d+)\s*)");
 
     // Ensure we have one user ID and one movie ID (else ignore)
-    if (extractedNumbers.size() != 2) return;
+    if (extractedNumbers.size() != 2) {
+        ICommand::setStatus(BadRequest);
+        return "";
+    }
 
     // Get user and movie index in the global list (if non-existant, ignore)
     int userIndex = User::findUser(extractedNumbers[0]);
-    if (userIndex == -1) return;
     int movieIndex = Movie::findMovie(extractedNumbers[1]);
-    if (movieIndex == -1) return;
+    if (userIndex == -1 || movieIndex == -1) {
+        ICommand::setStatus(NotFound);
+        return "";
+    }
 
     User* user = allUsers[userIndex].get();
     Movie* movie = allMovies[movieIndex].get();
 
-    std::vector<Movie*> recommendations = RecommendCommand::recommend(user, movie);
+    std::vector<Movie*> recommendations = GetCommand::recommend(user, movie);
 
-    RecommendCommand::printRecommendations(recommendations);
+    return "\n\n" + GetCommand::printRecommendations(recommendations);
 }
