@@ -16,7 +16,7 @@ void generateRandomPostCommand(int minMovies, int maxMovies, int& userId, std::v
     movies.clear();
 
     // Populate the movies vector with random movie IDs (1 to 1000)
-    for (int i = 0; i < numMovies; ++i) {
+    for (int i = 0; i < numMovies; i++) {
         int movieId = randInt(1, 100);
         movies.push_back(movieId);
     }

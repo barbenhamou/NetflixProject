@@ -55,22 +55,21 @@ std::vector<int> FileStorage::isUserInFile(int userId) {
     return {};
 }
 
-std::vector<int> FileStorage::filterMoviesToAdd(int userId, const std::vector<int>& moviesToAdd) {
-    // Check if the user already watched any of the movies
-    int userIndex = User::findUser(userId);
-    std::vector<int> finalMovies = moviesToAdd;
+std::vector<int> FileStorage::filterMovies(int userId, const std::vector<int>& movies, Change change) {
+    const auto& watchedMovies = isUserInFile(userId);
+    std::vector<int> finalMovies = movies;
+
+    // Check for unnecessary movies based on the user's watched list
     bool alreadyWatched;
-
-    if (userIndex != -1) {
+    if (!watchedMovies.empty()) {
         finalMovies = {};
-        const auto& watchedMovies = allUsers[userIndex]->getMovies();
-
-        for (const int movieId : moviesToAdd) {
+        
+        for (const int movieId : movies) {
             alreadyWatched = false;
 
             // Check if the movieId is in the watchedMovies list
             for (const auto& movie : watchedMovies) {
-                if (movie->getId() == movieId) {
+                if (movie == movieId) {
                     alreadyWatched = true;
                     break;
                 }
@@ -90,14 +89,13 @@ std::vector<int> FileStorage::filterMoviesToAdd(int userId, const std::vector<in
     return finalMovies;
 }
 
-void FileStorage::updateUserInFile(int userId, std::vector<int>& moviesToAdd) {
+void FileStorage::updateUserInFile(int userId, std::vector<int>& movies, Change change) {
+    // Open stream
     std::ifstream fileIn(fileName);
-    if (!fileIn.is_open()) {
-        return;
-    }
+    if (!fileIn.is_open()) {return;}
 
     // Filter out already watched movies and remove duplicates
-    auto finalMovies = filterMoviesToAdd(userId, moviesToAdd);
+    auto finalMovies = filterMovies(userId, movies, change);
     // No new movies to add
     if (finalMovies.empty()) {
         fileIn.close();
@@ -118,7 +116,7 @@ void FileStorage::updateUserInFile(int userId, std::vector<int>& moviesToAdd) {
             fileOut << userId << ":";
             fileOut << parts[1] << ",";
 
-            for (size_t i = 0; i < finalMovies.size(); ++i) {
+            for (size_t i = 0; i < finalMovies.size(); i++) {
                 // Write movie IDs
                 fileOut << finalMovies[i];
                 if (i < finalMovies.size() - 1) {

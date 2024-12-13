@@ -124,7 +124,7 @@ std::string AddCommand::executeSpecificAdd(const std::string& command, Functiona
     }
 
     // Add info to the file
-    fileStorage.updateUserInFile(userId, watchedMovies);
+    fileStorage.updateUserInFile(userId, watchedMovies, FileStorage::Add);
 
     // Add info to the global vectors
     AddCommand::add(userId, watchedMovies);

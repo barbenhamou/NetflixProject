@@ -20,12 +20,17 @@ class FileStorage : public IStorage {
         std::string fileName;
 
     public:
+        enum Change {
+            Add,
+            Remove
+        };
+
         // Constructor: takes the filename where user data will be saved/loaded
         FileStorage(const std::string& file);
 
-        // Adds movies to the user's watched list, but in the file and not the variables. If the user
-        // doesn't exist, it creates it
-        void updateUserInFile(int userId, std::vector<int>& moviesToAdd);
+        // Adds or removes movies from a user's movie list, but only in the file and not the global vectors.
+        // If `change == Add` and the user doesn't exist, it creates it.
+        void updateUserInFile(int userId, std::vector<int>& movies, Change change);
 
         // Checks if the user exists in the file. If so, it will return a vector of its watched
         // movies (otherwise an empty vector)
@@ -34,6 +39,7 @@ class FileStorage : public IStorage {
         // Splits `str` into parts seperated by `delimiter`
         static std::vector<std::string> split(const std::string& str, char delimiter);
 
-        // Returns a set of the movies excluding watched movies and duplicates 
-        std::vector<int> filterMoviesToAdd(int userId, const std::vector<int>& moviesToAdd);
+        // Removes duplicates and unnecessary movies - if `change == Add` it excludes movies
+        // that the user already watched and if `change == Remove` excludes movies they didn't watch
+        std::vector<int> filterMovies(int userId, const std::vector<int>& movies, Change change);
 };

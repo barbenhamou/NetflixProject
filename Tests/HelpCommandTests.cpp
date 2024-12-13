@@ -2,7 +2,7 @@
 #include "../src/Include/HelpCommand.h"
 
 // Generic parsing test
-TEST(HelpCommandTest, ExecuteCommandOutput) {
+TEST(HelpCommandTests, ExecuteCommandOutput) {
     std::unique_ptr<HelpCommand> helpCommand = std::make_unique<HelpCommand>();
     
     std::string output = helpCommand->execute("");

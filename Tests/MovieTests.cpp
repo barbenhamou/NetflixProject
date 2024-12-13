@@ -19,7 +19,7 @@ std::vector<std::vector<Movie*>> generateTwoVectors(int num, int size) {
     return ret;
 }
 
-TEST(MovieTest, Intersection) {
+TEST(MovieTests, Intersection) {
     int sizeOfVector = randInt(5,20);
     
     std::vector<Movie*> correct;
@@ -51,7 +51,7 @@ TEST(MovieTest, Intersection) {
     ASSERT_TRUE(compareVec(empty2, {}));
 }
 
-TEST(MovieTest, RelativeComplement) {
+TEST(MovieTests, RelativeComplement) {
     int sizeOfVector = randInt(5,20);
     
     std::vector<Movie*> correct1, correct2;

@@ -52,13 +52,13 @@ target_link_libraries(
 
 # Register the test with CTest
 add_test(
-    NAME ConsoleMenuTest
-    COMMAND ConsoleMenuTest
+    NAME ConsoleMenuTests
+    COMMAND ConsoleMenuTests
 )
 
 add_test(
-    NAME FileStorageTest
-    COMMAND FileStorageTest
+    NAME FileStorageTests
+    COMMAND FileStorageTests
 )
 
 add_test(
@@ -67,8 +67,8 @@ add_test(
 )
 
 add_test(
-    NAME HelpCommandTest
-    COMMAND HelpCommandTest
+    NAME HelpCommandTests
+    COMMAND HelpCommandTests
 )
 
 add_test(
@@ -82,13 +82,13 @@ add_test(
 )
 
 #add_test(
-#    NAME EndToEnd
-#    COMMAND EndToEnd
+#    NAME EndToEndTests
+#    COMMAND EndToEndTests
 #)
 
 add_test(
-    NAME SocketMenuTest
-    COMMAND SocketMenuTest
+    NAME SocketMenuTests
+    COMMAND SocketMenuTests
 )
 
 add_test(
