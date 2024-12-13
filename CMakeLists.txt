@@ -16,6 +16,9 @@ include_directories(
 # Add the executable for ConsoleMenuTest
 add_executable(
     Tests
+    Tests/SocketMenuTests.cpp
+    Tests/PatchCommandTests.cpp
+    Tests/PostCommandTests.cpp
     Tests/FileStorageTests.cpp
     Tests/ConsoleMenuTests.cpp
     Tests/MovieTests.cpp
@@ -23,8 +26,8 @@ add_executable(
     Tests/AddCommandTests.cpp    
     Tests/RecommendCommandTests.cpp
     Tests/EndToEndTests.cpp
-    Tests/PostCommandTests.cpp
-    Tests/PatchCommandTests.cpp
+
+    src/Objects/SocketMenu.cpp
     src/Objects/ConsoleMenu.cpp
     src/Objects/App.cpp
     src/Objects/Movie.cpp
@@ -80,11 +83,18 @@ add_test(
     NAME EndToEnd
     COMMAND EndToEnd
 )
+
 add_test(
-    NAME PostFunctionTests
-    COMMAND RandomizedUserAndMovieId
+    NAME SocketMenuTest
+    COMMAND SocketMenuTest
 )
+
 add_test(
     NAME PatchFunctionTests
-    COMMAND RandomizedUseresAndMovieId
+    COMMAND PatchFunctionTests
+)
+
+add_test(
+    NAME PostFunctionTests
+    COMMAND PostFunctionTests
 )
