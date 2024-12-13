@@ -98,7 +98,7 @@ std::string AddCommand::executeSpecificAdd(const std::string& command, Functiona
 
     FileStorage fileStorage("data/user_data.txt");
 
-    // Decide if execution is possible
+    // Decide if the command is valid
     switch(func) {
         case POST:
             if (!(fileStorage.isUserInFile(userId).empty())) {
@@ -123,8 +123,10 @@ std::string AddCommand::executeSpecificAdd(const std::string& command, Functiona
             return "";
     }
 
+    // Add info to the file
     fileStorage.updateUserInFile(userId, watchedMovies);
 
+    // Add info to the global vectors
     AddCommand::add(userId, watchedMovies);
 
     return "";

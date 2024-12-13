@@ -17,10 +17,10 @@ class User {
         // Adds a movie to the user's watched list
         void addMovie(Movie* movie);
 
-        // Gets the list of watched movies
+        // Returns the user's list of watched movies
         const std::vector<Movie*>& getMovies() const;
 
-        // Gets the user's ID
+        // Returns the user's ID
         int getId() const;
         
         // Returns the index of the user in the global vector allUsers, or -1 if it isn't there
@@ -39,10 +39,10 @@ class Movie {
         // Adds a user to the movie's list of watchers
         void addUser(User* user);
 
-        // Gets the list of users that watched the movie
+        // Returns the list of users that watched the movie
         const std::vector<User*>& getUsers() const;
 
-        // Gets the movie's ID
+        // Returns the movie's ID
         int getId() const;
 
         // Calculates the "set difference" A\B of two vectors of movies

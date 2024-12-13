@@ -3,7 +3,7 @@
 #include "ICommand.h"
 
 // A command that adds a user to the system along with some movies the user watched.
-// Syntax: `add [userid] [movieid1] [movieid2] ...`
+// This command splits into POST and PATCH, and can't be executed itself.
 class AddCommand : public ICommand {
     public:
         enum Functionality {POST, PATCH};

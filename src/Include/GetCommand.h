@@ -8,7 +8,8 @@
 
 #define NUM_OF_RECOMMENDATIONS 10
 
-// A command to recommend movies to a user based on a movie. Syntax: `recommend [userid] [movieid]`
+// A command to recommend movies to a user based on a movie.
+// Syntax: `GET [userid] [movieid]`
 class GetCommand : public ICommand {
     public:
         // Compares between 2 movies based on their relevance in descending order
@@ -18,7 +19,7 @@ class GetCommand : public ICommand {
         // Sorts the movies, based on the compareMovies method
         static std::vector<Movie*> sortByRelevance(std::vector<int> relevance, std::vector<Movie*> relevantMovies);
 
-        // Prints the IDs of the final movie recommendations
+        // Returns one string of all the IDs of the final movie recommendations
         static std::string printRecommendations(std::vector<Movie*> recommendations);
 
         // Returns up to `NUM_OF_RECOMMENDATIONS` movies that are recommended to `user` based on `movie`.
