@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ICommand.h"
+#include "FileStorage.h"
 
 // A command that adds a user to the system along with some movies the user watched.
 // This command splits into POST and PATCH, and can't be executed itself.

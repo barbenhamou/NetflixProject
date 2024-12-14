@@ -18,7 +18,7 @@ void createTestFile() {
             userId = randInt(1, MAX_ID);
         } while (usedUserIds.find(userId) != usedUserIds.end());
 
-        // Add the user ID to the set
+        // userId was used, so add it to the set
         usedUserIds.insert(userId);
 
         // Write the user ID to the file
@@ -36,7 +36,7 @@ void createTestFile() {
                 movieId = randInt(1, MAX_ID);
             } while (usedMovieIds.find(movieId) != usedMovieIds.end());
 
-            // Add the movie ID to the set
+            // movieId was used, so add it to the set
             usedMovieIds.insert(movieId);
 
             // Write the movie ID to the file
@@ -46,7 +46,7 @@ void createTestFile() {
             }
         }
 
-        testFile << "\n";
+        testFile << std::endl;
     }
 
     testFile.close();
