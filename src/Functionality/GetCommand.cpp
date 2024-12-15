@@ -7,14 +7,13 @@ std::string GetCommand::printRecommendations(std::vector<Movie*> recommendations
     std::string output;
 
     for (int i = 0; i < recCount; i++) {
-        std::cout << recommendations[i]->getId();
         output += std::to_string(recommendations[i]->getId());
 
         // Add space or nothing
         if (i == recCount - 1) {
             return output;
         }
-        std::cout << " ";
+        output += " ";
     }
 
     // If this line is reached, recCount is 0 so there are no movies to recommend

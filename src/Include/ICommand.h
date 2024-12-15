@@ -4,7 +4,6 @@
 #include <regex>
 
 #include "MovieUser.h"
-#include "FileStorage.h"
 
 enum StatusCode {
     None = -1,
@@ -29,12 +28,13 @@ class ICommand {
     public:
         // All commands will override this function have their own implementation
         virtual std::string execute(std::string command) = 0;
-        
+
         StatusCode getStatus() const {
             return status;
         }
 
-        // Parses the command's arguments and returns them according to the given pattern
+        // Parses the command's arguments and returns them according to the given pattern.
+        // Upon error (an argument is not a number) returns an empty vector
         static std::vector<int> parseCommand(std::string command, std::string inputPattern) {
             std::regex pattern(inputPattern);
             std::smatch match;

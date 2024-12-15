@@ -11,4 +11,3 @@ class HelpCommand : public ICommand {
     public:
         std::string execute(std::string command) override;
 };
-

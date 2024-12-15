@@ -1,6 +1,7 @@
 #include "Tests.h"
 #include "../src/Include/GetCommand.h"
 #include "../src/Include/AddCommand.h"
+#include "../src/Include/Globals.h"
 
 TEST(RecommendationTests, SortByRelevance) {
     Movie* movie1 = new Movie(100);
@@ -63,15 +64,25 @@ TEST(RecommendationTests, Recommend) {
     User* user;
     Movie* movie;
     std::vector<int> expected;
-    std::vector<int> recommendations;
+    std::string expectedString;
+    std::string recommendations;
 
     for (int i = 0; i < testCases.size(); i++) {
-        // Command syntax: recommend [user] [movie]
+        // Command syntax: GET [user] [movie]
         user = allUsers[User::findUser(std::get<0>(testCases[i]))].get();
         movie = allMovies[Movie::findMovie(std::get<1>(testCases[i]))].get();
         
         expected = std::get<2>(testCases[i]);
+        // Turn the vector into a string of movie IDs
+        expectedString = "";
+        for (int movieId : expected) {
+            expectedString += std::to_string(movieId) + " ";
+        }
+
+        // Remove last space
+        expectedString.pop_back();
+
         recommendations = GetCommand::printRecommendations(GetCommand::recommend(user, movie));
-        EXPECT_EQ(recommendations, expected);
+        EXPECT_EQ(recommendations, expectedString);
     }
 }

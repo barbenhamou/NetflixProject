@@ -21,10 +21,21 @@ std::vector<std::string> FileStorage::split(const std::string& str, char delimit
     return tokens;
 }
 
+std::vector<int> FileStorage::splitToInt(const std::string& str, char delimiter) {
+    std::vector<int> tokens;
+    std::string token;
+    std::istringstream tokenStream(str);
+
+    while (getline(tokenStream, token, delimiter)) {
+        tokens.push_back(std::stoi(token));
+    }
+
+    return tokens;
+}
+
 std::vector<int> FileStorage::isUserInFile(int userId) {
     std::ifstream fileIn(fileName);
     
-    // Upon errors, ignore command
     if (!fileIn) return {};
 
     std::string line;
@@ -45,109 +56,143 @@ std::vector<int> FileStorage::isUserInFile(int userId) {
                     movieIds.push_back(std::stoi(movieStr));
                 }
 
-                // The user was found, return a list of their watched movies
+                fileIn.close();
+                // The user was found, return the list of their watched movies
                 return movieIds;
             }
         }
     }
 
-    // If the user wass not found, return an empty list
+    fileIn.close();
+    // If the user was not found or doesn't have any movies, return an empty list
     return {};
 }
 
-std::vector<int> FileStorage::filterMoviesToAdd(int userId, const std::vector<int>& moviesToAdd) {
-    // Check if the user already watched any of the movies
-    int userIndex = User::findUser(userId);
-    std::vector<int> finalMovies = moviesToAdd;
-    bool alreadyWatched;
+std::vector<int> FileStorage::filterMovies(int userId, const std::vector<int>& movies, Change change) {
+    // A vector of all the movies that the user watched
+    const auto& watchedMovies = isUserInFile(userId);
+    // A set of those movies, for easy finding
+    std::unordered_set<int> watchedSet(watchedMovies.begin(), watchedMovies.end());
+    // A set for ignoring duplicate movies
+    std::unordered_set<int> uniqueMovies;
+    // The final list of movies that need to be changed in the file
+    std::vector<int> finalMovies = {};
 
-    if (userIndex != -1) {
-        finalMovies = {};
-        const auto& watchedMovies = allUsers[userIndex]->getMovies();
+    for (const int movieId : movies) {
+        // Did the user watch this movie
+        bool alreadyWatched = watchedSet.find(movieId) != watchedSet.end();
 
-        for (const int movieId : moviesToAdd) {
-            alreadyWatched = false;
+        // We want to only add movies that the user didn't already watch, and
+        // only remove movies that the user did watch
+        if ((change == Add && !alreadyWatched) || (change == Remove)) {
+            // Catch attempts to delete unwatched movies
+            if (change == Remove && !alreadyWatched) {return {};}
 
-            // Check if the movieId is in the watchedMovies list
-            for (const auto& movie : watchedMovies) {
-                if (movie->getId() == movieId) {
-                    alreadyWatched = true;
-                    break;
-                }
-            }
-
-            if (!alreadyWatched) {
+            // Make sure not to add the same movie twice:
+            // insert.second is whether the insertion succeeded or not, indicating previous usage
+            if (uniqueMovies.insert(movieId).second) {
                 finalMovies.push_back(movieId);
             }
         }
     }
-    
-    // Check for duplicates
-    std::sort(finalMovies.begin(), finalMovies.end());
-    auto lastUnique = std::unique(finalMovies.begin(), finalMovies.end());
-    finalMovies.erase(lastUnique, finalMovies.end());
 
     return finalMovies;
 }
 
-void FileStorage::updateUserInFile(int userId, std::vector<int>& moviesToAdd) {
+void FileStorage::writeMoviesToFile(std::ofstream& file, std::vector<int> movies) {
+    int size = movies.size();
+    for (int i = 0; i < size; i++) {
+        file << movies[i];
+        if (i < size - 1) {
+            file << ",";
+        }
+    }
+}
+
+StatusCode FileStorage::updateUserInFile(int userId, std::vector<int>& movies, Change change) {
+    // Open stream
     std::ifstream fileIn(fileName);
-    if (!fileIn.is_open()) {
-        return;
+    if (!fileIn.is_open()) {return None;}
+
+    // Filter out unnecessary movies (based on change type) and duplicates
+    auto filteredMovies = filterMovies(userId, movies, change);
+
+    // Check for attempt to remove movies that weren't patched/posted (in particular, of a non-existing user)
+    if (filteredMovies.empty()) {
+        if (change == Remove) {
+            fileIn.close();
+            return NotFound;
+        } else if (change == Add) {
+            fileIn.close();
+            return None;
+        }
     }
 
-    // Filter out already watched movies and remove duplicates
-    auto finalMovies = filterMoviesToAdd(userId, moviesToAdd);
-    // No new movies to add
-    if (finalMovies.empty()) {
-        fileIn.close();
-        return;
-    }
-    
-    // Temporary file for storing updated content
+    // Open a temporary file for storing updated content
     std::ofstream fileOut("temp.txt");
+    if (!fileOut.is_open()) {
+        fileIn.close();
+        return None;
+    }
+
     bool userFound = false;
     std::string line;
 
-    while (getline(fileIn, line)) {
+    // Iterate through the lines, find the user and change its movie list
+    while (std::getline(fileIn, line)) {
         // Split by ':', first part is userId, second is movie list
         auto parts = FileStorage::split(line, ':');
-
-        if (parts.size() == 2 && std::stoi(parts[0]) == userId) {              
+        
+        if (std::stoi(parts[0]) == userId) {
             // Found the user, update their movie list
-            fileOut << userId << ":";
-            fileOut << parts[1] << ",";
-
-            for (size_t i = 0; i < finalMovies.size(); ++i) {
-                // Write movie IDs
-                fileOut << finalMovies[i];
-                if (i < finalMovies.size() - 1) {
-                    // Separate movie IDs with commas
-                    fileOut << ",";
-                }
-            }
-
-            fileOut << std::endl;
             userFound = true;
+            // Write user ID
+            fileOut << userId << ":";
+
+            if (change == Add) {
+                // Write the old movies
+                fileOut << parts[1] << ",";
+
+                // Write the new movies
+                writeMoviesToFile(fileOut, filteredMovies);
+            } else if (change == Remove) {
+                // Turn filteredMovies into a set
+                std::unordered_set<int> toRemove(filteredMovies.begin(), filteredMovies.end());
+                // Get the movie IDs of the user, as ints
+                std::vector<int> currentMovies = splitToInt(parts[1], ',');
+                // The user's movies after removing the movies that needed to be removed
+                std::vector<int> updatedMovies;
+
+                for (int movie : currentMovies) {
+                    // Only add movies that aren't in toRemove
+                    if (toRemove.find(movie) == toRemove.end()) {
+                        updatedMovies.push_back(movie);
+                    }
+                }
+
+                writeMoviesToFile(fileOut, updatedMovies);
+            }
+            
+            fileOut << std::endl;
         } else {
-            // Copy unchanged lines
+            // Irrelevant user, copy unchanged lines
             fileOut << line << std::endl;
         }
     }
 
     // If the user wasn't found, add them as a new entry
     if (!userFound) {
-        // Add new user entry
-        fileOut << userId << ":";
-
-        bool first = true;
-        for (int movie : finalMovies) {
-            if (!first) {
-                fileOut << ",";
-            }
-            fileOut << movie;
-            first = false;
+        if (change == Remove) {
+            // This shouldn't be reached
+            fileIn.close();
+            fileOut.close();
+            return NotFound;
         }
+
+        // Add new user entry
+        fileOut << userId << ':';
+
+        writeMoviesToFile(fileOut, filteredMovies);
 
         fileOut << std::endl;
     }
@@ -158,4 +203,6 @@ void FileStorage::updateUserInFile(int userId, std::vector<int>& moviesToAdd) {
     // Replace the original file with the updated file
     remove(fileName.c_str());
     rename("temp.txt", fileName.c_str());
+
+    return None;
 }

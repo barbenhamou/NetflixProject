@@ -87,9 +87,11 @@ std::string AddCommand::executeSpecificAdd(const std::string& command, Functiona
     // Match numbers with potential spaces before and after them
     auto extractedNumbers = ICommand::parseCommand(command, R"(\s*(\d+)\s*)");
 
-    // Ensure we have at least one user ID and one movie ID
-    if (extractedNumbers.size() < 2){
+    // Ensure we have at least one user ID and one movie ID, and that
+    // they are numbers (parseCommand returns {} if a non-number was passed)
+    if (extractedNumbers.size() < 2 || extractedNumbers.empty()){
         ICommand::setStatus(BadRequest);
+        return "";
     } 
 
     // The first number is the user ID, the rest are movie IDs
@@ -124,7 +126,11 @@ std::string AddCommand::executeSpecificAdd(const std::string& command, Functiona
     }
 
     // Add info to the file
-    fileStorage.updateUserInFile(userId, watchedMovies);
+    StatusCode error = fileStorage.updateUserInFile(userId, watchedMovies, FileStorage::Add);
+    if (error != None) {
+        ICommand::setStatus(error);
+        return "";
+    }
 
     // Add info to the global vectors
     AddCommand::add(userId, watchedMovies);

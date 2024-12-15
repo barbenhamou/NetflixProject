@@ -2,7 +2,7 @@
 #include "../src/Include/ConsoleMenu.h"
 
 // Genric parsing test
-TEST(ConsoleMenuTest, NextCommandGnericForm) {
+TEST(ConsoleMenuTests, NextCommandGnericForm) {
     std::istringstream simulatedInput("command arg1 arg2"); // Redirecting the stdin for the test
     std::cin.rdbuf(simulatedInput.rdbuf());
 

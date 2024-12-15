@@ -1,6 +1,6 @@
 #include "Tests.h"
 
-TEST(SocketMenuTest, TestNextCommand) {
+TEST(SocketMenuTests, TestNextCommand) {
     const int port = randomPort();
 
     int server_sock = simulateServer(port);
@@ -28,7 +28,7 @@ TEST(SocketMenuTest, TestNextCommand) {
     close(server_sock);
 }
 
-TEST(SocketMenuTest, TestDisplayError) {
+TEST(SocketMenuTests, TestDisplayError) {
     const int port = 12345;
 
     int server_sock = simulateServer(port);
