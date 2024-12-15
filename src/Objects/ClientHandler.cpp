@@ -4,4 +4,4 @@ ClientHandler::ClientHandler(int clientSocket) {
 
 }
 
-void ClientHandler::interact()
+void ClientHandler::interact() {}
