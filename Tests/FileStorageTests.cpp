@@ -1,8 +1,6 @@
 #include "Tests.h"
 #include "../src/Include/FileStorage.h"
 
-#define MAX_ID 50
-
 void createTestFile() {
     std::ofstream testFile(TEST_FILE);
 
@@ -54,7 +52,6 @@ void createTestFile() {
 
 TEST(FileStorageTests, IsUserInFile) {
     createTestFile();
-    std::srand(std::random_device()());
 
     FileStorage storage(TEST_FILE);
 
@@ -86,6 +83,7 @@ TEST(FileStorageTests, IsUserInFile) {
         } else {
             ASSERT_TRUE(result.empty());
         }
+
         file.close();
     }
 
@@ -94,7 +92,6 @@ TEST(FileStorageTests, IsUserInFile) {
 
 // Tests adding movies to a new user
 TEST(FileStorageTests, UpdateUserAddNew) {
-    std::srand(std::random_device()());
 
     int numUpdates = randInt(10, 30);
 
@@ -139,8 +136,7 @@ int randomUser(const std::string& fileName) {
     }
 
     // Generate a random index
-    std::srand(std::time(nullptr)); // Seed the random number generator
-    int randomIndex = std::rand() % lines.size();
+    int randomIndex = randInt(0, lines.size() - 1);
 
     // Extract the user ID from the selected line
     const std::string& selectedLine = lines[randomIndex];
@@ -155,7 +151,6 @@ int randomUser(const std::string& fileName) {
 
 // tests adding movies to already existing users
 TEST(FileStorageTests, UpdateUserAddExisting) {
-    std::srand(std::random_device()());
     createTestFile();
 
     FileStorage storage(TEST_FILE);
@@ -194,8 +189,6 @@ TEST(FileStorageTests, UpdateUserAddExisting) {
 
 // Tests edge cases in adding movies to users
 TEST(FileStorageTests, UpdateUserAddEdge) {
-    std::srand(std::random_device()());
-
     // Add to the same user the same movie twice (in 2 additions)
     int numUpdates = randInt(10, 30);
     for (int i = 0; i < numUpdates; i++) {
@@ -276,8 +269,6 @@ TEST(FileStorageTests, UpdateUserAddEdge) {
 
 // Tests removing movies from a non-existing user
 TEST(FileStorageTests, UpdateUserRemoveNew) {
-    std::srand(std::random_device()());
-
     int numUpdates = randInt(10, 30);
 
     for (int i = 0; i < numUpdates; i++) {
@@ -304,12 +295,11 @@ TEST(FileStorageTests, UpdateUserRemoveNew) {
 
 // Tests removing movies from an existing user
 TEST(FileStorageTests, UpdateUserRemoveExisting) {
-    std::srand(std::random_device()());
     createTestFile();
 
     FileStorage storage(TEST_FILE);
 
-    int numUpdates = randInt(20, 40);
+    int numUpdates = randInt(30, 40);
     for (int i = 0; i < numUpdates; i++) {
         int userId = randomUser(TEST_FILE);
         std::vector<int> before = storage.isUserInFile(userId);
@@ -320,8 +310,12 @@ TEST(FileStorageTests, UpdateUserRemoveExisting) {
 
         for (int j = 0; j < numMoviesToRemove; j++) {
             int movieId = randInt(1, MAX_ID);
-            moviesToRemove.push_back(movieId);
-            remainingMoviesSet.erase(movieId); // Remove from expected set
+
+            // Only add movieId to moviesToRemove if the user has watched it
+            if (remainingMoviesSet.count(movieId) > 0) {
+                moviesToRemove.push_back(movieId);
+                remainingMoviesSet.erase(movieId); // Remove from expected set
+            }
         }
 
         storage.updateUserInFile(userId, moviesToRemove, FileStorage::Remove);
@@ -336,8 +330,6 @@ TEST(FileStorageTests, UpdateUserRemoveExisting) {
 }
 
 TEST(FileStorageTests, UpdateUserRemoveEdge) {
-    std::srand(std::random_device()());
-
     // Remove all movies from a user
     int numUpdates = randInt(10, 30);
     for (int i = 0; i < numUpdates; i++) {
@@ -370,8 +362,15 @@ TEST(FileStorageTests, UpdateUserRemoveEdge) {
         // Add some movies
         int numMovies = randInt(1, 7);
         std::vector<int> initialMovies;
+        std::unordered_set<int> usedMovieIds;
         for (int j = 0; j < numMovies; j++) {
-            initialMovies.push_back(randInt(1, MAX_ID));
+            int randMovie;
+            // Generate a unique movie ID for the user
+            do {
+                randMovie = randInt(1, MAX_ID);
+            } while (usedMovieIds.find(randMovie) != usedMovieIds.end());
+            usedMovieIds.insert(randMovie);
+            initialMovies.push_back(randMovie);
         }
         storage.updateUserInFile(userId, initialMovies, FileStorage::Add);
 

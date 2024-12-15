@@ -56,15 +56,15 @@ std::vector<int> FileStorage::isUserInFile(int userId) {
                     movieIds.push_back(std::stoi(movieStr));
                 }
 
-                //fileIn.close();
+                fileIn.close();
                 // The user was found, return the list of their watched movies
                 return movieIds;
             }
         }
     }
 
-    //fileIn.close();
-    // If the user was not found, return an empty list
+    fileIn.close();
+    // If the user was not found or doesn't have any movies, return an empty list
     return {};
 }
 
@@ -118,9 +118,14 @@ StatusCode FileStorage::updateUserInFile(int userId, std::vector<int>& movies, C
     auto filteredMovies = filterMovies(userId, movies, change);
 
     // Check for attempt to remove movies that weren't patched/posted (in particular, of a non-existing user)
-    if (filteredMovies.empty() && change == Remove) {
-        fileIn.close();
-        return NotFound;
+    if (filteredMovies.empty()) {
+        if (change == Remove) {
+            fileIn.close();
+            return NotFound;
+        } else if (change == Add) {
+            fileIn.close();
+            return None;
+        }
     }
 
     // Open a temporary file for storing updated content
@@ -137,49 +142,38 @@ StatusCode FileStorage::updateUserInFile(int userId, std::vector<int>& movies, C
     while (std::getline(fileIn, line)) {
         // Split by ':', first part is userId, second is movie list
         auto parts = FileStorage::split(line, ':');
-
+        
         if (std::stoi(parts[0]) == userId) {
             // Found the user, update their movie list
             userFound = true;
             // Write user ID
             fileOut << userId << ":";
 
-            switch(change) {
-                case Add: {
-                    // Write the old movies
-                    fileOut << parts[1] << ",";
+            if (change == Add) {
+                // Write the old movies
+                fileOut << parts[1] << ",";
 
-                    // Write the new movies
-                    writeMoviesToFile(fileOut, filteredMovies);
+                // Write the new movies
+                writeMoviesToFile(fileOut, filteredMovies);
+            } else if (change == Remove) {
+                // Turn filteredMovies into a set
+                std::unordered_set<int> toRemove(filteredMovies.begin(), filteredMovies.end());
+                // Get the movie IDs of the user, as ints
+                std::vector<int> currentMovies = splitToInt(parts[1], ',');
+                // The user's movies after removing the movies that needed to be removed
+                std::vector<int> updatedMovies;
 
-                    fileOut << std::endl;
-                    break;
-                }
-                case Remove: {
-                    // Turn filteredMovies into a set
-                    std::unordered_set<int> toRemove(filteredMovies.begin(), filteredMovies.end());
-                    // The movie IDs of the user, as ints
-                    std::vector<int> currentMovies = splitToInt(parts[1], ',');
-                    // The user's movies after removing the movies that needed to be removed
-                    std::vector<int> updatedMovies;
-
-                    for (int movie : currentMovies) {
-                        // Only add movies that aren't in toRemove
-                        if (toRemove.find(movie) == toRemove.end()) {
-                            updatedMovies.push_back(movie);
-                        }
+                for (int movie : currentMovies) {
+                    // Only add movies that aren't in toRemove
+                    if (toRemove.find(movie) == toRemove.end()) {
+                        updatedMovies.push_back(movie);
                     }
+                }
 
-                    writeMoviesToFile(fileOut, updatedMovies);
-                    
-                    break;
-                }
-                default: {
-                    fileIn.close();
-                    fileOut.close();
-                    return BadRequest;
-                }
+                writeMoviesToFile(fileOut, updatedMovies);
             }
+            
+            fileOut << std::endl;
         } else {
             // Irrelevant user, copy unchanged lines
             fileOut << line << std::endl;
