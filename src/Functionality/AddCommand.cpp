@@ -89,10 +89,10 @@ std::string AddCommand::executeSpecificAdd(const std::string& command, Functiona
 
     // Ensure we have at least one user ID and one movie ID, and that
     // they are numbers (parseCommand returns {} if a non-number was passed)
-    if (extractedNumbers.size() < 2 || extractedNumbers.empty()){
+    if (extractedNumbers.size() < 2){
         ICommand::setStatus(BadRequest);
         return "";
-    } 
+    }
 
     // The first number is the user ID, the rest are movie IDs
     int userId = extractedNumbers[0];
@@ -100,10 +100,11 @@ std::string AddCommand::executeSpecificAdd(const std::string& command, Functiona
 
     FileStorage fileStorage("data/user_data.txt");
 
+    auto userMovies = fileStorage.isUserInStorage(userId);
     // Decide if the command is valid
     switch(func) {
         case POST:
-            if (!(fileStorage.isUserInFile(userId).empty())) {
+            if (userMovies != std::vector<long long>{-1}) {
                 ICommand::setStatus(NotFound);
                 return "";
             }
@@ -112,7 +113,7 @@ std::string AddCommand::executeSpecificAdd(const std::string& command, Functiona
             break;
 
         case PATCH:
-            if (fileStorage.isUserInFile(userId).empty()) {
+            if (userMovies == std::vector<long long>{-1}) {
                 ICommand::setStatus(NotFound);
                 return "";
             }
@@ -126,7 +127,7 @@ std::string AddCommand::executeSpecificAdd(const std::string& command, Functiona
     }
 
     // Add info to the file
-    StatusCode error = fileStorage.updateUserInFile(userId, watchedMovies, FileStorage::Add);
+    StatusCode error = fileStorage.updateUserData(userId, watchedMovies, FileStorage::Add);
     if (error != None) {
         ICommand::setStatus(error);
         return "";

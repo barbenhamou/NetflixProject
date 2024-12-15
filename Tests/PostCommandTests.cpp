@@ -43,7 +43,7 @@ TEST(PostFunctionTests, RandomizedUserAndMovieId) {
 
         // Check if the user already exists in the file
         FileStorage fileStorage("data/user_data.txt");
-        if (!(fileStorage.isUserInFile(newUserId).empty())) {
+        if (!(fileStorage.isUserInStorage(newUserId).empty())) {
             Post->execute(command);
 
             // Check the status

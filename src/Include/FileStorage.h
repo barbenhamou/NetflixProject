@@ -13,7 +13,6 @@
 
 #include "MovieUser.h"
 #include "IStorage.h"
-#include "ICommand.h"
 
 class FileStorage : public IStorage {
     private:
@@ -22,11 +21,6 @@ class FileStorage : public IStorage {
         std::string fileName;
 
     public:
-        enum Change {
-            Add,
-            Remove
-        };
-
         // Constructor: takes the filename where user data will be saved/loaded
         FileStorage(const std::string& file);
 
@@ -39,14 +33,9 @@ class FileStorage : public IStorage {
         // Write the movie IDs to the file, separated by commas: `movie1,movie2,...lastmovie`
         void writeMoviesToFile(std::ofstream& file, std::vector<int> movies);
 
-        // Adds or removes movies from a user's movie list, but only in the file and not
-        // the global vectors. If `change == Add` and the user doesn't exist, it creates it.
-        // If there is an error it returns the error code, otherwise None.
-        StatusCode updateUserInFile(int userId, std::vector<int>& movies, Change change);
+        StatusCode updateUserData(int userId, std::vector<int>& movies, Change change) override;
 
-        // Checks if the user exists in the file. If so, it will return a vector of its watched
-        // movies (otherwise an empty vector)
-        std::vector<int> isUserInFile(int userId);
+        std::vector<long long> isUserInStorage(int userId) override;
 
         // Removes duplicates and unnecessary movies - if `change == Add` it excludes movies
         // that the user already watched and if `change == Remove` excludes movies they didn't watch

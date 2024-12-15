@@ -59,7 +59,7 @@ TEST(FileStorageTests, IsUserInFile) {
     
     for (int i = 0; i < numTests; i++) {
         int randomUserId = randInt(1, MAX_ID);
-        std::vector<int> result = storage.isUserInFile(randomUserId);
+        std::vector<int> result = storage.isUserInStorage(randomUserId);
 
         std::ifstream file(TEST_FILE);
         std::string line;
@@ -106,9 +106,9 @@ TEST(FileStorageTests, UpdateUserAddNew) {
             newMovies.push_back(randInt(10 * j, 10 * (j + 1) - 1));
         }
 
-        storage.updateUserInFile(userId, newMovies, FileStorage::Add);
+        storage.updateUserData(userId, newMovies, FileStorage::Add);
 
-        std::vector<int> updatedMovies = storage.isUserInFile(userId);
+        std::vector<int> updatedMovies = storage.isUserInStorage(userId);
 
         EXPECT_EQ(updatedMovies, newMovies);
 
@@ -158,7 +158,7 @@ TEST(FileStorageTests, UpdateUserAddExisting) {
     int numUpdates = randInt(10, 30);
     for (int i = 0; i < numUpdates; i++) {
         int userId = randomUser(TEST_FILE);
-        std::vector<int> before = storage.isUserInFile(userId);
+        std::vector<int> before = storage.isUserInStorage(userId);
         
         int numNewMovies = randInt(1, 7);
         std::vector<int> newMovies;
@@ -173,9 +173,9 @@ TEST(FileStorageTests, UpdateUserAddExisting) {
             newMoviesSet.insert(id);
         }
 
-        storage.updateUserInFile(userId, newMovies, FileStorage::Add);
+        storage.updateUserData(userId, newMovies, FileStorage::Add);
 
-        std::vector<int> after = storage.isUserInFile(userId);
+        std::vector<int> after = storage.isUserInStorage(userId);
         std::unordered_set<int> afterSet;
         for (const int& id : after) {
             afterSet.insert(id);
@@ -208,7 +208,7 @@ TEST(FileStorageTests, UpdateUserAddEdge) {
             newMoviesSet.insert(movieId);
         }
 
-        storage.updateUserInFile(userId, newMovies, FileStorage::Add);
+        storage.updateUserData(userId, newMovies, FileStorage::Add);
 
         // 2nd add
         newMovies = {};
@@ -220,9 +220,9 @@ TEST(FileStorageTests, UpdateUserAddEdge) {
         }
         newMovies.push_back(twiceMovieId);
 
-        storage.updateUserInFile(userId, newMovies, FileStorage::Add);
+        storage.updateUserData(userId, newMovies, FileStorage::Add);
 
-        std::vector<int> after = storage.isUserInFile(userId);
+        std::vector<int> after = storage.isUserInStorage(userId);
         std::unordered_set<int> afterSet;
         for (const int& id : after) {
             afterSet.insert(id);
@@ -254,9 +254,9 @@ TEST(FileStorageTests, UpdateUserAddEdge) {
             }
         }
 
-        storage.updateUserInFile(userId, newMovies, FileStorage::Add);
+        storage.updateUserData(userId, newMovies, FileStorage::Add);
 
-        std::vector<int> after = storage.isUserInFile(userId);
+        std::vector<int> after = storage.isUserInStorage(userId);
         std::unordered_set<int> afterSet;
         for (const int& id : after) {
             afterSet.insert(id);
@@ -283,10 +283,10 @@ TEST(FileStorageTests, UpdateUserRemoveNew) {
         }
 
         // Attempt to remove movies from a user who doesn't exist
-        storage.updateUserInFile(userId, moviesToRemove, FileStorage::Remove);
+        storage.updateUserData(userId, moviesToRemove, FileStorage::Remove);
 
         // The user shouldn't exist, so the result should be empty
-        std::vector<int> updatedMovies = storage.isUserInFile(userId);
+        std::vector<int> updatedMovies = storage.isUserInStorage(userId);
         EXPECT_TRUE(updatedMovies.empty());
 
         remove(TEST_FILE);
@@ -302,7 +302,7 @@ TEST(FileStorageTests, UpdateUserRemoveExisting) {
     int numUpdates = randInt(30, 40);
     for (int i = 0; i < numUpdates; i++) {
         int userId = randomUser(TEST_FILE);
-        std::vector<int> before = storage.isUserInFile(userId);
+        std::vector<int> before = storage.isUserInStorage(userId);
 
         int numMoviesToRemove = randInt(1, 15);
         std::vector<int> moviesToRemove;
@@ -318,9 +318,9 @@ TEST(FileStorageTests, UpdateUserRemoveExisting) {
             }
         }
 
-        storage.updateUserInFile(userId, moviesToRemove, FileStorage::Remove);
+        storage.updateUserData(userId, moviesToRemove, FileStorage::Remove);
 
-        std::vector<int> after = storage.isUserInFile(userId);
+        std::vector<int> after = storage.isUserInStorage(userId);
         std::unordered_set<int> afterSet(after.begin(), after.end());
 
         EXPECT_EQ(afterSet, remainingMoviesSet);
@@ -342,13 +342,13 @@ TEST(FileStorageTests, UpdateUserRemoveEdge) {
         for (int j = 0; j < numMovies; j++) {
             initialMovies.push_back(randInt(1, MAX_ID));
         }
-        storage.updateUserInFile(userId, initialMovies, FileStorage::Add);
+        storage.updateUserData(userId, initialMovies, FileStorage::Add);
 
         // Remove all movies
-        storage.updateUserInFile(userId, initialMovies, FileStorage::Remove);
+        storage.updateUserData(userId, initialMovies, FileStorage::Remove);
 
         // The user should still exist but have no movies
-        std::vector<int> after = storage.isUserInFile(userId);
+        std::vector<int> after = storage.isUserInStorage(userId);
         EXPECT_TRUE(after.empty());
         remove(TEST_FILE);
     }
@@ -372,7 +372,7 @@ TEST(FileStorageTests, UpdateUserRemoveEdge) {
             usedMovieIds.insert(randMovie);
             initialMovies.push_back(randMovie);
         }
-        storage.updateUserInFile(userId, initialMovies, FileStorage::Add);
+        storage.updateUserData(userId, initialMovies, FileStorage::Add);
 
         // Remove non-existent movies
         int numMoviesToRemove = randInt(1, 7);
@@ -381,10 +381,10 @@ TEST(FileStorageTests, UpdateUserRemoveEdge) {
             moviesToRemove.push_back(randInt(MAX_ID + 1, 2 * MAX_ID)); // IDs outside the range of initialMovies
         }
 
-        storage.updateUserInFile(userId, moviesToRemove, FileStorage::Remove);
+        storage.updateUserData(userId, moviesToRemove, FileStorage::Remove);
 
         // The user's movies should remain unchanged
-        std::vector<int> after = storage.isUserInFile(userId);
+        std::vector<int> after = storage.isUserInStorage(userId);
         EXPECT_EQ(after, initialMovies);
         remove(TEST_FILE);
     }

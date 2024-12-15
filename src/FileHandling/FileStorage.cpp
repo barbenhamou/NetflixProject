@@ -33,10 +33,11 @@ std::vector<int> FileStorage::splitToInt(const std::string& str, char delimiter)
     return tokens;
 }
 
-std::vector<int> FileStorage::isUserInFile(int userId) {
+std::vector<long long> FileStorage::isUserInStorage(int userId) {
     std::ifstream fileIn(fileName);
     
-    if (!fileIn) return {};
+    // No user exists in the system
+    if (!fileIn) return {-1};
 
     std::string line;
     while (std::getline(fileIn, line)) {
@@ -47,7 +48,7 @@ std::vector<int> FileStorage::isUserInFile(int userId) {
             // Compare the first part (the current user ID) with the provided userId
             if (std::stoi(parts[0]) == userId) {
                 // User ID found, now parse the movie IDs
-                std::vector<int> movieIds;
+                std::vector<long long> movieIds;
 
                 // Split the second part (movie list) by ',' to extract individual movie IDs
                 auto movieParts = FileStorage::split(parts[1], ',');
@@ -64,13 +65,13 @@ std::vector<int> FileStorage::isUserInFile(int userId) {
     }
 
     fileIn.close();
-    // If the user was not found or doesn't have any movies, return an empty list
-    return {};
+    // The user was not found
+    return {-1};
 }
 
 std::vector<int> FileStorage::filterMovies(int userId, const std::vector<int>& movies, Change change) {
     // A vector of all the movies that the user watched
-    const auto& watchedMovies = isUserInFile(userId);
+    const auto& watchedMovies = isUserInStorage(userId);
     // A set of those movies, for easy finding
     std::unordered_set<int> watchedSet(watchedMovies.begin(), watchedMovies.end());
     // A set for ignoring duplicate movies
@@ -109,7 +110,7 @@ void FileStorage::writeMoviesToFile(std::ofstream& file, std::vector<int> movies
     }
 }
 
-StatusCode FileStorage::updateUserInFile(int userId, std::vector<int>& movies, Change change) {
+StatusCode FileStorage::updateUserData(int userId, std::vector<int>& movies, Change change) {
     // Open stream
     std::ifstream fileIn(fileName);
     if (!fileIn.is_open()) {return None;}
