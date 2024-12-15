@@ -15,5 +15,5 @@ class IMenu {
         virtual std::vector<std::string> nextCommand() = 0;
         
         // Displays an error message
-        virtual void displayError(std::string error) = 0;
+        virtual void sendOutput(std::string output) = 0;
 };

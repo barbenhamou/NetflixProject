@@ -13,20 +13,46 @@ void App::run() {
         data = input[1];
         
         try {
-            // Ignore invalid commands
-            if (this->commands.find(command) == this->commands.end()) continue;
+            // Invalid commands
+            if (this->commands.find(command) == this->commands.end()) {
+                this->menu->sendOutput(statusCodes[BadRequest]);
+                continue;
+            }
 
             // Execute the command
             output = this->commands[command]->execute(data);
 
             // Send the status code of the command's execution
-            std::cout << statusCodes[commands[command]->getStatus()];
+            this->menu->sendOutput(statusCodes[this->commands[command]->getStatus()]);
             
+            if (!output.empty()) {
+                output = "\n\n" + output;
+            }
+
             // Send the command's output
-            std::cout << output;
+            this->menu->sendOutput(output + "\n");
         } catch (...) {
-            // Currenty no error message is needed
-            this->menu->displayError("");
+            // Invalid command
+            this->menu->sendOutput(statusCodes[BadRequest]);
         }
+    }
+}
+
+void App::createCommands() {
+    ICommand* help = new HelpCommand();
+    ICommand* post = new PostCommand();
+    ICommand* patch = new PatchCommand();
+    ICommand* get = new GetCommand();
+    
+    // Define the commands
+    ::commands[help->toString().first] = help;
+    ::commands[post->toString().first] = post;
+    ::commands[get->toString().first] = get;
+    ::commands[patch->toString().first] = patch;
+}
+
+void App::deleteCommands() {
+    for (const auto& command : ::commands) {
+        delete command.second;
     }
 }

@@ -16,7 +16,7 @@ std::vector<std::string> ConsoleMenu::nextCommand() {
     return {command, input.substr(command.size())};
 }
 
-void ConsoleMenu::displayError(std::string error) {
+void ConsoleMenu::sendOutput(std::string output) {
     // Print the error to stdout
-    std::cout << error << std::endl;
+    std::cout << output;
 }

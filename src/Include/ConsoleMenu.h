@@ -8,5 +8,5 @@ class ConsoleMenu : public IMenu {
     public:
         std::vector<std::string> nextCommand() override;
 
-        void displayError(std::string error) override;
+        void sendOutput(std::string output) override;
 };

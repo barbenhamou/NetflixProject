@@ -6,5 +6,7 @@
 // Syntax: `PATCH [userid] [movieid1] [movieid2] ...`
 class PatchCommand : public AddCommand {
 public:
+    std::pair<std::string, std::string> toString() override;
+
     std::string execute(std::string command) override;
 };

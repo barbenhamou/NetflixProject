@@ -4,9 +4,6 @@
 #include "../src/Include/Globals.h"
 
 TEST(AddFunctionTests, RandomizedUserAndMovieIds) {
-    // Seed the random number generator
-    std::srand(std::random_device()());
-
     int testCount = randInt(10, 30);
     for (int testRun = 0; testRun < 20; ++testRun) {
         // Clear global lists before each test run
