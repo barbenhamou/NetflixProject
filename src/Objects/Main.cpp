@@ -5,14 +5,14 @@ int main() {
     // Get all info from the file into global variables
     AddCommand::initGlobals("data/user_data.txt");
 
-    IMenu* menu = new ConsoleMenu();
-
     App::createCommands();
+
+    IMenu* menu = new ConsoleMenu();
 
     App app(menu, commands);
     app.run();
 
-    App::deleteCommands();
-
     delete menu;
+
+    App::deleteCommands();
 }
