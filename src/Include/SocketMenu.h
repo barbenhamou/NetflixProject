@@ -13,7 +13,7 @@ class SocketMenu : public IMenu {
 
         std::vector<std::string> nextCommand() override;
 
-        void displayError(std::string error) override;
+        void sendOutput(std::string output) override;
 
         // Destructor
         ~SocketMenu() {

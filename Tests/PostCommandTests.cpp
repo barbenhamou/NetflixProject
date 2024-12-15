@@ -3,14 +3,11 @@
 #include "../src/Include/Globals.h"
 
 void generateRandomPostCommand(int minMovies, int maxMovies, int& userId, std::vector<int>& movies, std::string& command) {
-    // Seed the random number generator
-    std::srand(std::random_device()());
-
     // Generate a random user ID between 1 and 1000
     userId = randInt(1, 100);
 
     // Generate a random number of movies (minMovies to maxMovies)
-    int numMovies = minMovies + std::rand() % (maxMovies - minMovies + 1);
+    int numMovies = randInt(minMovies, maxMovies);
 
     // Clear the movies vector
     movies.clear();

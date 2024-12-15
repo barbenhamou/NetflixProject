@@ -39,13 +39,13 @@ std::vector<std::string> SocketMenu::nextCommand() {
     }
 }
 
-void SocketMenu::displayError(std::string error) {
+void SocketMenu::sendOutput(std::string output) {
     try {
-        // Send the size of the error message first
-        uint32_t size = htonl(error.size());
+        // Send the size of the output first
+        uint32_t size = htonl(output.size());
         send(this->clientSocket, &size, sizeof(size), 0);
 
-        // Send the actual error message
-        send(this->clientSocket, error.c_str(), error.size(), 0);
+        // Send the actual output
+        send(this->clientSocket, output.c_str(), output.size(), 0);
     } catch (...) {}
 }

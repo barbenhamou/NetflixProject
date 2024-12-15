@@ -41,7 +41,7 @@ TEST(SocketMenuTests, TestDisplayError) {
     SocketMenu menu(test_sock);
 
     std::string msg = "command arg1 arg2\n";
-    menu.displayError(msg);
+    menu.sendOutput(msg);
 
     uint32_t recved_size;
     recv(client_sock, &recved_size, sizeof(recved_size), 0);

@@ -4,7 +4,9 @@
 // Generic parsing test
 TEST(HelpCommandTests, ExecuteCommandOutput) {
     std::unique_ptr<HelpCommand> helpCommand = std::make_unique<HelpCommand>();
-    
+
+    App::createCommands();
+
     std::string output = helpCommand->execute("");
 
     std::string expectedOutput =
@@ -15,4 +17,6 @@ TEST(HelpCommandTests, ExecuteCommandOutput) {
         "help\n";
 
     EXPECT_EQ(output, expectedOutput);
+    
+    App::deleteCommands();
 }

@@ -12,3 +12,5 @@ std::map<int, std::string> statusCodes = {
     {BadRequest, "400 Bad Request"},
     {NotFound, "404 Not Found"}
 };
+
+std::map<std::string, ICommand*> commands;

@@ -51,7 +51,7 @@ TEST(EndToEndTests, EndToEndTest) {
             if (commands.find(command) == commands.end()) continue;
             commands[command]->execute(data); // Executing the function in generic form
         } catch (...) {
-            menu->displayError(""); // In case of an error
+            menu->sendOutput(""); // In case of an error
         }
 
         output = ::testing::internal::GetCapturedStdout();

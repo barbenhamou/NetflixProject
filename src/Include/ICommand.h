@@ -26,9 +26,14 @@ class ICommand {
         }
 
     public:
+        virtual ~ICommand() = default;
+
         // All commands will override this function have their own implementation
         virtual std::string execute(std::string command) = 0;
 
+        // Returns {command, arguments}
+        virtual std::pair<std::string, std::string> toString() = 0;
+        
         StatusCode getStatus() const {
             return status;
         }

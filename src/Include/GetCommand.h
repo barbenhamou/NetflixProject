@@ -26,5 +26,7 @@ class GetCommand : public ICommand {
         // The algorithm looks at common movies `user` has with other users that watched `movie`
         static std::vector<Movie*> recommend(User* user, Movie* movie);
 
+        std::pair<std::string, std::string> toString() override;
+
         std::string execute(std::string command) override;
 };

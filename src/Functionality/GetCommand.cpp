@@ -1,6 +1,10 @@
 #include "../Include/GetCommand.h"
 #include "../Include/Globals.h"
 
+std::pair<std::string, std::string> GetCommand::toString() {
+    return {"GET", "[userid] [movieid]"};
+}
+
 std::string GetCommand::printRecommendations(std::vector<Movie*> recommendations) {
     // In case there are not enough movies in the system
     int recCount = std::min(NUM_OF_RECOMMENDATIONS, (int)recommendations.size());
@@ -123,5 +127,5 @@ std::string GetCommand::execute(std::string command) {
 
     std::vector<Movie*> recommendations = GetCommand::recommend(user, movie);
 
-    return "\n\n" + GetCommand::printRecommendations(recommendations);
+    return GetCommand::printRecommendations(recommendations);
 }
