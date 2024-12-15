@@ -31,7 +31,7 @@ void generateRandomPatchCommand(int minMovies, int maxMovies, int& userId, std::
 
 
 
-TEST(PatchFunctionTests, RandomizedUseresAndMovieId) {
+TEST(PatchFunctionTests, RandomizedUsersAndMovieId) {
     for (int testRun = 0; testRun < 20; ++testRun) {
         // Seed the random number generator
         int newUserId;
@@ -45,7 +45,7 @@ TEST(PatchFunctionTests, RandomizedUseresAndMovieId) {
 
         // Check if the user already exists in the file
         FileStorage fileStorage("data/user_data.txt");
-        if ((fileStorage.isUserInStorage(newUserId).empty())) {
+        if (fileStorage.isUserInStorage(newUserId) == std::vector<long long>{-1}) {
             Patch->execute(command);
 
             // Check the status

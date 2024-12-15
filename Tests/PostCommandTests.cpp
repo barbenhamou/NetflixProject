@@ -43,7 +43,7 @@ TEST(PostFunctionTests, RandomizedUserAndMovieId) {
 
         // Check if the user already exists in the file
         FileStorage fileStorage("data/user_data.txt");
-        if (!(fileStorage.isUserInStorage(newUserId).empty())) {
+        if (fileStorage.isUserInStorage(newUserId) != std::vector<long long>{-1}) {
             Post->execute(command);
 
             // Check the status

@@ -36,6 +36,8 @@ We wrote some tests for the project.
 To run the tests, run these two commands:
 ```bash
 docker build -f Dockerfile.tests -t tests .
+```
+```bash
 docker run tests
 ```
 
