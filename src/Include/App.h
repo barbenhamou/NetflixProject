@@ -7,7 +7,7 @@
 #include <string>
 #include <vector>
 
-#include "ConsoleMenu.h"
+#include "IMenu.h"
 #include "AddCommand.h"
 #include "HelpCommand.h"
 #include "GetCommand.h"
