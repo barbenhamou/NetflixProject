@@ -1,9 +1,10 @@
 #include "../Include/PatchCommand.h"
+#include "../Include/Globals.h"
 
-// Overrides the execute function to handle patch user commands.
-void PatchCommand::execute(std::string command) {
-    if (isValidCommand(command, 2)) {
-        AddCommand::execute(command);
-        ICommand :: setStatus(204);
-    }
+std::pair<std::string, std::string> PatchCommand::toString() {
+    return {"PATCH", "[userid] [movieid1] [movieid2] ..."};
+}
+
+std::string PatchCommand::execute(std::string command) {
+    return executeSpecificAdd(command, PATCH);
 }

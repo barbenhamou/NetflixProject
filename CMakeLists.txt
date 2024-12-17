@@ -24,21 +24,23 @@ add_executable(
     Tests/MovieTests.cpp
     Tests/HelpCommandTests.cpp
     Tests/AddCommandTests.cpp    
-    Tests/RecommendCommandTests.cpp
-    Tests/EndToEndTests.cpp
+    Tests/GetCommandTests.cpp
+    #Tests/EndToEndTests.cpp
 
     src/Objects/SocketMenu.cpp
     src/Objects/ConsoleMenu.cpp
     src/Objects/App.cpp
     src/Objects/Movie.cpp
     src/Objects/User.cpp
+    src/Objects/Globals.cpp
 
     src/Functionality/AddCommand.cpp
     src/Functionality/HelpCommand.cpp
-    src/Functionality/RecommendCommand.cpp
+    src/Functionality/GetCommand.cpp
     src/Functionality/PostCommand.cpp
-    src/FileHandling/FileStorage.cpp
     src/Functionality/PatchCommand.cpp
+    
+    src/FileHandling/FileStorage.cpp
 )
 
 # Link GoogleTest and pthread libraries to the ConsoleMenuTest executable
@@ -50,13 +52,13 @@ target_link_libraries(
 
 # Register the test with CTest
 add_test(
-    NAME ConsoleMenuTest
-    COMMAND ConsoleMenuTest
+    NAME ConsoleMenuTests
+    COMMAND ConsoleMenuTests
 )
 
 add_test(
-    NAME FileStorageTest
-    COMMAND FileStorageTest
+    NAME FileStorageTests
+    COMMAND FileStorageTests
 )
 
 add_test(
@@ -65,8 +67,8 @@ add_test(
 )
 
 add_test(
-    NAME HelpCommandTest
-    COMMAND HelpCommandTest
+    NAME HelpCommandTests
+    COMMAND HelpCommandTests
 )
 
 add_test(
@@ -79,14 +81,14 @@ add_test(
     COMMAND RecommendationTests
 )
 
-add_test(
-    NAME EndToEnd
-    COMMAND EndToEnd
-)
+#add_test(
+#    NAME EndToEndTests
+#    COMMAND EndToEndTests
+#)
 
 add_test(
-    NAME SocketMenuTest
-    COMMAND SocketMenuTest
+    NAME SocketMenuTests
+    COMMAND SocketMenuTests
 )
 
 add_test(

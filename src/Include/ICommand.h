@@ -4,26 +4,42 @@
 #include <regex>
 
 #include "MovieUser.h"
-#include "FileStorage.h"
+
+enum StatusCode {
+    None = -1,
+    Ok = 200,
+    Created = 201,
+    NoContent = 204,
+    BadRequest = 400,
+    NotFound = 404
+};
 
 // An interface which all the commands will implement
 class ICommand {
     private:
-        int status;
+        // The command's HTTP status code
+        StatusCode status = None;
 
     protected:
-        void setStatus(int value){
-            status=value;
+        void setStatus(StatusCode code) {
+            status = code;
         }
-           
+
     public:
+        virtual ~ICommand() = default;
+
         // All commands will override this function have their own implementation
-        virtual void execute(std::string command) = 0;
+        virtual std::string execute(std::string command) = 0;
+
+        // Returns {command, arguments}
+        virtual std::pair<std::string, std::string> toString() = 0;
         
-        int getStatus() const{
+        StatusCode getStatus() const {
             return status;
         }
-        // Parses the command's arguments and returns them according to the given pattern
+
+        // Parses the command's arguments and returns them according to the given pattern.
+        // Upon error (an argument is not a number) returns an empty vector
         static std::vector<int> parseCommand(std::string command, std::string inputPattern) {
             std::regex pattern(inputPattern);
             std::smatch match;

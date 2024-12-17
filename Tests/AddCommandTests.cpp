@@ -1,11 +1,9 @@
 #include "Tests.h"
 #include "../src/Include/AddCommand.h"
 #include "../src/Include/MovieUser.h"
+#include "../src/Include/Globals.h"
 
 TEST(AddFunctionTests, RandomizedUserAndMovieIds) {
-    // Seed the random number generator
-    std::srand(std::random_device()());
-
     int testCount = randInt(10, 30);
     for (int testRun = 0; testRun < 20; ++testRun) {
         // Clear global lists before each test run
@@ -18,7 +16,7 @@ TEST(AddFunctionTests, RandomizedUserAndMovieIds) {
         // Generate a random number of movies and their IDs
         int numMovies = randInt(1, 10);
         std::vector<int> newMovieIds;
-        for (int i = 0; i < numMovies; ++i) {
+        for (int i = 0; i < numMovies; i++) {
             newMovieIds.push_back(randInt(1, 100));
         }
 

@@ -5,9 +5,13 @@
 
 #include "ICommand.h"
 
-// A command to display all available commands. Syntax: `help`
+// A command to display all available commands, alphabetically (help itself is always last).
+// Syntax: `help`
 class HelpCommand : public ICommand {
     public:
-        void execute(std::string command) override;
-};
+        std::pair<std::string, std::string> toString() override;
 
+        std::string execute(std::string command) override;
+
+        std::vector<std::pair<std::string, ICommand*>> sortCommands();
+};

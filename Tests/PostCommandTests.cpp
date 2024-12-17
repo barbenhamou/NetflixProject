@@ -1,21 +1,20 @@
 #include "Tests.h"
 #include "../src/Include/PostCommand.h"
-void generateRandomPostCommand(int minMovies, int maxMovies, int& userId, std::vector<int>& movies, std::string& command) {
-    // Seed the random number generator
-    std::srand(std::random_device()());
+#include "../src/Include/Globals.h"
 
+void generateRandomPostCommand(int minMovies, int maxMovies, int& userId, std::vector<int>& movies, std::string& command) {
     // Generate a random user ID between 1 and 1000
-    userId = 1 + std::rand() % 1000;
+    userId = randInt(1, 100);
 
     // Generate a random number of movies (minMovies to maxMovies)
-    int numMovies = minMovies + std::rand() % (maxMovies - minMovies + 1);
+    int numMovies = randInt(minMovies, maxMovies);
 
     // Clear the movies vector
     movies.clear();
 
     // Populate the movies vector with random movie IDs (1 to 1000)
-    for (int i = 0; i < numMovies; ++i) {
-        int movieId = 1 + std::rand() % 1000;
+    for (int i = 0; i < numMovies; i++) {
+        int movieId = randInt(1, 100);
         movies.push_back(movieId);
     }
 
@@ -30,8 +29,6 @@ void generateRandomPostCommand(int minMovies, int maxMovies, int& userId, std::v
     command = commandStream.str();
 }
 
-
-
 TEST(PostFunctionTests, RandomizedUserAndMovieId) {
     for (int testRun = 0; testRun < 20; ++testRun) {
         // Seed the random number generator
@@ -42,8 +39,6 @@ TEST(PostFunctionTests, RandomizedUserAndMovieId) {
         // Generate a random command
         generateRandomPostCommand(3, 10, newUserId, newMovieIds, command);
 
-       
-
         ICommand* Post = new PostCommand();
 
         // Check if the user already exists in the file
@@ -52,8 +47,7 @@ TEST(PostFunctionTests, RandomizedUserAndMovieId) {
             Post->execute(command);
 
             // Check the status
-            EXPECT_EQ(Post->getStatus(), 401);
-
+            EXPECT_EQ(Post->getStatus(), NotFound);
 
             continue;
         }

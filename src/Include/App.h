@@ -7,11 +7,10 @@
 #include <string>
 #include <vector>
 
-#include "MovieUser.h"
 #include "ConsoleMenu.h"
 #include "AddCommand.h"
 #include "HelpCommand.h"
-#include "RecommendCommand.h"
+#include "GetCommand.h"
 #include "../Include/PostCommand.h"
 #include "../Include/PatchCommand.h"
 
@@ -26,4 +25,10 @@ class App {
 
         // Starts the app
         void run();
+
+        // Populate the global map of commands
+        static void createCommands();
+
+        // Delete all the command pointers from the global map of commands
+        static void deleteCommands();
 };

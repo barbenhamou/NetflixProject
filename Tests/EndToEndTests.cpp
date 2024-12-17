@@ -1,6 +1,6 @@
 #include "Tests.h"
 
-TEST(EndToEnd, EndToEndTest) {
+TEST(EndToEndTests, EndToEndTest) {
     AddCommand::initGlobals("data/user_data.txt");
 
     std::map<std::string, ICommand*> commands;
@@ -9,7 +9,7 @@ TEST(EndToEnd, EndToEndTest) {
 
     ICommand* help = new HelpCommand();
     ICommand* add = new AddCommand();
-    ICommand* recommend = new RecommendCommand();
+    ICommand* recommend = new GetCommand();
 
     commands["help"] = help;
     commands["add"] = add;
@@ -51,7 +51,7 @@ TEST(EndToEnd, EndToEndTest) {
             if (commands.find(command) == commands.end()) continue;
             commands[command]->execute(data); // Executing the function in generic form
         } catch (...) {
-            menu->displayError(""); // In case of an error
+            menu->sendOutput(""); // In case of an error
         }
 
         output = ::testing::internal::GetCapturedStdout();

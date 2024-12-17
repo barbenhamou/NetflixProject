@@ -1,19 +1,9 @@
 #include "../Include/App.h"
-
-std::vector<std::unique_ptr<Movie>> allMovies = {};
-std::vector<std::unique_ptr<User>> allUsers = {};
-// Global dictionary (map) for HTTP status codes and their descriptions
-std::map<int, std::string> statusCodes = {
-    {201, "201 Created"},
-    {204, "204 No Content"},
-    {200, "200 Ok"},
-    {404, "404 Not Found"},
-    {401, "401 Bad Request"}
-};
+#include "../Include/Globals.h"
 
 void App::run() {
     std::vector<std::string> input = {};
-    std::string command, data;
+    std::string command, data, output;
 
     // The app never stops
     while(true) {
@@ -23,14 +13,46 @@ void App::run() {
         data = input[1];
         
         try {
-            // Ignore invalid commands
-            if (this->commands.find(command) == this->commands.end()) continue;
+            // Invalid commands
+            if (this->commands.find(command) == this->commands.end()) {
+                this->menu->sendOutput(statusCodes[BadRequest]);
+                continue;
+            }
+
             // Execute the command
-            this->commands[command]->execute(data);
-            std:: cout<< statusCodes[commands[command]->getStatus()];
+            output = this->commands[command]->execute(data);
+
+            // Send the status code of the command's execution
+            this->menu->sendOutput(statusCodes[this->commands[command]->getStatus()]);
+            
+            if (!output.empty()) {
+                output = "\n\n" + output;
+            }
+
+            // Send the command's output
+            this->menu->sendOutput(output + "\n");
         } catch (...) {
-            // Currenty no error message is needed
-            this->menu->displayError("");
+            // Invalid command
+            this->menu->sendOutput(statusCodes[BadRequest]);
         }
+    }
+}
+
+void App::createCommands() {
+    ICommand* help = new HelpCommand();
+    ICommand* post = new PostCommand();
+    ICommand* patch = new PatchCommand();
+    ICommand* get = new GetCommand();
+    
+    // Define the commands
+    ::commands[help->toString().first] = help;
+    ::commands[post->toString().first] = post;
+    ::commands[get->toString().first] = get;
+    ::commands[patch->toString().first] = patch;
+}
+
+void App::deleteCommands() {
+    for (const auto& command : ::commands) {
+        delete command.second;
     }
 }

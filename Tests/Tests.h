@@ -21,10 +21,11 @@
 #include "../src/Include/SocketMenu.h"
 
 #define TEST_FILE "../data/test_user_data.txt"
+#define MAX_ID 50
 
 // Generate a random whole number between a and b (inclusive)
 inline int randInt(int a, int b) {
-    std::srand(std::time(0));
+    std::srand(std::random_device()());
     return std::rand() % (b - a + 1) + a;
 }
 
@@ -40,8 +41,7 @@ inline bool compareVec(std::vector<Movie*> a, std::vector<Movie*> b) {
 inline int randomPort() {
     const int minPort = 1024;  // Avoid system-reserved ports
     const int maxPort = 65535;
-    std::srand(std::time(nullptr));
-    return std::rand() % (maxPort - minPort + 1) + minPort;
+    return randInt(minPort, maxPort);
 }
 
 inline int simulateServer(int port) {

@@ -1,4 +1,5 @@
 #include "../Include/App.h"
+#include "../Include/Globals.h"
 
 int main(int argc, char* argv[]) {
     if (argc != 2) {
@@ -11,26 +12,14 @@ int main(int argc, char* argv[]) {
     // Get all info from the file into global variables
     AddCommand::initGlobals("data/user_data.txt");
 
-    std::map<std::string, ICommand*> commands;
-
     IMenu* menu = new ConsoleMenu();
 
-    ICommand* help = new HelpCommand();
-    ICommand* Post = new PostCommand();
-    ICommand* Patch = new PatchCommand();
-    ICommand* recommend = new RecommendCommand();
-    
-    // Define the commands
-    commands["help"] = help;
-    commands["Post"] = Post;
-    commands["recommend"] = recommend;
-    commands["Patch"] =Patch ;
+    App::createCommands();
+
     App app(menu, commands);
     app.run();
 
+    App::deleteCommands();
+
     delete menu;
-    delete help;
-    delete Post;
-    delete Patch;
-    delete recommend;
 }
