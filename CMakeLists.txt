@@ -74,8 +74,8 @@ add_test(
 )
 
 add_test(
-    NAME AddFunctionTests
-    COMMAND AddFunctionTests
+    NAME AddCommandTests
+    COMMAND AddCommandTests
 )
 
 add_test(
@@ -94,13 +94,13 @@ add_test(
 )
 
 add_test(
-    NAME PatchFunctionTests
-    COMMAND PatchFunctionTests
+    NAME PatchCommandTests
+    COMMAND PatchCommandTests
 )
 
 add_test(
-    NAME PostFunctionTests
-    COMMAND PostFunctionTests
+    NAME PostCommandTests
+    COMMAND PostCommandTests
 )
 
 add_test(

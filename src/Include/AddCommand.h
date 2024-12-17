@@ -10,7 +10,7 @@ class AddCommand : public ICommand {
         enum Functionality {POST, PATCH};
 
         // Adds movies to a user's watched list. If the user or movies don't already
-        // exist in the system, it creates them (they are all stored in global vectors).
+        // exist in the system, it creates them (they are all stored in global vectors)
         static void add(int userId, std::vector<int> movieIds);
 
         // Adds all the data from the file to the global vectors allUsers and allMovies 

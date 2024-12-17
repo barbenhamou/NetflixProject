@@ -118,12 +118,13 @@ StatusCode FileStorage::updateUserData(int userId, std::vector<int>& movies, Cha
     // Filter out unnecessary movies (based on change type) and duplicates
     auto filteredMovies = filterMovies(userId, movies, change);
 
-    // Check for attempt to remove movies that weren't patched/posted (in particular, of a non-existing user)
     if (filteredMovies.empty()) {
         if (change == Remove) {
+            // Catch attempts to remove movies that the user didn't watch (in particular, if the user doesn't exist)
             fileIn.close();
             return NotFound;
         } else if (change == Add) {
+            // No new movies to add
             fileIn.close();
             return None;
         }

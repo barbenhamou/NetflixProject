@@ -3,7 +3,7 @@
 #include "../src/Include/MovieUser.h"
 #include "../src/Include/Globals.h"
 
-TEST(AddFunctionTests, RandomizedUserAndMovieIds) {
+TEST(AddCommandTests, AddFunction) {
     int testCount = randInt(10, 30);
     for (int testRun = 0; testRun < 20; ++testRun) {
         // Clear global lists before each test run
