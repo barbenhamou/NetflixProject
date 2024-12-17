@@ -61,3 +61,11 @@ int Movie::findMovie(int id) {
 
     return -1;
 }
+
+bool Movie::wasWatchedBy(User* user) {
+    for (const auto& userWatched : this->users) {
+        if (user->getId() == userWatched->getId()) return true;
+    }
+
+    return false;
+}

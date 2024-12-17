@@ -3,7 +3,7 @@
 
 int main() {
     // Get all info from the file into global variables
-    AddCommand::initGlobals("data/user_data.txt");
+    AddCommand::initGlobals(DATA_FILE);
 
     IMenu* menu = new ConsoleMenu();
 

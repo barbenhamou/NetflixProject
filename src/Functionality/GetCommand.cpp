@@ -30,7 +30,7 @@ bool GetCommand::compareMovies(std::pair<int, Movie*> pair1, std::pair<int, Movi
         return pair1.first < pair2.first;
     }
 
-    // Or ID in increasing order
+    // If relevance is equal then ID in increasing order
     return pair1.second->getId() > pair2.second->getId();
 }
 
@@ -42,7 +42,7 @@ std::vector<Movie*> GetCommand::sortByRelevance(std::vector<int> relevanceValues
         moviesWithRelevance.push_back({relevanceValues[i], relevantMovies[i]});
     }
 
-    // Sorting the vector
+    // Sort the vector
     std::sort(moviesWithRelevance.begin(), moviesWithRelevance.end(), GetCommand::compareMovies);
     std::vector<Movie*> sortedMovies;
     
@@ -70,7 +70,7 @@ std::vector<Movie*> GetCommand::recommend(User* user, Movie* movie) {
     }
 
     // relevantMovies = allMovies\user.getMovies so we don't recommend movies that user already watched
-    std::vector<Movie*> relevantMovies = Movie::relativeComplement(allMoviesRaw, irrelevantMovies);
+    auto relevantMovies = Movie::relativeComplement(allMoviesRaw, irrelevantMovies);
     
     int movieCount = relevantMovies.size();
     int userCount = (movie->getUsers()).size();
@@ -88,7 +88,7 @@ std::vector<Movie*> GetCommand::recommend(User* user, Movie* movie) {
     std::vector<int> relevanceValues(movieCount, 0);
     int i,j;
 
-    for (i = 0; i < movieCount; i++) {
+    /*for (i = 0; i < movieCount; i++) {
         // Find all users who watched both the current relevant movie and the inputted movie, and add their MiC value 
         for (j = 0; j < userCount; j++) {
             for (const auto& relevantUser : relevantMovies[i]->getUsers()) {
@@ -96,6 +96,16 @@ std::vector<Movie*> GetCommand::recommend(User* user, Movie* movie) {
                     relevanceValues[i] += moviesInCommon[j];
                     break;
                 }
+            }
+        }
+    }*/
+
+    for (i = 0; i < movieCount; i++) {
+        // Find all users who watched both relevantMovies[i] movie and the inputted movie and add their MiC value 
+        for (j = 0; j < userCount; j++) {
+            if (movie->getUsers()[j]->hasWatched(relevantMovies[i])) {
+                relevanceValues[i] += moviesInCommon[j];
+                break;
             }
         }
     }
@@ -108,7 +118,8 @@ std::string GetCommand::execute(std::string command) {
     // Match numbers with potential spaces before and after them
     auto extractedNumbers = ICommand::parseCommand(command, R"(\s*(\d+)\s*)");
 
-    // Ensure we have one user ID and one movie ID (else ignore)
+    // Ensure we have one user ID and one movie ID, and that
+    // they are numbers (parseCommand returns {} if a non-number was passed)
     if (extractedNumbers.size() != 2) {
         ICommand::setStatus(BadRequest);
         return "";

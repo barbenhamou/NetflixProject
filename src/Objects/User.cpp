@@ -23,3 +23,11 @@ int User::findUser(int id) {
     }
     return -1;
 }
+
+bool User::hasWatched(Movie* movie) {
+    for (const auto& watchedMovie : this->movies) {
+        if (movie->getId() == watchedMovie->getId()) return true;
+    }
+
+    return false;
+}

@@ -25,6 +25,9 @@ class User {
         
         // Returns the index of the user in the global vector allUsers, or -1 if it isn't there
         static int findUser(int id);
+
+        // Checks if the user watched `movie`
+        bool hasWatched(Movie* movie);
 };
 
 class Movie {
@@ -55,4 +58,7 @@ class Movie {
 
         // Returns the index of the movie in the global vector allMovies, or -1 if it isn't there
         static int findMovie(int id);
+
+        // Checks if the movie was watched by `user`
+        bool wasWatchedBy(User* user);
 };

@@ -16,6 +16,9 @@ class AddCommand : public ICommand {
         // Adds all the data from the file to the global vectors allUsers and allMovies 
         static void initGlobals(const std::string& fileName);
 
+        // desc
+        bool checkAddValidity(IStorage* storage, int userId, Functionality func);
+
         // Executes the add command but with the specified functionality (post/patch...)
         std::string executeSpecificAdd(const std::string& command, Functionality func);
 };

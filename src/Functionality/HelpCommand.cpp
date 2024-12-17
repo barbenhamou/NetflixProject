@@ -32,6 +32,7 @@ std::string HelpCommand::execute(std::string command) {
     for (const auto& command : commandsVec) {
         std::string commandStr = command.second->toString().first;
 
+        // The help command always comes at the end
         if (commandStr == "help") continue;
         
         output += commandStr;

@@ -1,7 +1,7 @@
 #include "Tests.h"
 
 TEST(EndToEndTests, EndToEndTest) {
-    AddCommand::initGlobals("data/user_data.txt");
+    AddCommand::initGlobals(TEST_FILE);
 
     std::map<std::string, ICommand*> commands;
 

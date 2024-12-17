@@ -3,6 +3,7 @@
 
 void AddCommand::add(int userId, std::vector<int> movieIds) {
     int userIndex = User::findUser(userId);
+    int movieIndex;
 
     // If the user doesn't exist, add it to the global list
     if (userIndex == -1) {
@@ -10,10 +11,11 @@ void AddCommand::add(int userId, std::vector<int> movieIds) {
         allUsers.push_back(std::make_unique<User>(userId));
     }
 
-    bool userWatched;
-    bool movieWatched;
+    User* user = allUsers[userIndex].get();
+    Movie* movie;
+
     for (const int& movieId : movieIds) {
-        int movieIndex = Movie::findMovie(movieId);
+        movieIndex = Movie::findMovie(movieId);
 
         // If the movie doesn't exist, add it to the global list
         if (movieIndex == -1) {
@@ -21,30 +23,15 @@ void AddCommand::add(int userId, std::vector<int> movieIds) {
             allMovies.push_back(std::make_unique<Movie>(movieId));
         }
 
-        userWatched = false;
-        movieWatched = false;
-
-        // Check if the user already has the movie
-        for (const auto& movie : allUsers[userIndex]->getMovies()) {
-            if (movie->getId() == movieId) {
-                userWatched = true;
-            }
-        }
-        
-        // Check if the movie already has the user
-        for (const auto& user : allMovies[movieIndex]->getUsers()) {
-            if (user->getId() == userId) {
-                movieWatched = true;
-            }
-        }
+        movie = allMovies[movieIndex].get();
 
         // Add the movie to the user's watched list
-        if (!userWatched) {
+        if (!user->hasWatched(movie)) {
             allUsers[userIndex]->addMovie(allMovies[movieIndex].get());
         }
 
         // Add the user to the movie's watchers list
-        if (!movieWatched) {
+        if (!movie->wasWatchedBy(user)) {
             allMovies[movieIndex]->addUser(allUsers[userIndex].get());
         }
     }
@@ -83,13 +70,41 @@ void AddCommand::initGlobals(const std::string& fileName) {
     inputFile.close();
 }
 
+bool AddCommand::checkAddValidity(IStorage* storage, int userId, Functionality func) {
+    auto userMovies = storage->isUserInStorage(userId);
+    // Decide if the command is valid
+    switch(func) {
+        case POST:
+            if (userMovies != std::vector<long long>{-1}) {
+                ICommand::setStatus(NotFound);
+                return false;
+            }
+
+            ICommand::setStatus(Created);
+            return true;
+
+        case PATCH:
+            if (userMovies == std::vector<long long>{-1}) {
+                ICommand::setStatus(NotFound);
+                return false;
+            }
+
+            ICommand::setStatus(NoContent);
+            return true;
+
+        default:
+            ICommand::setStatus(BadRequest);
+            return false;
+    }
+}
+
 std::string AddCommand::executeSpecificAdd(const std::string& command, Functionality func){
     // Match numbers with potential spaces before and after them
     auto extractedNumbers = ICommand::parseCommand(command, R"(\s*(\d+)\s*)");
 
     // Ensure we have at least one user ID and one movie ID, and that
     // they are numbers (parseCommand returns {} if a non-number was passed)
-    if (extractedNumbers.size() < 2){
+    if (extractedNumbers.size() < 2) {
         ICommand::setStatus(BadRequest);
         return "";
     }
@@ -98,36 +113,13 @@ std::string AddCommand::executeSpecificAdd(const std::string& command, Functiona
     int userId = extractedNumbers[0];
     std::vector<int> watchedMovies(extractedNumbers.begin() + 1, extractedNumbers.end());
 
-    FileStorage fileStorage("data/user_data.txt");
+    IStorage* fileStorage = new FileStorage(DATA_FILE);
 
-    auto userMovies = fileStorage.isUserInStorage(userId);
-    // Decide if the command is valid
-    switch(func) {
-        case POST:
-            if (userMovies != std::vector<long long>{-1}) {
-                ICommand::setStatus(NotFound);
-                return "";
-            }
-
-            ICommand::setStatus(Created);
-            break;
-
-        case PATCH:
-            if (userMovies == std::vector<long long>{-1}) {
-                ICommand::setStatus(NotFound);
-                return "";
-            }
-
-            ICommand::setStatus(NoContent);
-            break;
-
-        default:
-            ICommand::setStatus(BadRequest);
-            return "";
-    }
+    // Check the validity of post or patch (cant patch before post, etc)
+    if (!checkAddValidity(fileStorage, userId, func)) return "";
 
     // Add info to the file
-    StatusCode error = fileStorage.updateUserData(userId, watchedMovies, FileStorage::Add);
+    StatusCode error = fileStorage->updateUserData(userId, watchedMovies, FileStorage::Add);
     if (error != None) {
         ICommand::setStatus(error);
         return "";
@@ -135,6 +127,8 @@ std::string AddCommand::executeSpecificAdd(const std::string& command, Functiona
 
     // Add info to the global vectors
     AddCommand::add(userId, watchedMovies);
+
+    delete fileStorage;
 
     return "";
 }

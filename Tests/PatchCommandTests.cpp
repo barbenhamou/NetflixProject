@@ -15,7 +15,7 @@ TEST(PatchCommandTests, RandomizedUsersAndMovieId) {
         ICommand* Patch = new PatchCommand();
 
         // Check if the user already exists in the file
-        FileStorage fileStorage("data/user_data.txt");
+        FileStorage fileStorage(TEST_FILE);
         if (fileStorage.isUserInStorage(newUserId) == std::vector<long long>{-1}) {
             Patch->execute(command);
 
