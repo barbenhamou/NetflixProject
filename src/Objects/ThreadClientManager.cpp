@@ -5,6 +5,7 @@ void ThreadClientManager::addTask(int clientSocket) {
         ClientHandler handler(clientSocket);
         handler.interact();
     });
+    // close(clientSocket);
 }
 
 void ThreadClientManager::shutdown() {
@@ -14,8 +15,3 @@ void ThreadClientManager::shutdown() {
         }
     }
 }
-
-ThreadClientManager::~ThreadClientManager() {
-    this->shutdown();
-}
-

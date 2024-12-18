@@ -17,7 +17,7 @@ include_directories(
 add_executable(
     Tests
     Tests/TCPServerTests.cpp
-    Tests/ThreadManagertests.cpp
+    Tests/ThreadManagerTests.cpp
     Tests/EndToEndTests2.cpp
     Tests/SocketMenuTests.cpp
     Tests/PatchCommandTests.cpp
@@ -30,6 +30,9 @@ add_executable(
     Tests/GetCommandTests.cpp
     #Tests/EndToEndTests.cpp
 
+    src/Objects/TCPServer.cpp
+    src/Objects/ThreadClientManager.cpp
+    src/Objects/ClientHandler.cpp
     src/Objects/SocketMenu.cpp
     src/Objects/ConsoleMenu.cpp
     src/Objects/App.cpp
@@ -110,11 +113,11 @@ add_test(
 )
 
 add_test(
-    NAME PostFunctionTests
-    COMMAND PostFunctionTests
+    NAME ThreadClientManagerTests
+    COMMAND ThreadClientManagerTests
 )
 
 add_test(
-    NAME PostFunctionTests
-    COMMAND PostFunctionTests
+    NAME TCPServerTests
+    COMMAND TCPServerTests
 )

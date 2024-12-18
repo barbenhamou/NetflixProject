@@ -8,15 +8,27 @@
 // Helper function to create a simple server socket
 int createTestServerSocket(int port) {
     int serverSocket = socket(AF_INET, SOCK_STREAM, 0);
-    ASSERT_NE(serverSocket, -1) << "Failed to create server socket.";
+    if (serverSocket < 0) {
+        std::cerr << "Failed to create server socket.\n";
+        return -1; // Return -1 on failure
+    }
 
     sockaddr_in serverAddr{};
     serverAddr.sin_family = AF_INET;
     serverAddr.sin_addr.s_addr = INADDR_ANY;
     serverAddr.sin_port = htons(port);
 
-    ASSERT_EQ(bind(serverSocket, (sockaddr*)&serverAddr, sizeof(serverAddr)), 0);
-    ASSERT_EQ(listen(serverSocket, 5), 0);
+    if (bind(serverSocket, (sockaddr*)&serverAddr, sizeof(serverAddr)) < 0) {
+        std::cerr << "Failed to bind server socket.\n";
+        close(serverSocket);
+        return -1;
+    }
+
+    if (listen(serverSocket, 5) < 0) {
+        std::cerr << "Failed to listen on server socket.\n";
+        close(serverSocket);
+        return -1;
+    }
 
     return serverSocket;
 }

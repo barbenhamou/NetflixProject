@@ -9,7 +9,7 @@ class ClientHandler {
     private:
         int clientSocket;
         IMenu* menu;
-        App app;
+        App* app;
 
     public:
         // Constructor

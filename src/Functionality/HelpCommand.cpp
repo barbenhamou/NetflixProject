@@ -19,7 +19,7 @@ std::vector<std::pair<std::string, ICommand*>> HelpCommand::sortCommands() {
 
 std::string HelpCommand::execute(std::string command) {
     // Ensure no arguments are passed
-    if (!command.empty()) {
+    if (!command.empty() && command != "\n") {
         ICommand::setStatus(BadRequest);
         return "";
     }

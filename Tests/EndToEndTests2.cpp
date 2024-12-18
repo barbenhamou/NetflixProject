@@ -80,28 +80,28 @@ TEST(EndToEndTests2, FullFunctionality) {
     sleep(1); // Allow server to start
 
     // -------- Test Case 1: GET 1 104 --------
-    std::string getRequest = "get 1 104\n";
+    std::string getRequest = "GET 1 104\n";
     std::string getResponse = simulateClientRequest("127.0.0.1", 12345, getRequest);
     std::string expectedOutput = "105 106 111 110 112 113 107 108 109 114";
-    EXPECT_EQ(getResponse, expectedOutput + "\n");
+    EXPECT_EQ(getResponse, "200 Ok\n\n" + expectedOutput + "\n");
 
     // -------- Test Case 2: POST - Add a new user --------
-    std::string postRequest = "add 11 120 121 122\n";
+    std::string postRequest = "POST 11 120 121 122\n";
     std::string postResponse = simulateClientRequest("127.0.0.1", 12345, postRequest);
     EXPECT_EQ(postResponse, "201 Created\n");
 
     // -------- Test Case 3: PATCH - Update user 1 --------
-    std::string patchRequest = "patch 1 104 105\n";
+    std::string patchRequest = "PATCH 1 104 105\n";
     std::string patchResponse = simulateClientRequest("127.0.0.1", 12345, patchRequest);
     EXPECT_EQ(patchResponse, "204 No Content\n");
 
     // -------- Test Case 4: Invalid Command --------
-    std::string invalidRequest = "unknowncommand 123\n";
+    std::string invalidRequest = "UNKNOWNCOMMAND 123\n";
     std::string invalidResponse = simulateClientRequest("127.0.0.1", 12345, invalidRequest);
     EXPECT_EQ(invalidResponse, "400 Bad Request\n");
 
     // -------- Test Case 5: GET with Invalid User --------
-    std::string invalidGetRequest = "get 999 104\n";
+    std::string invalidGetRequest = "GET 999 104\n";
     std::string invalidGetResponse = simulateClientRequest("127.0.0.1", 12345, invalidGetRequest);
     EXPECT_EQ(invalidGetResponse, "404 Not Found\n");
 
@@ -109,18 +109,19 @@ TEST(EndToEndTests2, FullFunctionality) {
     std::string helpRequest = "help\n";
     std::string helpResponse = simulateClientRequest("127.0.0.1", 12345, helpRequest);
     std::string expectedHelpOutput = 
-        "add [userid] [movieid1] [movieid2] ...\n"
-        "recommend [userid] [movieid]\n"
+        "POST, arguments: [userid] [movieid1] [movieid2] ...\n"
+        "PATCH, arguments: [userid] [movieid1] [movieid2] ...\n"
+        "GET, arguments: [userid] [movieid]\n"
         "help\n";
-    EXPECT_EQ(helpResponse, expectedHelpOutput);
+    EXPECT_EQ(helpResponse, "200 Ok\n\n" + expectedHelpOutput);
 
     // -------- Test Case 7: PATCH - Update non-existing user --------
-    std::string patchInvalidUser = "patch 999 104 105\n";
+    std::string patchInvalidUser = "PATCH 999 104 105\n";
     std::string patchInvalidUserResponse = simulateClientRequest("127.0.0.1", 12345, patchInvalidUser);
     EXPECT_EQ(patchInvalidUserResponse, "404 Not Found\n");
 
     // -------- Test Case 8: POST - Add an existing user --------
-    std::string postExistingUser = "add 1 200 201\n";
+    std::string postExistingUser = "POST 1 200 201\n";
     std::string postExistingResponse = simulateClientRequest("127.0.0.1", 12345, postExistingUser);
     EXPECT_EQ(postExistingResponse, "404 Not Found\n");
 

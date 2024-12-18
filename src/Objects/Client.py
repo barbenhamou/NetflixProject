@@ -18,10 +18,11 @@ class Client:
             while True:
                 # Get input from the user
                 msg = input("")
+                
                 if not msg:
                     continue
 
-                msg_bytes = msg.encode()
+                msg_bytes = (msg + '\n').encode()
 
                 # Send the message bytes directly
                 self.__sock.sendall(msg_bytes)

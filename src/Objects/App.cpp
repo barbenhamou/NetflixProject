@@ -3,7 +3,7 @@
 
 void App::run() {
     std::vector<std::string> input = {};
-    std::string command, data, output;
+    std::string command, data, output, status;
 
     // The app never stops
     while(true) {
@@ -11,6 +11,8 @@ void App::run() {
         input = this->menu->nextCommand();
         command = input[0];
         data = input[1];
+
+        // std::cout << command << " " << data << std::endl;
         
         try {
             // Invalid commands
@@ -22,15 +24,15 @@ void App::run() {
             // Execute the command
             output = this->commands[command]->execute(data);
 
-            // Send the status code of the command's execution
-            this->menu->sendOutput(statusCodes[this->commands[command]->getStatus()]);
+            // The status code of the command's execution
+            status = statusCodes[this->commands[command]->getStatus()];
             
             if (!output.empty()) {
                 output = "\n\n" + output;
             }
 
             // Send the command's output
-            this->menu->sendOutput(output + "\n");
+            this->menu->sendOutput(status + output + "\n");
         } catch (...) {
             // Invalid command
             this->menu->sendOutput(statusCodes[BadRequest]);

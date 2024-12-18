@@ -33,5 +33,4 @@ class TCPServer : public IServer {
 
         // Destructor / Destoyer
         ~TCPServer() {this->shutdown();}
-    
 };

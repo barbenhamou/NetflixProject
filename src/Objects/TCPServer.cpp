@@ -1,6 +1,7 @@
 #include "../Include/TCPServer.h"
 
-TCPServer::TCPServer(std::string ip, uint32_t port, IThreadManager* manager) : ip(ip), port(port), threadManager(manager) {
+TCPServer::TCPServer(std::string ip, uint32_t port, IThreadManager* manager)
+    : ip(std::move(ip)), port(port), threadManager(manager), active(false) {
     this->serverSocket = socket(AF_INET, SOCK_STREAM, 0);
     if (this->serverSocket < 0) {
         this->serverSocket = -1;
@@ -8,9 +9,11 @@ TCPServer::TCPServer(std::string ip, uint32_t port, IThreadManager* manager) : i
 }
 
 int TCPServer::activate() {
-    if (this->serverSocket == -1) return -1;
+    if (this->serverSocket == -1) {
+        return -1;
+    }
 
-    struct sockaddr_in serverAddress;
+    sockaddr_in serverAddress{};
     serverAddress.sin_family = AF_INET;
     serverAddress.sin_addr.s_addr = inet_addr(this->ip.c_str());
     serverAddress.sin_port = htons(port);
@@ -19,19 +22,26 @@ int TCPServer::activate() {
         return -1;
     }
 
-    if (listen(this->serverSocket, 128) < -1) {
+    if (listen(this->serverSocket, 128) < 0) {
         return -1;
     }
 
     this->active = true;
 
     while (this->active) {
-        struct sockaddr_in clientAddr;
-        unsigned int clientAddrLen = sizeof(clientAddr);
+        sockaddr_in clientAddr{};
+        socklen_t clientAddrLen = sizeof(clientAddr);
         int clientSocket = accept(this->serverSocket, (struct sockaddr*)&clientAddr, &clientAddrLen);
 
-        this->threadManager->addTask(clientSocket);
+        if (clientSocket >= 0) {
+            this->threadManager->addTask(clientSocket);
+
+        } else {
+            break;
+        }
     }
+    
+    this->shutdown();
 
     return 0;
 }

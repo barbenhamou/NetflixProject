@@ -3,11 +3,12 @@
 ClientHandler::ClientHandler(int clientSocket) {
     this->clientSocket = clientSocket;
     this->menu = new SocketMenu(this->clientSocket);
-    this->app(commands, this->menu);
+    this->app = new App(this->menu, commands);
 }
 
 void ClientHandler::interact() {
-    this->app.run();
+    this->app->run();
     
-    delete menu;
+    delete this->menu;
+    delete this->app;
 }
