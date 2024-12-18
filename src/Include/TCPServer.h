@@ -4,22 +4,21 @@
 #include <thread>
 #include <vector>
 #include <cstring>
-#include <arpa/inet.h>
-#include <unistd.h>
 
-#include "ClientHandler.h"
+#include "IServer.h"
 
-class TCPServer {
+// TCP server
+class TCPServer : public IServer {
     private:
         std::string ip;
         uint32_t port;
-        ssize_t serverSocket;
-        std::vector<std::thread> threads;
+        int serverSocket;
+        IThreadManager* threadManager;
         bool active;
 
     public:
         // Constructor
-        TCPServer(std::string ip, uint32_t port);
+        TCPServer(std::string ip, uint32_t port, IThreadManager* manager);
 
         // Activating the server
         int activate();
@@ -32,7 +31,7 @@ class TCPServer {
             return this->serverSocket;
         }
 
-        // Destructor-Destoyer
+        // Destructor / Destoyer
         ~TCPServer() {this->shutdown();}
     
 };
