@@ -14,6 +14,8 @@
 #include "MovieUser.h"
 #include "IStorage.h"
 
+#define USER_NOT_FOUND std::vector<long long>{-1}
+
 class FileStorage : public IStorage {
     private:
         // The name of the file where the data is stored.
@@ -31,7 +33,7 @@ class FileStorage : public IStorage {
         static std::vector<int> splitToInt(const std::string& str, char delimiter);
 
         // Write the movie IDs to the file, separated by commas: `movie1,movie2,...lastmovie`
-        void writeMoviesToFile(std::ofstream& file, std::vector<int> movies);
+        static void writeMoviesToFile(std::ofstream& file, std::vector<int> movies);
 
         StatusCode updateUserData(int userId, std::vector<int>& movies, Change change) override;
 

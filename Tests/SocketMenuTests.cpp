@@ -19,7 +19,7 @@ TEST(SocketMenuTests, TestNextCommand) {
 
     std::vector<std::string> res = menu.nextCommand();
 
-    ASSERT_EQ(res.size(), 2);
+    EXPECT_EQ(res.size(), 2);
     EXPECT_EQ(res[0], "command");
     EXPECT_EQ(res[1], " arg1 arg2\n");
 
@@ -50,7 +50,7 @@ TEST(SocketMenuTests, TestDisplayError) {
     char data[4096] = { 0 };
     int recved = recv(client_sock, data, recved_size, 0);
 
-    ASSERT_GT(recved, 0);
+    EXPECT_GT(recved, 0);
     EXPECT_EQ(std::string(data, recved), msg);
 
     close(client_sock);

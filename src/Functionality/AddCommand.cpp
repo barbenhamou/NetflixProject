@@ -25,14 +25,10 @@ void AddCommand::add(int userId, std::vector<int> movieIds) {
 
         movie = allMovies[movieIndex].get();
 
-        // Add the movie to the user's watched list
+        // Add the movie to the user's watched list and the user to the movie's watchers list
         if (!user->hasWatched(movie)) {
-            allUsers[userIndex]->addMovie(allMovies[movieIndex].get());
-        }
-
-        // Add the user to the movie's watchers list
-        if (!movie->wasWatchedBy(user)) {
-            allMovies[movieIndex]->addUser(allUsers[userIndex].get());
+            user->addMovie(movie);
+            movie->addUser(user);
         }
     }
 }
@@ -75,7 +71,7 @@ bool AddCommand::checkAddValidity(IStorage* storage, int userId, Functionality f
     // Decide if the command is valid
     switch(func) {
         case POST:
-            if (userMovies != std::vector<long long>{-1}) {
+            if (userMovies != USER_NOT_FOUND) {
                 ICommand::setStatus(NotFound);
                 return false;
             }
@@ -84,7 +80,7 @@ bool AddCommand::checkAddValidity(IStorage* storage, int userId, Functionality f
             return true;
 
         case PATCH:
-            if (userMovies == std::vector<long long>{-1}) {
+            if (userMovies == USER_NOT_FOUND) {
                 ICommand::setStatus(NotFound);
                 return false;
             }

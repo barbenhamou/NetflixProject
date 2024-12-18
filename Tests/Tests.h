@@ -96,7 +96,7 @@ inline int simulateClient(int port) {
     return client_sock;
 }
 
-void generateRandomAddCommand(int minMovies, int maxMovies, int& userId, std::vector<int>& movies, std::string& command) {
+inline void generateRandomAddCommand(int minMovies, int maxMovies, int& userId, std::vector<int>& movies, std::string& command) {
     // Generate a random user ID between 1 and 1000
     userId = randInt(1, 100);
 

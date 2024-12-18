@@ -1,4 +1,5 @@
 #include "Tests.h"
+#include "../src/Include/Globals.h"
 
 TEST(DeleteCommandTests, RemoveFunction) {
     allUsers.clear();
@@ -6,14 +7,14 @@ TEST(DeleteCommandTests, RemoveFunction) {
 
     int numTests = randInt(10, 30);
 
-    for (int i = 0; i < numTests; ++i) {    
+    for (int i = 0; i < numTests; i++) {    
         // Set up the user and movies to add
         // Unique user ID for each iteration
         int userId = randInt(10 * i, 10 * (i + 1) - 1);
         int numMovies = randInt(1, 15);
         std::vector<int> movieIds;
 
-        for (int j = 0; j < numMovies; ++j) {
+        for (int j = 0; j < numMovies; j++) {
             movieIds.push_back(randInt(10 * j, 10 * (j + 1) - 1)); // Unique movie IDs
         }
 
@@ -29,7 +30,7 @@ TEST(DeleteCommandTests, RemoveFunction) {
         // Find the user and get their remaining movies
         int userIndex = User::findUser(userId);
         // Ensure the user still exists
-        ASSERT_NE(userIndex, -1);
+        EXPECT_NE(userIndex, -1);
 
         auto remainingMovies = allUsers[userIndex]->getMovies();
         std::vector<int> remainingMovieIds;

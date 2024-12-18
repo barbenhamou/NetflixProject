@@ -6,7 +6,29 @@ std::pair<std::string, std::string> DeleteCommand::toString() {
 }
 
 void DeleteCommand::remove(int userId, std::vector<int> movieIds) {
-    return;
+    int userIndex = User::findUser(userId);
+    int movieIndex;
+
+    // If the user doesn't exist, return
+    if (userIndex == -1) return;
+
+    User* user = allUsers[userIndex].get();
+    Movie* movie;
+
+    for (const int& movieId : movieIds) {
+        movieIndex = Movie::findMovie(movieId);
+
+        // If the movie doesn't exist, skip it
+        if (movieIndex == -1) continue;
+
+        movie = allMovies[movieIndex].get();
+
+        // Add the movie to the user's watched list
+        if (user->hasWatched(movie)) {
+            user->removeMovie(movie);
+            movie->removeUser(user);
+        }
+    }
 }
 
 std::string DeleteCommand::execute(std::string command) {
@@ -33,8 +55,10 @@ std::string DeleteCommand::execute(std::string command) {
         return "";
     }
 
-    // Add info to the global vectors
+    // Remove info from the global vectors
     DeleteCommand::remove(userId, watchedMovies);
+
+    ICommand::setStatus(NoContent);
 
     return "";
 }

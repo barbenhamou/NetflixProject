@@ -17,6 +17,9 @@ class User {
         // Adds a movie to the user's watched list
         void addMovie(Movie* movie);
 
+        // Removes a movie from the user's watched list
+        void removeMovie(Movie* movie);
+
         // Returns the user's list of watched movies
         const std::vector<Movie*>& getMovies() const;
 
@@ -41,6 +44,9 @@ class Movie {
 
         // Adds a user to the movie's list of watchers
         void addUser(User* user);
+
+        // Removes a user from the movie's list of watchers
+        void removeUser(User* user);
 
         // Returns the list of users that watched the movie
         const std::vector<User*>& getUsers() const;

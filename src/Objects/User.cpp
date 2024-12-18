@@ -7,6 +7,16 @@ void User::addMovie(Movie* movie) {
     movies.push_back(movie);
 }
 
+void User::removeMovie(Movie* movie) {
+    // Find the movie in the watched list
+    auto iter = std::find(movies.begin(), movies.end(), movie);
+
+    // Remove it if found
+    if (iter != movies.end()) {
+        movies.erase(iter);
+    }
+}
+
 const std::vector<Movie*>& User::getMovies() const {
     return movies;
 }

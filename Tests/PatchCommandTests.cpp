@@ -16,7 +16,7 @@ TEST(PatchCommandTests, RandomizedUsersAndMovieId) {
 
         // Check if the user already exists in the file
         FileStorage fileStorage(TEST_FILE);
-        if (fileStorage.isUserInStorage(newUserId) == std::vector<long long>{-1}) {
+        if (fileStorage.isUserInStorage(newUserId) == USER_NOT_FOUND) {
             Patch->execute(command);
 
             // Check the status
@@ -36,7 +36,7 @@ TEST(PatchCommandTests, RandomizedUsersAndMovieId) {
                 break;
             }
         }
-        ASSERT_TRUE(userFound);
+        EXPECT_TRUE(userFound);
 
         // 2. Check if the new movies are in the global movies list
         for (int movieId : newMovieIds) {
@@ -47,7 +47,7 @@ TEST(PatchCommandTests, RandomizedUsersAndMovieId) {
                     break;
                 }
             }
-            ASSERT_TRUE(movieFound);
+            EXPECT_TRUE(movieFound);
         }
 
         // 3. Check if the new movies are in the user's list of watched movies
@@ -58,7 +58,7 @@ TEST(PatchCommandTests, RandomizedUsersAndMovieId) {
                 break;
             }
         }
-        ASSERT_NE(newUser, nullptr);
+        EXPECT_NE(newUser, nullptr);
         for (int movieId : newMovieIds) {
             bool movieInUserList = false;
             for (const auto& movie : newUser->getMovies()) {
@@ -67,7 +67,7 @@ TEST(PatchCommandTests, RandomizedUsersAndMovieId) {
                     break;
                 }
             }
-            ASSERT_TRUE(movieInUserList);
+            EXPECT_TRUE(movieInUserList);
         }
 
         // 4. Check if the new user is in each movie's list of users who watched it
@@ -79,7 +79,7 @@ TEST(PatchCommandTests, RandomizedUsersAndMovieId) {
                     break;
                 }
             }
-            ASSERT_NE(newMovie, nullptr);
+            EXPECT_NE(newMovie, nullptr);
             bool userInMovieList = false;
             for (const auto& user : newMovie->getUsers()) {
                 if (user->getId() == newUserId) {
@@ -87,7 +87,7 @@ TEST(PatchCommandTests, RandomizedUsersAndMovieId) {
                     break;
                 }
             }
-            ASSERT_TRUE(userInMovieList);
+            EXPECT_TRUE(userInMovieList);
         }
 
         delete Patch;
