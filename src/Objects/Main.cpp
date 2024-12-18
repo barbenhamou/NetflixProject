@@ -1,12 +1,13 @@
 #include "../Include/App.h"
 #include "../Include/Globals.h"
+#include "../Include/TCPServer.h"
 
 int main(int argc, char* argv[]) {
-    if (argc != 2) {
-        return 1;
+    if (argc != 3) {
+        return -1;
     }
 
-    int server_port = stoi(argv[1]);
+    int port = std::stoi(argv[1]);
 
     
     // Get all info from the file into global variables
@@ -14,12 +15,17 @@ int main(int argc, char* argv[]) {
 
     App::createCommands();
 
-    IMenu* menu = new ConsoleMenu();
+    // IMenu* menu = new ConsoleMenu();
 
-    App app(menu, commands);
-    app.run();
+    // App app(menu, commands);
+    // app.run();
 
-    delete menu;
+    // delete menu;
 
+    ThreadClientManager* manager = new ThreadClientManager();
+    TCPServer server(argv[2], port, manager);
+    server.activate();
+
+    delete manager;
     App::deleteCommands();
 }

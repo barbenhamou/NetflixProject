@@ -16,6 +16,9 @@ include_directories(
 # Add the executable for ConsoleMenuTest
 add_executable(
     Tests
+    Tests/TCPServerTests.cpp
+    Tests/ThreadManagertests.cpp
+    Tests/EndToEndTests2.cpp
     Tests/SocketMenuTests.cpp
     Tests/PatchCommandTests.cpp
     Tests/PostCommandTests.cpp
@@ -94,6 +97,21 @@ add_test(
 add_test(
     NAME PatchFunctionTests
     COMMAND PatchFunctionTests
+)
+
+add_test(
+    NAME PostFunctionTests
+    COMMAND PostFunctionTests
+)
+
+add_test(
+    NAME EndToEndTests2
+    COMMAND EndToEndTests2
+)
+
+add_test(
+    NAME PostFunctionTests
+    COMMAND PostFunctionTests
 )
 
 add_test(
