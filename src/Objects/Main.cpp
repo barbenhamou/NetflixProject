@@ -11,7 +11,7 @@ int main(int argc, char* argv[]) {
 
     
     // Get all info from the file into global variables
-    AddCommand::initGlobals("data/user_data.txt");
+    AddCommand::initGlobals(DATA_FILE);
 
     App::createCommands();
 

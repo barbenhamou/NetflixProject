@@ -36,6 +36,8 @@ We wrote some tests for the project.
 To run the tests, run these two commands:
 ```bash
 docker build -f Dockerfile.tests -t tests .
+```
+```bash
 docker run tests
 ```
 
@@ -47,12 +49,12 @@ When running the project, a command-line interface starts. It supports 5 command
 Creates a user and adds movies to the user's watched list. The user must not already exist in the system for you to use this command on them. The movies can be either new or existing.
 
 ### PATCH
-**Syntax:** `PATCH [userid] [movieid1] [movieid2] ...` (supports multiple spaces)
+**Syntax:** `PATCH [userid] [movieid1] [movieid2] ...`
 
 Adds movies to an existing user's watched list. The user must already exist in the system for you to use this command on them. The movies can be either new or existing.
 
 ### DELETE
-**Syntax:** `DELETE [userid] [movieid1] [movieid2] ...` (supports multiple spaces)
+**Syntax:** `DELETE [userid] [movieid1] [movieid2] ...`
 
 Deletes movies from an existing user's watched list.
 
@@ -66,7 +68,7 @@ Each user is assigned a "Movies in Common" (MiC) value - how many movies both th
 ### Help
 **Syntax:** `help`
 
-Displays all available commands and their syntax.
+Displays all available commands and their arguments.
 
 <br>
 

@@ -7,6 +7,8 @@
 #include "MovieUser.h"
 #include "ICommand.h"
 
+#define DATA_FILE "data/user_data.txt"
+
 // Global vectors to uniquely store all movies and users
 extern std::vector<std::unique_ptr<Movie>> allMovies;
 extern std::vector<std::unique_ptr<User>> allUsers;

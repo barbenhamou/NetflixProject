@@ -6,7 +6,6 @@
 #include "ICommand.h"
 
 // A command to display all available commands, alphabetically (help itself is always last).
-// Syntax: `help`
 class HelpCommand : public ICommand {
     public:
         std::pair<std::string, std::string> toString() override;

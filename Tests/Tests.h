@@ -95,3 +95,30 @@ inline int simulateClient(int port) {
 
     return client_sock;
 }
+
+inline void generateRandomAddCommand(int minMovies, int maxMovies, int& userId, std::vector<int>& movies, std::string& command) {
+    // Generate a random user ID between 1 and 1000
+    userId = randInt(1, 100);
+
+    // Generate a random number of movies (minMovies to maxMovies)
+    int numMovies = randInt(minMovies, maxMovies);
+
+    // Clear the movies vector
+    movies.clear();
+
+    // Populate the movies vector with random movie IDs (1 to 1000)
+    for (int i = 0; i < numMovies; i++) {
+        int movieId = randInt(1, 100);
+        movies.push_back(movieId);
+    }
+
+    // Construct the command string
+    std::ostringstream commandStream;
+    commandStream << userId;  // Start with the user ID
+    for (int movieId : movies) {
+        commandStream << " " << movieId;  // Append each movie ID
+    }
+
+    // Convert to a string
+    command = commandStream.str();
+}

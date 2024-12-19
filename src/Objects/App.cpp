@@ -17,7 +17,7 @@ void App::run() {
         try {
             // Invalid commands
             if (this->commands.find(command) == this->commands.end()) {
-                this->menu->sendOutput(statusCodes[BadRequest]);
+                this->menu->sendOutput(statusCodes[BadRequest] + "\n");
                 continue;
             }
 
@@ -35,22 +35,24 @@ void App::run() {
             this->menu->sendOutput(status + output + "\n");
         } catch (...) {
             // Invalid command
-            this->menu->sendOutput(statusCodes[BadRequest]);
+            this->menu->sendOutput(statusCodes[BadRequest] + "\n");
         }
     }
 }
 
 void App::createCommands() {
-    ICommand* help = new HelpCommand();
-    ICommand* post = new PostCommand();
-    ICommand* patch = new PatchCommand();
-    ICommand* get = new GetCommand();
+    ICommand* Help = new HelpCommand();
+    ICommand* Post = new PostCommand();
+    ICommand* Patch = new PatchCommand();
+    ICommand* Get = new GetCommand();
+    ICommand* Delete = new DeleteCommand();
     
     // Define the commands
-    ::commands[help->toString().first] = help;
-    ::commands[post->toString().first] = post;
-    ::commands[get->toString().first] = get;
-    ::commands[patch->toString().first] = patch;
+    ::commands[Help->toString().first] = Help;
+    ::commands[Post->toString().first] = Post;
+    ::commands[Patch->toString().first] = Patch;
+    ::commands[Get->toString().first] = Get;
+    ::commands[Delete->toString().first] = Delete;
 }
 
 void App::deleteCommands() {

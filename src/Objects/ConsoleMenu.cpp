@@ -17,6 +17,6 @@ std::vector<std::string> ConsoleMenu::nextCommand() {
 }
 
 void ConsoleMenu::sendOutput(std::string output) {
-    // Print the error to stdout
+    // Print the output to stdout
     std::cout << output;
 }
