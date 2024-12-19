@@ -1,5 +1,6 @@
 import socket
 import sys
+import signal
 
 # The maximum number of bytes to receive per chunk
 BYTES = 4096
@@ -50,7 +51,16 @@ class Client:
             # Close the socket in case of an error
             self.__sock.close()
             return
+        
+    def servClose(self):
+        if self.__sock:
+            self.__sock.close()
 
+def signal_handler(client_instance):
+    def handler(sig, frame):
+        client_instance.close()
+        sys.exit(0)
+    return handler
 
 def main():
     # Ensure the correct number of arguments are passed
@@ -62,6 +72,10 @@ def main():
 
     # Initialize and run the client
     client = Client(port=SERVER_PORT, server_ip=SERVER_IP)
+
+    # Initialize client handler
+    signal.signal(signal.SIGINT, signal_handler(client))
+
     client.run()
 
 

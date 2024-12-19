@@ -9,7 +9,7 @@ BIN_DIR = ./bin
 DATA_DIR = ./data
 
 PORT = 12350
-IP = 192.168.1.52
+IP = 127.0.0.1
 
 # Source files
 SRC_FILES = $(wildcard $(SRC_DIR)/Objects/*.cpp) $(wildcard $(SRC_DIR)/FileHandling/*.cpp) $(wildcard $(SRC_DIR)/Functionality/*.cpp)

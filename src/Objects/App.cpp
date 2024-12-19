@@ -15,6 +15,10 @@ void App::run() {
         // std::cout << command << " " << data << std::endl;
         
         try {
+            if (command.empty()) {
+                break;
+            }
+
             // Invalid commands
             if (this->commands.find(command) == this->commands.end()) {
                 this->menu->sendOutput(statusCodes[BadRequest] + "\n");
