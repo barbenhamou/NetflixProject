@@ -1,5 +1,5 @@
 # Compiler and flags
-CXX = g++
+CXX =g++
 CXXFLAGS = -Wall -Wextra -std=c++17 -pthread -g
 
 # Directories
@@ -9,6 +9,7 @@ BIN_DIR = ./bin
 DATA_DIR = ./data
 
 PORT = 12350
+IP = 192.168.1.52
 
 # Source files
 SRC_FILES = $(wildcard $(SRC_DIR)/Objects/*.cpp) $(wildcard $(SRC_DIR)/FileHandling/*.cpp) $(wildcard $(SRC_DIR)/Functionality/*.cpp)
@@ -52,7 +53,7 @@ run-server: server
 	./$(SERVER_EXEC) $(PORT)
 # Run the Python client with command-line arguments
 run-client:
-	python3 $(PY_CLIENT) 127.0.0.1 $(PORT)
+	python3 $(PY_CLIENT) $(IP) $(PORT)
 
 # Clean build artifacts
 clean:

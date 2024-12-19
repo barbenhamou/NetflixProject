@@ -7,4 +7,4 @@ WORKDIR /usr/src/project
 COPY . .
 
 # Default entry point to run the Python client script
-CMD ["python3", "./src/Objects/Client.py"]
+ENTRYPOINT ["python3", "./src/Objects/Client.py"]
