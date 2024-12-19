@@ -10,8 +10,8 @@ void ThreadClientManager::addTask(int clientSocket) {
 
 void ThreadClientManager::shutdown() {
     for (auto& worker : this->workers) {
-            if (worker.joinable()) {
-                worker.join();
+        if (worker.joinable()) {
+            worker.join();
         }
     }
 }

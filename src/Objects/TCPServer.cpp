@@ -35,12 +35,13 @@ int TCPServer::activate() {
 
         if (clientSocket >= 0) {
             this->threadManager->addTask(clientSocket);
-
         } else {
             break;
         }
     }
     
+    sleep(1);
+
     this->shutdown();
 
     return 0;

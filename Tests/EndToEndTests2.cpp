@@ -45,39 +45,44 @@ std::string simulateClientRequest(const std::string& serverIp, int port, const s
 
     return "";
 }
-
-// Test Data Initialization
-void loadInitialData() {
-    std::ofstream file("data/user_data.txt");
-    file << "1:100,101,102,103\n";
-    file << "2:101,102,104,105,106\n";
-    file << "3:100,104,105,107,108\n";
-    file << "4:101,105,106,107,109,110\n";
-    file << "5:100,102,103,105,108,111\n";
-    file << "6:100,103,104,110,111,112,113\n";
-    file << "7:102,105,106,107,108,109,110\n";
-    file << "8:101,104,105,106,109,111,114\n";
-    file << "9:100,103,105,107,112,113,115\n";
-    file << "10:100,102,105,106,107,109,110,116\n";
-    file.close();
-}
-
-// End-to-End Test Suite
-TEST(EndToEndTests2, FullFunctionality) {
-    // Initialize test data
-    loadInitialData();
-    AddCommand::initGlobals("data/user_data.txt");
+TEST(EndToEndTests2, FullFunctionalityWithPosts) {
     App::createCommands();
 
     ThreadClientManager manager;
-    TCPServer server("127.0.0.1", 12345, &manager);
+    TCPServer server("0.0.0.0", 12345, &manager);
 
     // Start server in a separate thread
     std::thread serverThread([&server]() {
-        ASSERT_EQ(server.activate(), 0);
+        EXPECT_EQ(server.activate(), 0);
     });
 
     sleep(1); // Allow server to start
+
+    // -------- Initialize data using POST commands --------
+    std::vector<std::pair<int, std::vector<int>>> initialData = {
+        {1, {100, 101, 102, 103}},
+        {2, {101, 102, 104, 105, 106}},
+        {3, {100, 104, 105, 107, 108}},
+        {4, {101, 105, 106, 107, 109, 110}},
+        {5, {100, 102, 103, 105, 108, 111}},
+        {6, {100, 103, 104, 110, 111, 112, 113}},
+        {7, {102, 105, 106, 107, 108, 109, 110}},
+        {8, {101, 104, 105, 106, 109, 111, 114}},
+        {9, {100, 103, 105, 107, 112, 113, 115}},
+        {10, {100, 102, 105, 106, 107, 109, 110, 116}}
+    };
+
+    for (const auto& [userId, movies] : initialData) {
+        std::ostringstream postCommand;
+        postCommand << "POST " << userId;
+        for (int movieId : movies) {
+            postCommand << " " << movieId;
+        }
+        postCommand << "\n";
+
+        std::string postResponse = simulateClientRequest("127.0.0.1", 12345, postCommand.str());
+        EXPECT_EQ(postResponse, "201 Created\n") << "Failed to add user " << userId << " with movies.";
+    }
 
     // -------- Test Case 1: GET 1 104 --------
     std::string getRequest = "GET 1 104\n";

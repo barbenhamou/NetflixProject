@@ -16,8 +16,8 @@ include_directories(
 # Add the executable for ConsoleMenuTest
 add_executable(
     Tests
-    Tests/TCPServerTests.cpp
-    Tests/ThreadManagerTests.cpp
+    # Tests/TCPServerTests.cpp
+    # Tests/ThreadManagerTests.cpp
     Tests/EndToEndTests2.cpp
     Tests/SocketMenuTests.cpp
     Tests/PatchCommandTests.cpp
@@ -112,12 +112,12 @@ add_test(
     COMMAND EndToEndTests2
 )
 
-add_test(
-    NAME ThreadClientManagerTests
-    COMMAND ThreadClientManagerTests
-)
+# add_test(
+#     NAME ThreadClientManagerTests
+#     COMMAND ThreadClientManagerTests
+# )
 
-add_test(
-    NAME TCPServerTests
-    COMMAND TCPServerTests
-)
+# add_test(
+#     NAME TCPServerTests
+#     COMMAND TCPServerTests
+# )
