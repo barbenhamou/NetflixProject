@@ -27,10 +27,11 @@ int User::getId() const {
 
 int User::findUser(int id) {
     for (int i = 0; i < allUsers.size(); i++) {
-        if (id == allUsers[i].get()->getId()) {
+        if (id == allUsers[i]->getId()) {
             return i;
         }
     }
+
     return -1;
 }
 

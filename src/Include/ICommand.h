@@ -2,6 +2,8 @@
 
 #include <string>
 #include <regex>
+#include <mutex>
+#include <shared_mutex>
 
 #include "MovieUser.h"
 
@@ -16,6 +18,11 @@ enum StatusCode {
 
 // An interface which all the commands will implement
 class ICommand {
+    protected:
+        // A mutex that ensures only one command executes at a time
+        // (except for commands that don't use shared resources)
+        static std::shared_mutex commandMutex;
+
     public:
         virtual ~ICommand() = default;
 

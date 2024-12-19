@@ -45,7 +45,8 @@ std::pair<std::string, StatusCode> DeleteCommand::execute(std::string command) {
     int userId = extractedNumbers[0];
     std::vector<int> watchedMovies(extractedNumbers.begin() + 1, extractedNumbers.end());
 
-    // Lock
+    // Entering critical section, read and write
+    std::unique_lock<std::shared_mutex> lock(commandMutex);
 
     IStorage* fileStorage = new FileStorage(DATA_FILE);
 
@@ -58,7 +59,8 @@ std::pair<std::string, StatusCode> DeleteCommand::execute(std::string command) {
     // Remove info from the global vectors
     DeleteCommand::remove(userId, watchedMovies);
 
-    // Unlock
+    // Exiting critical section
+    lock.unlock();
 
     return {"", NoContent};
 }

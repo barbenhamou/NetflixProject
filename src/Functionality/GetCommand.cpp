@@ -111,7 +111,8 @@ std::pair<std::string, StatusCode> GetCommand::execute(std::string command) {
         return {"", BadRequest};
     }
 
-    // Lock
+    // Entering critical section, but read only
+    std::shared_lock<std::shared_mutex> lock(commandMutex);
 
     // Get user and movie index in the global list
     int userIndex = User::findUser(extractedNumbers[0]);
@@ -132,7 +133,8 @@ std::pair<std::string, StatusCode> GetCommand::execute(std::string command) {
 
     std::vector<Movie*> recommendations = GetCommand::recommend(user, movie);
 
-    // Unlock
+    // Exiting critical section
+    lock.unlock();
 
     return {GetCommand::printRecommendations(recommendations), Ok};
 }

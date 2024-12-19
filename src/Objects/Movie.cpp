@@ -64,7 +64,7 @@ std::vector<Movie*> Movie::intersection(std::vector<Movie*> A, std::vector<Movie
 
 int Movie::findMovie(int id) {
     for (int i = 0; i < allMovies.size(); i++) {
-        if (id == allMovies[i].get()->getId()) {
+        if (id == allMovies[i]->getId()) {
             return i;
         }
     }

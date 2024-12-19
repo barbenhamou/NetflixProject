@@ -1,6 +1,8 @@
 #include "../Include/AddCommand.h"
 #include "../Include/Globals.h"
 
+std::shared_mutex ICommand::commandMutex;
+
 void AddCommand::add(int userId, std::vector<int> movieIds) {
     int userIndex = User::findUser(userId);
     int movieIndex;
@@ -103,7 +105,8 @@ std::pair<std::string, StatusCode> AddCommand::executeSpecificAdd(const std::str
     int userId = extractedNumbers[0];
     std::vector<int> watchedMovies(extractedNumbers.begin() + 1, extractedNumbers.end());
 
-    // Lock
+    // Entering critical section, read and write
+    std::unique_lock<std::shared_mutex> lock(commandMutex);
 
     IStorage* fileStorage = new FileStorage(DATA_FILE);
 
@@ -111,18 +114,19 @@ std::pair<std::string, StatusCode> AddCommand::executeSpecificAdd(const std::str
     auto validity = checkAddValidity(fileStorage, userId, func);
     if (!validity.first) return {"", validity.second};
 
-    // Add info to the file
+    // Add the info to the file
     StatusCode error = fileStorage->updateUserData(userId, watchedMovies, FileStorage::Add);
     if (error != None) {
         return {"", error};
     }
 
-    // Add info to the global vectors
+    // Add the info to the global vectors
     AddCommand::add(userId, watchedMovies);
 
     delete fileStorage;
 
-    // Unlock
+    // Exiting critical section
+    lock.unlock();
 
     return {"", validity.second};
 }

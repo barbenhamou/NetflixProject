@@ -70,6 +70,7 @@ std::vector<long long> FileStorage::isUserInStorage(int userId) {
     }
 
     fileIn.close();
+
     // If this line is reached, the user was not found in the file
     return USER_NOT_FOUND;
 }
@@ -125,7 +126,8 @@ StatusCode FileStorage::updateUserData(int userId, std::vector<int>& movies, Cha
 
     if (filteredMovies.empty() && !movies.empty()) {
         if (change == Remove) {
-            // Catch attempts to remove movies that the user didn't watch (in particular, if the user doesn't exist)
+            // Catch attempts to remove movies that the user didn't watch
+            // (in particular, if the user doesn't exist)
             fileIn.close();
             return NotFound;
         } else if (change == Add) {
