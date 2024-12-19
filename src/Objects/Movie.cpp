@@ -7,6 +7,16 @@ void Movie::addUser(User* user) {
     users.push_back(user);
 }
 
+void Movie::removeUser(User* user) {
+    // Find the user in the watchers list
+    auto iter = std::find(users.begin(), users.end(), user);
+
+    // Remove it if found
+    if (iter != users.end()) {
+        users.erase(iter);
+    }
+}
+
 const std::vector<User*>& Movie::getUsers() const {
     return users;
 }
@@ -60,4 +70,12 @@ int Movie::findMovie(int id) {
     }
 
     return -1;
+}
+
+bool Movie::wasWatchedBy(User* user) {
+    for (const auto& userWatched : this->users) {
+        if (user->getId() == userWatched->getId()) return true;
+    }
+
+    return false;
 }

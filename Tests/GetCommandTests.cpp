@@ -15,13 +15,13 @@ TEST(RecommendationTests, SortByRelevance) {
     std::vector<int> relevance = {6, 5, 7, 1, 0};
     auto sortedMovies = GetCommand::sortByRelevance(relevance, movies);
     std::vector<Movie*> expected = {movie3, movie1, movie2, movie4, movie5};
-    ASSERT_TRUE(compareVec(sortedMovies, expected));
+    EXPECT_TRUE(compareVec(sortedMovies, expected));
 
     // Some equal relevance values
     relevance = {5, 4, 5, 6, 6};
     sortedMovies = GetCommand::sortByRelevance(relevance, movies);
     expected = {movie5, movie4, movie1, movie3, movie2};
-    ASSERT_TRUE(compareVec(sortedMovies, expected));
+    EXPECT_TRUE(compareVec(sortedMovies, expected));
 
     delete movie1;
     delete movie2;
@@ -68,7 +68,6 @@ TEST(RecommendationTests, Recommend) {
     std::string recommendations;
 
     for (int i = 0; i < testCases.size(); i++) {
-        // Command syntax: GET [user] [movie]
         user = allUsers[User::findUser(std::get<0>(testCases[i]))].get();
         movie = allMovies[Movie::findMovie(std::get<1>(testCases[i]))].get();
         

@@ -9,7 +9,6 @@
 #define NUM_OF_RECOMMENDATIONS 10
 
 // A command to recommend movies to a user based on a movie.
-// Syntax: `GET [userid] [movieid]`
 class GetCommand : public ICommand {
     public:
         // Compares between 2 movies based on their relevance in descending order

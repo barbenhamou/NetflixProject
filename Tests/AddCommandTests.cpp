@@ -3,7 +3,7 @@
 #include "../src/Include/MovieUser.h"
 #include "../src/Include/Globals.h"
 
-TEST(AddFunctionTests, RandomizedUserAndMovieIds) {
+TEST(AddCommandTests, AddFunction) {
     int testCount = randInt(10, 30);
     for (int testRun = 0; testRun < 20; ++testRun) {
         // Clear global lists before each test run
@@ -31,7 +31,7 @@ TEST(AddFunctionTests, RandomizedUserAndMovieIds) {
                 break;
             }
         }
-        ASSERT_TRUE(userFound);
+        EXPECT_TRUE(userFound);
 
         // 2. Check if the new movies are in the global movies list
         for (int movieId : newMovieIds) {
@@ -42,7 +42,7 @@ TEST(AddFunctionTests, RandomizedUserAndMovieIds) {
                     break;
                 }
             }
-            ASSERT_TRUE(movieFound);
+            EXPECT_TRUE(movieFound);
         }
 
         // 3. Check if the new movies are in the user's list of watched movies
@@ -53,7 +53,7 @@ TEST(AddFunctionTests, RandomizedUserAndMovieIds) {
                 break;
             }
         }
-        ASSERT_NE(newUser, nullptr);
+        EXPECT_NE(newUser, nullptr);
         for (int movieId : newMovieIds) {
             bool movieInUserList = false;
             for (const auto& movie : newUser->getMovies()) {
@@ -62,7 +62,7 @@ TEST(AddFunctionTests, RandomizedUserAndMovieIds) {
                     break;
                 }
             }
-            ASSERT_TRUE(movieInUserList);
+            EXPECT_TRUE(movieInUserList);
         }
 
         // 4. Check if the new user is in each movie's list of users who watched it
@@ -74,7 +74,7 @@ TEST(AddFunctionTests, RandomizedUserAndMovieIds) {
                     break;
                 }
             }
-            ASSERT_NE(newMovie, nullptr);
+            EXPECT_NE(newMovie, nullptr);
             bool userInMovieList = false;
             for (const auto& user : newMovie->getUsers()) {
                 if (user->getId() == newUserId) {
@@ -82,7 +82,7 @@ TEST(AddFunctionTests, RandomizedUserAndMovieIds) {
                     break;
                 }
             }
-            ASSERT_TRUE(userInMovieList);
+            EXPECT_TRUE(userInMovieList);
         }
     }
 }

@@ -2,36 +2,7 @@
 #include "../src/Include/PatchCommand.h"
 #include "../src/Include/Globals.h"
 
-void generateRandomPatchCommand(int minMovies, int maxMovies, int& userId, std::vector<int>& movies, std::string& command) {
-    // Generate a random user ID between 1 and 1000
-    userId = randInt(1, 100);
-
-    // Generate a random number of movies (minMovies to maxMovies)
-    int numMovies = randInt(minMovies, maxMovies);
-
-    // Clear the movies vector
-    movies.clear();
-
-    // Populate the movies vector with random movie IDs (1 to 1000)
-    for (int i = 0; i < numMovies; i++) {
-        int movieId = randInt(1, 100);
-        movies.push_back(movieId);
-    }
-
-    // Construct the command string
-    std::ostringstream commandStream;
-    commandStream << userId;  // Start with the user ID
-    for (int movieId : movies) {
-        commandStream << " " << movieId;  // Append each movie ID
-    }
-
-    // Convert to a string
-    command = commandStream.str();
-}
-
-
-
-TEST(PatchFunctionTests, RandomizedUseresAndMovieId) {
+TEST(PatchCommandTests, RandomizedUsersAndMovieId) {
     for (int testRun = 0; testRun < 20; ++testRun) {
         // Seed the random number generator
         int newUserId;
@@ -39,13 +10,13 @@ TEST(PatchFunctionTests, RandomizedUseresAndMovieId) {
         std::string command;
 
         // Generate a random command
-        generateRandomPatchCommand(3, 10, newUserId, newMovieIds, command);
+        generateRandomAddCommand(3, 10, newUserId, newMovieIds, command);
 
         ICommand* Patch = new PatchCommand();
 
         // Check if the user already exists in the file
-        FileStorage fileStorage("data/user_data.txt");
-        if ((fileStorage.isUserInFile(newUserId).empty())) {
+        FileStorage fileStorage(TEST_FILE);
+        if (fileStorage.isUserInStorage(newUserId) == USER_NOT_FOUND) {
             Patch->execute(command);
 
             // Check the status
@@ -65,7 +36,7 @@ TEST(PatchFunctionTests, RandomizedUseresAndMovieId) {
                 break;
             }
         }
-        ASSERT_TRUE(userFound);
+        EXPECT_TRUE(userFound);
 
         // 2. Check if the new movies are in the global movies list
         for (int movieId : newMovieIds) {
@@ -76,7 +47,7 @@ TEST(PatchFunctionTests, RandomizedUseresAndMovieId) {
                     break;
                 }
             }
-            ASSERT_TRUE(movieFound);
+            EXPECT_TRUE(movieFound);
         }
 
         // 3. Check if the new movies are in the user's list of watched movies
@@ -87,7 +58,7 @@ TEST(PatchFunctionTests, RandomizedUseresAndMovieId) {
                 break;
             }
         }
-        ASSERT_NE(newUser, nullptr);
+        EXPECT_NE(newUser, nullptr);
         for (int movieId : newMovieIds) {
             bool movieInUserList = false;
             for (const auto& movie : newUser->getMovies()) {
@@ -96,7 +67,7 @@ TEST(PatchFunctionTests, RandomizedUseresAndMovieId) {
                     break;
                 }
             }
-            ASSERT_TRUE(movieInUserList);
+            EXPECT_TRUE(movieInUserList);
         }
 
         // 4. Check if the new user is in each movie's list of users who watched it
@@ -108,7 +79,7 @@ TEST(PatchFunctionTests, RandomizedUseresAndMovieId) {
                     break;
                 }
             }
-            ASSERT_NE(newMovie, nullptr);
+            EXPECT_NE(newMovie, nullptr);
             bool userInMovieList = false;
             for (const auto& user : newMovie->getUsers()) {
                 if (user->getId() == newUserId) {
@@ -116,7 +87,7 @@ TEST(PatchFunctionTests, RandomizedUseresAndMovieId) {
                     break;
                 }
             }
-            ASSERT_TRUE(userInMovieList);
+            EXPECT_TRUE(userInMovieList);
         }
 
         delete Patch;

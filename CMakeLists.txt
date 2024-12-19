@@ -17,14 +17,15 @@ include_directories(
 add_executable(
     Tests
     Tests/SocketMenuTests.cpp
-    Tests/PatchCommandTests.cpp
-    Tests/PostCommandTests.cpp
     Tests/FileStorageTests.cpp
     Tests/ConsoleMenuTests.cpp
     Tests/MovieTests.cpp
+    Tests/PatchCommandTests.cpp
+    Tests/PostCommandTests.cpp
     Tests/HelpCommandTests.cpp
     Tests/AddCommandTests.cpp    
     Tests/GetCommandTests.cpp
+    Tests/DeleteCommandTests.cpp
     #Tests/EndToEndTests.cpp
 
     src/Objects/SocketMenu.cpp
@@ -39,6 +40,7 @@ add_executable(
     src/Functionality/GetCommand.cpp
     src/Functionality/PostCommand.cpp
     src/Functionality/PatchCommand.cpp
+    src/Functionality/DeleteCommand.cpp
     
     src/FileHandling/FileStorage.cpp
 )
@@ -72,8 +74,8 @@ add_test(
 )
 
 add_test(
-    NAME AddFunctionTests
-    COMMAND AddFunctionTests
+    NAME AddCommandTests
+    COMMAND AddCommandTests
 )
 
 add_test(
@@ -92,11 +94,16 @@ add_test(
 )
 
 add_test(
-    NAME PatchFunctionTests
-    COMMAND PatchFunctionTests
+    NAME PatchCommandTests
+    COMMAND PatchCommandTests
 )
 
 add_test(
-    NAME PostFunctionTests
-    COMMAND PostFunctionTests
+    NAME PostCommandTests
+    COMMAND PostCommandTests
+)
+
+add_test(
+    NAME DeleteCommandTests
+    COMMAND DeleteCommandTests
 )
