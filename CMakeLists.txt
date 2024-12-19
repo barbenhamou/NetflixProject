@@ -1,7 +1,6 @@
 cmake_minimum_required(VERSION 3.14)
 project(FileStorageTest)
 
-# Enable testing
 enable_testing()
 
 # Find GoogleTest package
@@ -10,10 +9,10 @@ find_package(GTest REQUIRED)
 # Include directories for header files
 include_directories(
     ${GTEST_INCLUDE_DIRS}           # Google Test includes
-    ${CMAKE_SOURCE_DIR}/src/Include # Your project's include directory
+    ${CMAKE_SOURCE_DIR}/src/Include # Project's includes directory
 )
 
-# Add the executable for ConsoleMenuTest
+# Add the executables
 add_executable(
     Tests
     Tests/TCPServerTests.cpp

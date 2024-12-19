@@ -11,6 +11,8 @@
 // An interface for different menu interfaces
 class IMenu {
     public:
+        virtual ~IMenu() = default;
+
         // Receives a command from the user and extracts first word (the command itself)
         virtual std::vector<std::string> nextCommand() = 0;
         

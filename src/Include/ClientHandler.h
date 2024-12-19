@@ -15,6 +15,6 @@ class ClientHandler {
         // Constructor
         ClientHandler(int clientSocket);
 
-        // Initiate the interaction with the client, in thread
+        // Initiates the interaction with the client, in thread
         void interact();
 };

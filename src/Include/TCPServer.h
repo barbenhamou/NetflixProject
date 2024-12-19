@@ -20,17 +20,15 @@ class TCPServer : public IServer {
         // Constructor
         TCPServer(std::string ip, uint32_t port, IThreadManager* manager);
 
-        // Activating the server
-        int activate();
+        // Destructor / Destoyer
+        ~TCPServer() {this->shutdown();}
+        
+        int activate() override;
 
-        // The shutdown routine of the server
-        void  shutdown();
+        void  shutdown() override;
 
         // Getter for the socket
         ssize_t getSocket() {
             return this->serverSocket;
         }
-
-        // Destructor / Destoyer
-        ~TCPServer() {this->shutdown();}
 };

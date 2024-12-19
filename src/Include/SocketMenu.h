@@ -11,12 +11,12 @@ class SocketMenu : public IMenu {
         // Constructor
         SocketMenu(int clientSocket);
 
-        std::vector<std::string> nextCommand() override;
-
-        void sendOutput(std::string output) override;
-
         // Destructor
         ~SocketMenu() {
             close(this->clientSocket);
         }
+
+        std::vector<std::string> nextCommand() override;
+
+        void sendOutput(std::string output) override;
 };

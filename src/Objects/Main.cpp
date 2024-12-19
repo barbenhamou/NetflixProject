@@ -8,7 +8,6 @@ int main(int argc, char* argv[]) {
     }
 
     int port = std::stoi(argv[1]);
-
     
     // Get all info from the file into global variables
     AddCommand::initGlobals(DATA_FILE);

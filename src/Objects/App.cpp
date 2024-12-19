@@ -22,10 +22,11 @@ void App::run() {
             }
 
             // Execute the command
-            output = this->commands[command]->execute(data);
+            auto execution = this->commands[command]->execute(data);
+            output = execution.first;
 
             // The status code of the command's execution
-            status = statusCodes[this->commands[command]->getStatus()];
+            status = statusCodes[execution.second];
             
             if (!output.empty()) {
                 output = "\n\n" + output;

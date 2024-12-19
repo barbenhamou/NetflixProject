@@ -8,12 +8,12 @@
 // Thread manager for the multi-threaded
 class IThreadManager {
     public:
-        // Adding tasks for execution
-        virtual void addTask(int clientSocket) = 0;
-
-        // Finishing job
-        virtual void shutdown() = 0;
-
         // Destructor / Destroyer
         virtual ~IThreadManager() = default;
+
+        // Adds tasks for execution
+        virtual void addTask(int clientSocket) = 0;
+
+        // Finishes the job
+        virtual void shutdown() = 0;
 };

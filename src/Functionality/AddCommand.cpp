@@ -66,59 +66,55 @@ void AddCommand::initGlobals(const std::string& fileName) {
     inputFile.close();
 }
 
-bool AddCommand::checkAddValidity(IStorage* storage, int userId, Functionality func) {
+std::pair<bool, StatusCode> AddCommand::checkAddValidity(IStorage* storage, int userId, Functionality func) {
     auto userMovies = storage->isUserInStorage(userId);
     // Decide if the command is valid
     switch(func) {
         case POST:
             if (userMovies != USER_NOT_FOUND) {
-                ICommand::setStatus(NotFound);
-                return false;
+                return {false, NotFound};
             }
 
-            ICommand::setStatus(Created);
-            return true;
+            return {true, Created};
 
         case PATCH:
             if (userMovies == USER_NOT_FOUND) {
-                ICommand::setStatus(NotFound);
-                return false;
+                return {false, NotFound};
             }
 
-            ICommand::setStatus(NoContent);
-            return true;
+            return {true, NoContent};
 
         default:
-            ICommand::setStatus(BadRequest);
-            return false;
+            return {false, BadRequest};
     }
 }
 
-std::string AddCommand::executeSpecificAdd(const std::string& command, Functionality func){
+std::pair<std::string, StatusCode> AddCommand::executeSpecificAdd(const std::string& command, Functionality func){
     // Match numbers with potential spaces before and after them
     auto extractedNumbers = ICommand::parseCommand(command, R"(\s*(\d+)\s*)");
 
     // Ensure we have at least one user ID and one movie ID, and that
     // they are numbers (parseCommand returns {} if a non-number was passed)
     if (extractedNumbers.size() < 2) {
-        ICommand::setStatus(BadRequest);
-        return "";
+        return {"", BadRequest};
     }
 
     // The first number is the user ID, the rest are movie IDs
     int userId = extractedNumbers[0];
     std::vector<int> watchedMovies(extractedNumbers.begin() + 1, extractedNumbers.end());
 
+    // Lock
+
     IStorage* fileStorage = new FileStorage(DATA_FILE);
 
     // Check the validity of post or patch (cant patch before post, etc)
-    if (!checkAddValidity(fileStorage, userId, func)) return "";
+    auto validity = checkAddValidity(fileStorage, userId, func);
+    if (!validity.first) return {"", validity.second};
 
     // Add info to the file
     StatusCode error = fileStorage->updateUserData(userId, watchedMovies, FileStorage::Add);
     if (error != None) {
-        ICommand::setStatus(error);
-        return "";
+        return {"", error};
     }
 
     // Add info to the global vectors
@@ -126,5 +122,7 @@ std::string AddCommand::executeSpecificAdd(const std::string& command, Functiona
 
     delete fileStorage;
 
-    return "";
+    // Unlock
+
+    return {"", validity.second};
 }

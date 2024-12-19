@@ -16,27 +16,14 @@ enum StatusCode {
 
 // An interface which all the commands will implement
 class ICommand {
-    private:
-        // The command's HTTP status code
-        StatusCode status = None;
-
-    protected:
-        void setStatus(StatusCode code) {
-            status = code;
-        }
-
     public:
         virtual ~ICommand() = default;
 
-        // All commands will override this function have their own implementation
-        virtual std::string execute(std::string command) = 0;
+        // Executes the command. Returns {command's output, command's status code}
+        virtual std::pair<std::string, StatusCode> execute(std::string command) = 0;
 
         // Returns {command, arguments}
         virtual std::pair<std::string, std::string> toString() = 0;
-        
-        StatusCode getStatus() const {
-            return status;
-        }
 
         // Parses the command's arguments and returns them according to the given pattern.
         // Upon error (an argument is not a number) returns an empty vector

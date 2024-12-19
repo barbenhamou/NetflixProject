@@ -8,15 +8,15 @@ class ThreadClientManager : public IThreadManager {
         std::vector<std::thread> workers;
 
     public:
+        // Destoyer / Destructor
+        ~ThreadClientManager() {
+            this->shutdown();
+        }
+
         // Creating a new thread
         void addTask(int clientSocket) override;
 
         // Shutting down the manager
         void shutdown() override;
-
-        // Destoyer / Destructor
-        ~ThreadClientManager() {
-            this->shutdown();
-        }
 };
 

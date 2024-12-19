@@ -17,23 +17,22 @@ std::vector<std::pair<std::string, ICommand*>> HelpCommand::sortCommands() {
     return commandsVec;
 }
 
-std::string HelpCommand::execute(std::string command) {
+std::pair<std::string, StatusCode> HelpCommand::execute(std::string command) {
     // Ensure no arguments are passed
     if (!command.empty() && command != "\n") {
-        ICommand::setStatus(BadRequest);
-        return "";
+        return {"", BadRequest};
     }
 
     std::string output;
 
     auto commandsVec = sortCommands();
 
-    // Add "[command], arguments: [args]\n" for each command to the output
+    // Add to the output `[command], arguments: [args]\n` for each command
     for (const auto& command : commandsVec) {
         std::string commandStr = command.second->toString().first;
 
         // The help command always comes at the end
-        if (commandStr == "help") continue;
+        if (commandStr == this->toString().first) continue;
         
         output += commandStr;
 
@@ -48,6 +47,5 @@ std::string HelpCommand::execute(std::string command) {
     // Add help at the end
     output += this->toString().first;
 
-    ICommand::setStatus(Ok);
-    return output;
+    return {output, Ok};
 }
