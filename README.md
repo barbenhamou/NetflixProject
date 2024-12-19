@@ -1,33 +1,64 @@
 # Netflix Project
 This is a Netflix project for the course "Advanced System programming" in Bar-Ilan University.
 
-## Running the project
+## Running the server
 This project uses Docker for easy building.
 
-To compile the project, run this command (it might take a while):
+To compile the server, run this command (it might take a while):
 ```bash
-docker build -f Dockerfile.run -t img .
+docker build -f Dockerfile.server -t serverimage .
 ```
-To run the project, run this:
+To run the server, run this:
 ```bash
-docker run -it --name app img
+docker run -it -p 12350:12350 --name server_container serverimage <PORT>
 ```
-and then you will be able to enter your input.
-`app` is the name of the Docker container, and `img` is the name of the image.
+and the server is running.
+`server_container` is the name of the Docker container, and `serverimage` is the name of the image.
 
 If you want to stop the program, run this (from a different terminal):
 ```bash
-docker stop app
+docker stop server_container
 ```
+Note: clients that were connected needs to be closed by ctrl+c or by sending some nonsense 
 
 If you want to run the program again (in the same container, keeping the data from previous runs), run this:
 ```bash
-docker start -i app
+docker start -i server_container
 ```
 
 If you want to delete the container:
 ```bash
-docker rm app
+docker rm server_container
+```
+
+## Running the client
+This project uses Docker for easy building.
+
+To compile the client, run this command (it might take a while):
+```bash
+docker build -t client -f Dockerfile.client .
+```
+To run the client, run this:
+```bash
+docker run -it client --name client_container <SERVER_IP> <PORT> // Discover the IP in the cmd with ipconfig
+```
+and the client is running.
+`client_container` is the name of the Docker container, and `client` is the name of the image.
+
+If you want to stop the program, run this (from a different terminal):
+```bash
+docker stop client_container
+```
+Note: closing clients by ctrl+c 
+
+If you want to run the program again (in the same container, keeping the data from previous runs), run this:
+```bash
+docker start -i client_container
+```
+
+If you want to delete the container:
+```bash
+docker rm client_container
 ```
 
 ### Running our tests
@@ -80,3 +111,11 @@ Here is an example of how the project compiles and runs:<br>
 Here is an example of how the tests run:<br>
 
 ![Tests Run](TestsRun.png)
+
+<br>
+
+## Questions about ways of implemntation
+* The fact that the names of the functions changed, caused us to change the code. We had to change the global vector of commands because it goes by name. In addition, we decided to turn the add command to a mother-class of the two new commands patch and post.
+* The fact that new functions were added ddin't caused us to change the code, aprat from thr change mentioned above. We had an ICommand interface, we've just added the delete command.
+* The fact that the output of the commands changed caused us to change the code a bit. In previous exercise we printed the ouput and now we return it as a string and send to the client (socket or terminal clients).
+* The fact that the data came from sockets and not console, didn't cause us to change the code. We've created an IMenu interface and we have two classed that implements it - ConsoleMenu (previous exercise) and SocketMenu (current exercise), the app uses an IMenu object to handle request, and it unaware of the of the IMenu, so this part didn't need to be changed.
