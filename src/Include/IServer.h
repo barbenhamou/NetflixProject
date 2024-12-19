@@ -6,7 +6,7 @@
 #include "ClientHandler.h"
 #include "ThreadClientManager.h"
 
-// An interface that all kinds of server will have to satisfy
+// An interface for servers that run the app
 class IServer {
     public:
         virtual ~IServer() = default;

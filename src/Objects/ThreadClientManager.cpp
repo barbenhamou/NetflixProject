@@ -1,11 +1,11 @@
 #include "../Include/ThreadClientManager.h"
 
 void ThreadClientManager::addTask(int clientSocket) {
+    // Add a new worker that runs a client
     this->workers.emplace_back([clientSocket]() {
         ClientHandler handler(clientSocket);
         handler.interact();
     });
-    // close(clientSocket);
 }
 
 void ThreadClientManager::shutdown() {

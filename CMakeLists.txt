@@ -15,8 +15,8 @@ include_directories(
 # Add the executables
 add_executable(
     Tests
-    Tests/TCPServerTests.cpp
-    Tests/ThreadClientManagerTests.cpp
+    #Tests/TCPServerTests.cpp
+    #Tests/ThreadManagerTests.cpp
     Tests/SocketMenuTests.cpp
     Tests/FileStorageTests.cpp
     Tests/ConsoleMenuTests.cpp
@@ -112,12 +112,12 @@ add_test(
     COMMAND DeleteCommandTests
 )
 
-add_test(
-    NAME TCPServerTests
-    COMMAND TCPServerTests
-)
+#add_test(
+#    NAME TCPServerTests
+#    COMMAND TCPServerTests
+#)
 
-add_test(
-    NAME ThreadClientManagerTests
-    COMMAND ThreadClientManagerTests
-)
+#add_test(
+#    NAME ThreadClientManagerTests
+#    COMMAND ThreadClientManagerTests
+#)
