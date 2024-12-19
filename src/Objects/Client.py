@@ -51,7 +51,7 @@ class Client:
                     if len(chunk) == BYTES and chunk.endswith(b'\n'):
                         break
 
-                print(data.decode())
+                print(data.decode(), end="")
         except:
             # Close the socket in case of an error
             self.__sock.close()
