@@ -10,7 +10,7 @@ class DeleteCommand : public ICommand {
         std::pair<std::string, StatusCode> execute(std::string command) override;
 
         // Removes movies from a user's watch list in the global vectors
-        static void remove(int userId, std::vector<int> movieIds);
+        static void remove(unsigned int userId, std::vector<unsigned int> movieIds);
 
         std::pair<std::string, std::string> toString() override;
 };

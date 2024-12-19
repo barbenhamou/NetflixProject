@@ -1,7 +1,7 @@
 #include "../Include/MovieUser.h"
 #include "../Include/Globals.h"
 
-Movie::Movie(int id) : id(id) {}
+Movie::Movie(unsigned int id) : id(id) {}
 
 void Movie::addUser(User* user) {
     users.push_back(user);
@@ -21,7 +21,7 @@ const std::vector<User*>& Movie::getUsers() const {
     return users;
 }
 
-int Movie::getId() const {
+unsigned int Movie::getId() const {
     return id;
 }
 
@@ -62,7 +62,7 @@ std::vector<Movie*> Movie::intersection(std::vector<Movie*> A, std::vector<Movie
     return intersection;
 }
 
-int Movie::findMovie(int id) {
+int Movie::findMovie(unsigned int id) {
     for (int i = 0; i < allMovies.size(); i++) {
         if (id == allMovies[i]->getId()) {
             return i;

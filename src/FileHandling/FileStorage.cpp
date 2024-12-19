@@ -23,10 +23,10 @@ std::vector<std::string> FileStorage::split(const std::string& str, char delimit
     return tokens;
 }
 
-std::vector<int> FileStorage::splitToInt(const std::string& str, char delimiter) {
+std::vector<unsigned int> FileStorage::splitToInt(const std::string& str, char delimiter) {
     if (str.empty()) return {};
 
-    std::vector<int> tokens;
+    std::vector<unsigned int> tokens;
     std::string token;
     std::istringstream tokenStream(str);
 
@@ -37,7 +37,7 @@ std::vector<int> FileStorage::splitToInt(const std::string& str, char delimiter)
     return tokens;
 }
 
-std::vector<long long> FileStorage::isUserInStorage(int userId) {
+std::vector<long long> FileStorage::isUserInStorage(unsigned int userId) {
     std::ifstream fileIn(fileName);
     
     // No user exists in the system
@@ -75,17 +75,17 @@ std::vector<long long> FileStorage::isUserInStorage(int userId) {
     return USER_NOT_FOUND;
 }
 
-std::vector<int> FileStorage::filterMovies(int userId, const std::vector<int>& movies, Change change) {
+std::vector<unsigned int> FileStorage::filterMovies(unsigned int userId, const std::vector<unsigned int>& movies, Change change) {
     // A vector of all the movies that the user watched
     const auto& watchedMovies = this->isUserInStorage(userId);
     // A set of those movies, for easy finding
-    std::unordered_set<int> watchedSet(watchedMovies.begin(), watchedMovies.end());
+    std::unordered_set<unsigned int> watchedSet(watchedMovies.begin(), watchedMovies.end());
     // A set for ignoring duplicate movies
-    std::unordered_set<int> uniqueMovies;
+    std::unordered_set<unsigned int> uniqueMovies;
     // The final list of movies that need to be changed in the file
-    std::vector<int> finalMovies = {};
+    std::vector<unsigned int> finalMovies = {};
 
-    for (const int movieId : movies) {
+    for (const auto& movieId : movies) {
         // Did the user watch this movie
         bool alreadyWatched = watchedSet.find(movieId) != watchedSet.end();
 
@@ -106,7 +106,7 @@ std::vector<int> FileStorage::filterMovies(int userId, const std::vector<int>& m
     return finalMovies;
 }
 
-void FileStorage::writeMoviesToFile(std::ofstream& file, std::vector<int> movies) {
+void FileStorage::writeMoviesToFile(std::ofstream& file, std::vector<unsigned int> movies) {
     int size = movies.size();
     for (int i = 0; i < size; i++) {
         file << movies[i];
@@ -116,7 +116,7 @@ void FileStorage::writeMoviesToFile(std::ofstream& file, std::vector<int> movies
     }
 }
 
-StatusCode FileStorage::updateUserData(int userId, std::vector<int>& movies, Change change) {
+StatusCode FileStorage::updateUserData(unsigned int userId, std::vector<unsigned int>& movies, Change change) {
     // Open stream
     std::ifstream fileIn(fileName);
     if (!fileIn.is_open()) return None;
@@ -168,18 +168,18 @@ StatusCode FileStorage::updateUserData(int userId, std::vector<int>& movies, Cha
                 FileStorage::writeMoviesToFile(fileOut, filteredMovies);
             } else if (change == Remove) {
                 // Turn filteredMovies into a set
-                std::unordered_set<int> toRemove(filteredMovies.begin(), filteredMovies.end());
+                std::unordered_set<unsigned int> toRemove(filteredMovies.begin(), filteredMovies.end());
                 // Get the movie IDs of the user, as ints
-                std::vector<int> currentMovies = {};
+                std::vector<unsigned int> currentMovies = {};
 
                 if (parts.size() != 1) {
                     currentMovies = splitToInt(parts[1], ',');
                 }
                 
                 // The user's movies after removing the movies that needed to be removed
-                std::vector<int> updatedMovies = {};
+                std::vector<unsigned int> updatedMovies = {};
 
-                for (int movie : currentMovies) {
+                for (const auto& movie : currentMovies) {
                     // Only add movies that aren't in toRemove
                     if (toRemove.find(movie) == toRemove.end()) {
                         updatedMovies.push_back(movie);

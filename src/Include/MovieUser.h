@@ -7,12 +7,12 @@ class Movie;
 
 class User {
     private:
-        int id;                       // Unique ID for the user
+        unsigned int id;                       // Unique positive ID for the user
         std::vector<Movie*> movies;   // List of movies the user watched
 
     public:
         // Constructor: Initializes a user with their ID
-        explicit User(int id);
+        explicit User(unsigned int id);
 
         // Adds a movie to the user's watched list
         void addMovie(Movie* movie);
@@ -24,10 +24,10 @@ class User {
         const std::vector<Movie*>& getMovies() const;
 
         // Returns the user's ID
-        int getId() const;
+        unsigned int getId() const;
         
         // Returns the index of the user in the global vector allUsers, or -1 if it isn't there
-        static int findUser(int id);
+        static int findUser(unsigned int id);
 
         // Checks if the user watched `movie`
         bool hasWatched(Movie* movie);
@@ -35,12 +35,12 @@ class User {
 
 class Movie {
     private:
-        int id;                     // Unique ID for the movie
+        unsigned int id;                     // Unique positive ID for the movie
         std::vector<User*> users;   // List of users that watched the movie
 
     public:
         // Constructor: Initializes a movie with their ID
-        explicit Movie(int id);
+        explicit Movie(unsigned int id);
 
         // Adds a user to the movie's list of watchers
         void addUser(User* user);
@@ -52,7 +52,7 @@ class Movie {
         const std::vector<User*>& getUsers() const;
 
         // Returns the movie's ID
-        int getId() const;
+        unsigned int getId() const;
 
         // Calculates the "set difference" A\B of two vectors of movies
         static std::vector<Movie*> relativeComplement(std::vector<Movie*> A, std::vector<Movie*> B);
@@ -63,7 +63,7 @@ class Movie {
         static std::vector<Movie*> intersection(std::vector<Movie*> A, std::vector<Movie*> B);
 
         // Returns the index of the movie in the global vector allMovies, or -1 if it isn't there
-        static int findMovie(int id);
+        static int findMovie(unsigned int id);
 
         // Checks if the movie was watched by `user`
         bool wasWatchedBy(User* user);
