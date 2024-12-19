@@ -11,6 +11,11 @@ class Client:
         self.__server_port = port  # The Server's port
         self.__server_ip = server_ip  # The Server's IP
         self.__sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)  # Initializing TCP socket
+        
+        # Initialize client handler
+        signal.signal(signal.SIGINT, self.signal_handler)
+        signal.signal(signal.SIGTERM, self.signal_handler)
+        
 
     def run(self):
         try:
@@ -52,15 +57,13 @@ class Client:
             self.__sock.close()
             return
         
-    def servClose(self):
+    def clientClose(self):
         if self.__sock:
             self.__sock.close()
 
-def signal_handler(client_instance):
-    def handler(sig, frame):
-        client_instance.close()
+    def signal_handler(self):
+        self.clientClose()
         sys.exit(0)
-    return handler
 
 def main():
     # Ensure the correct number of arguments are passed
@@ -72,9 +75,6 @@ def main():
 
     # Initialize and run the client
     client = Client(port=SERVER_PORT, server_ip=SERVER_IP)
-
-    # Initialize client handler
-    signal.signal(signal.SIGINT, signal_handler(client))
 
     client.run()
 

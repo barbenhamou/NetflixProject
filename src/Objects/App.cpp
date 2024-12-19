@@ -9,15 +9,14 @@ void App::run() {
     while(true) {
         // Get command and arguments
         input = this->menu->nextCommand();
-        command = input[0];
-        data = input[1];
-
-        // std::cout << command << " " << data << std::endl;
         
         try {
-            if (command.empty()) {
+            if (input.empty()) {
                 break;
             }
+
+            command = input[0];
+            data = input[1];
 
             // Invalid commands
             if (this->commands.find(command) == this->commands.end()) {

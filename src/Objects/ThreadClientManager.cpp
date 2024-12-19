@@ -4,7 +4,6 @@ void ThreadClientManager::addTask(int clientSocket) {
     this->workers.emplace_back([clientSocket]() {
         ClientHandler handler(clientSocket);
         handler.interact();
-        close(clientSocket);
     });
 }
 
