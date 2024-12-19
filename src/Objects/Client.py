@@ -55,7 +55,7 @@ class Client:
         except:
             # Close the socket in case of an error
             self.__sock.close()
-            return
+            sys.exit(0)
         
     def clientClose(self):
         if self.__sock:
