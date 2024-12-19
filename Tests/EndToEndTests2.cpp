@@ -73,7 +73,7 @@ TEST(EndToEndTests2, FullFunctionalityWithPosts) {
     for (const auto& [userId, movies] : initialData) {
         std::ostringstream postCommand;
         postCommand << "POST " << userId;
-        for (int movieId : movies) {
+        for (const auto& movieId : movies) {
             postCommand << " " << movieId;
         }
         postCommand << "\n";

@@ -13,14 +13,7 @@ int main(int argc, char* argv[]) {
     AddCommand::initGlobals(DATA_FILE);
 
     App::createCommands();
-
-    // IMenu* menu = new ConsoleMenu();
-
-    // App app(menu, commands);
-    // app.run();
-
-    // delete menu;
-
+    
     ThreadClientManager* manager = new ThreadClientManager();
     TCPServer server(port, manager);
     server.activate();

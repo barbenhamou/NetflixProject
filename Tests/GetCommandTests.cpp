@@ -34,7 +34,7 @@ TEST(RecommendationTests, Recommend) {
     allUsers.clear();
     allMovies.clear();
 
-    std::vector<std::pair<int, std::vector<int>>> data = {
+    std::vector<std::pair<unsigned int, std::vector<unsigned int>>> data = {
         {1, {100, 101, 102, 103}},
         {2, {101, 102, 104, 105, 106}},
         {3, {100, 104, 105, 107, 108}},
@@ -54,7 +54,7 @@ TEST(RecommendationTests, Recommend) {
     // Test cases 1-2: user hasn't watched movie
     // Test cases 3-4: user watched movie
     // vector of tuples that are <userId, movieId, output>
-    std::vector<std::tuple<int, int, std::vector<int>>> testCases = {
+    std::vector<std::tuple<unsigned int,unsigned  int, std::vector<unsigned int>>> testCases = {
         {1, 104, {105, 106, 111, 110, 112, 113, 107, 108, 109, 114}},
         {3, 115, {103, 112, 113, 101, 102, 106, 109, 110, 111, 114}},
         {7, 105, {100, 101, 104, 111, 116, 103, 114, 112, 113, 115}},
@@ -63,7 +63,7 @@ TEST(RecommendationTests, Recommend) {
 
     User* user;
     Movie* movie;
-    std::vector<int> expected;
+    std::vector<unsigned int> expected;
     std::string expectedString;
     std::string recommendations;
 
@@ -74,7 +74,7 @@ TEST(RecommendationTests, Recommend) {
         expected = std::get<2>(testCases[i]);
         // Turn the vector into a string of movie IDs
         expectedString = "";
-        for (int movieId : expected) {
+        for (const auto& movieId : expected) {
             expectedString += std::to_string(movieId) + " ";
         }
 

@@ -59,14 +59,14 @@ TEST(FileStorageTests, IsUserInFile) {
     // Randomly generate users with movies and add them to the file
     int numUsers = randInt(1, 65);
     for (int i = 0; i < numUsers; i++) {
-        int userId = randInt(1, MAX_ID);
+        unsigned int userId = randInt(1, MAX_ID);
 
         // Ensure userId is unique
         userId = randInt(10 * i, 10 * (i + 1) - 1);
 
         // Generate unique movie IDs for the user
         int numMovies = randInt(0, 25);
-        std::vector<int> moviesToAdd = {};
+        std::vector<unsigned int> moviesToAdd = {};
         for (int j = 0; j < numMovies; j++) {
             moviesToAdd.push_back(randInt(10 * j, 10 * (j + 1) - 1));  // Unique ID for each movie
         }
@@ -107,10 +107,10 @@ TEST(FileStorageTests, UpdateUserAddNew) {
 
     for (int i = 0; i < numUpdates; i++) {
         FileStorage storage(TEST_FILE);
-        int userId = randInt(10 * i, 10 * (i + 1) - 1); // using i as to not get the same ID twice
+        unsigned int userId = randInt(10 * i, 10 * (i + 1) - 1); // using i as to not get the same ID twice
         
         int numNewMovies = randInt(1, 7);
-        std::vector<int> moviesToAdd;
+        std::vector<unsigned int> moviesToAdd;
 
         for (int j = 0; j < numNewMovies; j++) {
             moviesToAdd.push_back(randInt(10 * j, 10 * (j + 1) - 1));
@@ -119,7 +119,7 @@ TEST(FileStorageTests, UpdateUserAddNew) {
         storage.updateUserData(userId, moviesToAdd, FileStorage::Add);
 
         auto addedMovies = storage.isUserInStorage(userId);
-        std::vector<int> addedMoviesInt(addedMovies.begin(), addedMovies.end());
+        std::vector<unsigned int> addedMoviesInt(addedMovies.begin(), addedMovies.end());
 
         EXPECT_EQ(addedMoviesInt, moviesToAdd);
 
@@ -168,27 +168,27 @@ TEST(FileStorageTests, UpdateUserAddExisting) {
 
     int numUpdates = randInt(10, 30);
     for (int i = 0; i < numUpdates; i++) {
-        int userId = randomUser(TEST_FILE);
+        unsigned int userId = randomUser(TEST_FILE);
         auto before = storage.isUserInStorage(userId);
         
         int numNewMovies = randInt(1, 7);
-        std::vector<int> newMovies;
-        std::unordered_set<int> newMoviesSet;
+        std::vector<unsigned int> newMovies;
+        std::unordered_set<unsigned int> newMoviesSet;
         for (int j = 0; j < numNewMovies; j++) {
             int movieId = randInt(1, MAX_ID);
             newMovies.push_back(movieId);
             newMoviesSet.insert(movieId);
         }
 
-        for (const int& id : before) {
+        for (const auto& id : before) {
             newMoviesSet.insert(id);
         }
 
         storage.updateUserData(userId, newMovies, FileStorage::Add);
 
         auto after = storage.isUserInStorage(userId);
-        std::unordered_set<int> afterSet;
-        for (const int& id : after) {
+        std::unordered_set<unsigned int> afterSet;
+        for (const auto& id : after) {
             afterSet.insert(id);
         }
 
@@ -204,14 +204,14 @@ TEST(FileStorageTests, UpdateUserAddEdge) {
     int numUpdates = randInt(10, 30);
     for (int i = 0; i < numUpdates; i++) {
         FileStorage storage(TEST_FILE);
-        int userId = randInt(1, MAX_ID);
+        unsigned int userId = randInt(1, MAX_ID);
 
         // 1st add
         int numNewMovies = randInt(1, 10);
         int twiceMovieId = randInt(1, MAX_ID);
 
-        std::vector<int> newMovies;
-        std::unordered_set<int> newMoviesSet;
+        std::vector<unsigned int> newMovies;
+        std::unordered_set<unsigned int> newMoviesSet;
 
         newMovies.push_back(twiceMovieId);
         newMoviesSet.insert(twiceMovieId);
@@ -242,7 +242,7 @@ TEST(FileStorageTests, UpdateUserAddEdge) {
 
         auto after = storage.isUserInStorage(userId);
 
-        std::unordered_set<int> afterSet(after.begin(), after.end());
+        std::unordered_set<unsigned int> afterSet(after.begin(), after.end());
 
         EXPECT_EQ(afterSet, newMoviesSet);
         remove(TEST_FILE);
@@ -252,12 +252,12 @@ TEST(FileStorageTests, UpdateUserAddEdge) {
     numUpdates = randInt(10, 30);
     for (int i = 0; i < numUpdates; i++) {
         FileStorage storage(TEST_FILE);
-        int userId = randInt(1, MAX_ID);
+        unsigned int userId = randInt(1, MAX_ID);
 
         int numNewMovies = randInt(1, 7);
         int twiceMovieId = randInt(1, MAX_ID);
-        std::vector<int> newMovies;
-        std::unordered_set<int> newMoviesSet;
+        std::vector<unsigned int> newMovies;
+        std::unordered_set<unsigned int> newMoviesSet;
         newMovies.push_back(twiceMovieId);
         newMoviesSet.insert(twiceMovieId);
         int randIndex = randInt(1, numNewMovies);
@@ -273,8 +273,8 @@ TEST(FileStorageTests, UpdateUserAddEdge) {
         storage.updateUserData(userId, newMovies, FileStorage::Add);
 
         auto after = storage.isUserInStorage(userId);
-        std::unordered_set<int> afterSet;
-        for (const int& id : after) {
+        std::unordered_set<unsigned int> afterSet;
+        for (const auto& id : after) {
             afterSet.insert(id);
         }
 
@@ -289,10 +289,10 @@ TEST(FileStorageTests, UpdateUserRemoveNew) {
 
     for (int i = 0; i < numUpdates; i++) {
         FileStorage storage(TEST_FILE);
-        int userId = randInt(10 * i, 10 * (i + 1) - 1); // Ensure unique user IDs for testing
+        unsigned int userId = randInt(10 * i, 10 * (i + 1) - 1); // Ensure unique user IDs for testing
 
         int numMoviesToRemove = randInt(1, 7);
-        std::vector<int> moviesToRemove;
+        std::vector<unsigned int> moviesToRemove;
 
         for (int j = 0; j < numMoviesToRemove; j++) {
             moviesToRemove.push_back(randInt(10 * j, 10 * (j + 1) - 1));
@@ -317,12 +317,12 @@ TEST(FileStorageTests, UpdateUserRemoveExisting) {
 
     int numUpdates = randInt(30, 40);
     for (int i = 0; i < numUpdates; i++) {
-        int userId = randomUser(TEST_FILE);
+        unsigned int userId = randomUser(TEST_FILE);
         auto before = storage.isUserInStorage(userId);
 
         int numMoviesToRemove = randInt(1, 15);
-        std::vector<int> moviesToRemove = {};
-        std::unordered_set<int> remainingMoviesSet(before.begin(), before.end());
+        std::vector<unsigned int> moviesToRemove = {};
+        std::unordered_set<unsigned int> remainingMoviesSet(before.begin(), before.end());
 
         for (int j = 0; j < numMoviesToRemove; j++) {
             int movieId = randInt(1, MAX_ID);
@@ -337,7 +337,7 @@ TEST(FileStorageTests, UpdateUserRemoveExisting) {
         storage.updateUserData(userId, moviesToRemove, FileStorage::Remove);
 
         auto after = storage.isUserInStorage(userId);
-        std::unordered_set<int> afterSet(after.begin(), after.end());
+        std::unordered_set<unsigned int> afterSet(after.begin(), after.end());
 
         EXPECT_EQ(afterSet, remainingMoviesSet);
     }
@@ -350,11 +350,11 @@ TEST(FileStorageTests, UpdateUserRemoveEdge) {
     int numUpdates = randInt(10, 30);
     for (int i = 0; i < numUpdates; i++) {
         FileStorage storage(TEST_FILE);
-        int userId = randInt(1, MAX_ID);
+        unsigned int userId = randInt(1, MAX_ID);
 
         // Add some movies
         int numMovies = randInt(1, 7);
-        std::vector<int> initialMovies;
+        std::vector<unsigned int> initialMovies;
         for (int j = 0; j < numMovies; j++) {
             initialMovies.push_back(randInt(1, MAX_ID));
         }
@@ -373,12 +373,12 @@ TEST(FileStorageTests, UpdateUserRemoveEdge) {
     numUpdates = randInt(10, 30);
     for (int i = 0; i < numUpdates; i++) {
         FileStorage storage(TEST_FILE);
-        int userId = randInt(1, MAX_ID);
+        unsigned int userId = randInt(1, MAX_ID);
 
         // Add some movies
         int numMovies = randInt(1, 7);
-        std::vector<int> initialMovies;
-        std::unordered_set<int> usedMovieIds;
+        std::vector<unsigned int> initialMovies;
+        std::unordered_set<unsigned int> usedMovieIds;
         for (int j = 0; j < numMovies; j++) {
             int randMovie;
             // Generate a unique movie ID for the user
@@ -392,7 +392,7 @@ TEST(FileStorageTests, UpdateUserRemoveEdge) {
 
         // Remove non-existent movies
         int numMoviesToRemove = randInt(1, 7);
-        std::vector<int> moviesToRemove;
+        std::vector<unsigned int> moviesToRemove;
         for (int j = 0; j < numMoviesToRemove; j++) {
             moviesToRemove.push_back(randInt(MAX_ID + 1, 2 * MAX_ID)); // IDs outside the range of initialMovies
         }
@@ -402,7 +402,7 @@ TEST(FileStorageTests, UpdateUserRemoveEdge) {
         // The user's movies should remain unchanged
         auto after = storage.isUserInStorage(userId);
 
-        std::vector<int> afterInt(after.begin(), after.end());
+        std::vector<unsigned int> afterInt(after.begin(), after.end());
         EXPECT_EQ(afterInt, initialMovies);
         remove(TEST_FILE);
     }

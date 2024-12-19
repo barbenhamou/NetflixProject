@@ -1,5 +1,7 @@
 # Netflix Project
 This is a Netflix project for the course "Advanced System programming" in Bar-Ilan University.
+<br>
+There is a server and a client. You can have as many clients as you want.
 
 ## Running the server
 This project uses Docker for easy building.
@@ -8,18 +10,17 @@ To compile the server, run this command (it might take a while):
 ```bash
 docker build -f Dockerfile.server -t serverimage .
 ```
-To run the server, run this:
+To run the server, run this (replace `<PORT>` with the port number that you want the client to connect to):
 ```bash
-docker run -it -p 12350:12350 --name server_container serverimage <PORT>
+docker run -it -p <PORT>:<PORT> --name server_container serverimage <PORT>
 ```
-and the server is running.
+and then the server will be running.
 `server_container` is the name of the Docker container, and `serverimage` is the name of the image.
 
 If you want to stop the program, run this (from a different terminal):
 ```bash
 docker stop server_container
 ```
-Note: clients that were connected needs to be closed by ctrl+c or by sending some nonsense 
 
 If you want to run the program again (in the same container, keeping the data from previous runs), run this:
 ```bash
@@ -32,28 +33,21 @@ docker rm server_container
 ```
 
 ## Running the client
-This project uses Docker for easy building.
-
 To compile the client, run this command (it might take a while):
 ```bash
 docker build -t client -f Dockerfile.client .
 ```
 To run the client, run this:
 ```bash
-docker run -it client --name client_container <SERVER_IP> <PORT> // Discover the IP in the cmd with ipconfig
+docker run -it client --name client_container <SERVER_IP> <PORT>
 ```
-and the client is running.
+Replace `<SERVER_IP>` with the IP you want your server to run on, and `<PORT>` is the same from before.
+<br>
 `client_container` is the name of the Docker container, and `client` is the name of the image.
 
-If you want to stop the program, run this (from a different terminal):
+If you want to stop the client, press ctrl+C, or run this (from a different terminal):
 ```bash
 docker stop client_container
-```
-Note: closing clients by ctrl+c 
-
-If you want to run the program again (in the same container, keeping the data from previous runs), run this:
-```bash
-docker start -i client_container
 ```
 
 If you want to delete the container:

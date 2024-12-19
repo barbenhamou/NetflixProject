@@ -120,7 +120,7 @@ inline void generateRandomAddCommand(int minMovies, int maxMovies, int& userId, 
     // Construct the command string
     std::ostringstream commandStream;
     commandStream << userId;  // Start with the user ID
-    for (int movieId : movies) {
+    for (const auto& movieId : movies) {
         commandStream << " " << movieId;  // Append each movie ID
     }
 

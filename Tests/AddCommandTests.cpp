@@ -11,11 +11,11 @@ TEST(AddCommandTests, AddFunction) {
         allUsers.clear();
 
         // Generate a random user ID
-        int newUserId = randInt(1, 100);
+        unsigned int newUserId = randInt(1, 100);
 
         // Generate a random number of movies and their IDs
         int numMovies = randInt(1, 10);
-        std::vector<int> newMovieIds;
+        std::vector<unsigned int> newMovieIds;
         for (int i = 0; i < numMovies; i++) {
             newMovieIds.push_back(randInt(1, 100));
         }
@@ -34,7 +34,7 @@ TEST(AddCommandTests, AddFunction) {
         EXPECT_TRUE(userFound);
 
         // 2. Check if the new movies are in the global movies list
-        for (int movieId : newMovieIds) {
+        for (const auto& movieId : newMovieIds) {
             bool movieFound = false;
             for (const auto& movie : allMovies) {
                 if (movie->getId() == movieId) {
@@ -54,7 +54,7 @@ TEST(AddCommandTests, AddFunction) {
             }
         }
         EXPECT_NE(newUser, nullptr);
-        for (int movieId : newMovieIds) {
+        for (const auto& movieId : newMovieIds) {
             bool movieInUserList = false;
             for (const auto& movie : newUser->getMovies()) {
                 if (movie->getId() == movieId) {
@@ -66,7 +66,7 @@ TEST(AddCommandTests, AddFunction) {
         }
 
         // 4. Check if the new user is in each movie's list of users who watched it
-        for (int movieId : newMovieIds) {
+        for (const auto& movieId : newMovieIds) {
             const Movie* newMovie = nullptr;
             for (const auto& movie : allMovies) {
                 if (movie->getId() == movieId) {
