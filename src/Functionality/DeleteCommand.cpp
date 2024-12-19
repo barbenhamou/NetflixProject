@@ -33,7 +33,7 @@ void DeleteCommand::remove(unsigned int userId, std::vector<unsigned int> movieI
 
 std::pair<std::string, StatusCode> DeleteCommand::execute(std::string command) {
     // Match numbers with potential spaces before and after them
-    auto extractedNumbers = ICommand::parseCommand(command, R"(\s*([-]?\d+)\s*)");
+    auto extractedNumbers = ICommand::parseCommand(command, R"(\s*(\S+)\s*)");
 
     // Ensure we have at least one user ID and one movie ID, and that
     // they are numbers (parseCommand returns {} if a non-number was passed)

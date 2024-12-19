@@ -93,7 +93,7 @@ std::pair<bool, StatusCode> AddCommand::checkAddValidity(IStorage* storage, unsi
 
 std::pair<std::string, StatusCode> AddCommand::executeSpecificAdd(const std::string& command, Functionality func){
     // Match numbers with potential spaces before and after them
-    auto extractedNumbers = ICommand::parseCommand(command, R"(\s*([-]?\d+)\s*)");
+    auto extractedNumbers = ICommand::parseCommand(command, R"(\s*(\S+)\s*)");
 
     // Ensure we have at least one user ID and one movie ID, and that
     // they are numbers (parseCommand returns {} if a non-number was passed)
