@@ -104,7 +104,7 @@ Here is an example of some commands functionality and communication from the ser
 
 Here is an example of two clients working, one posts and the other one tries and fails:<br>
 
-![Run Example](TwoClientRun.png)
+![Run Example](TwoClientsRun.png)
 
 Here is an example of how the tests run:<br>
 
