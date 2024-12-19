@@ -16,7 +16,7 @@ COPY . .
 RUN make
 
 # Ensure the executable is ready to run
-RUN chmod +x ./server
+RUN chmod +x ./bin/server
 
 # Run the project
-CMD ["./server"]
+ENTRYPOINT ["./bin/server"]
