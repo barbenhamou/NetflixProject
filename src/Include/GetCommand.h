@@ -27,5 +27,5 @@ class GetCommand : public ICommand {
 
         std::pair<std::string, std::string> toString() override;
 
-        std::string execute(std::string command) override;
+        std::pair<std::string, StatusCode> execute(std::string command) override;
 };

@@ -16,17 +16,16 @@ TEST(PatchCommandTests, RandomizedUserAndMovieId) {
 
         // Check if the user already exists in the file
         FileStorage fileStorage(TEST_FILE);
-        if (fileStorage.isUserInStorage(newUserId) != USER_NOT_FOUND) {
-            Post->execute(command);
 
+        // Execute the command
+        auto execution = Post->execute(command);
+
+        if (fileStorage.isUserInStorage(newUserId) != USER_NOT_FOUND) {
             // Check the status
-            EXPECT_EQ(Post->getStatus(), NotFound);
+            EXPECT_EQ(execution.second, NotFound);
 
             continue;
         }
-
-        // Execute the command
-        Post->execute(command);
 
         // 1. Check if the new user is in the global users list
         bool userFound = false;
@@ -39,7 +38,7 @@ TEST(PatchCommandTests, RandomizedUserAndMovieId) {
         EXPECT_TRUE(userFound);
 
         // 2. Check if the new movies are in the global movies list
-        for (int movieId : newMovieIds) {
+        for (const auto& movieId : newMovieIds) {
             bool movieFound = false;
             for (const auto& movie : allMovies) {
                 if (movie->getId() == movieId) {
@@ -59,7 +58,7 @@ TEST(PatchCommandTests, RandomizedUserAndMovieId) {
             }
         }
         EXPECT_NE(newUser, nullptr);
-        for (int movieId : newMovieIds) {
+        for (const auto& movieId : newMovieIds) {
             bool movieInUserList = false;
             for (const auto& movie : newUser->getMovies()) {
                 if (movie->getId() == movieId) {
@@ -71,7 +70,7 @@ TEST(PatchCommandTests, RandomizedUserAndMovieId) {
         }
 
         // 4. Check if the new user is in each movie's list of users who watched it
-        for (int movieId : newMovieIds) {
+        for (const auto& movieId : newMovieIds) {
             const Movie* newMovie = nullptr;
             for (const auto& movie : allMovies) {
                 if (movie->getId() == movieId) {

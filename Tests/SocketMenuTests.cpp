@@ -14,7 +14,6 @@ TEST(SocketMenuTests, TestNextCommand) {
 
     std::string msg = "command arg1 arg2\n";
     uint32_t msg_size = htonl(msg.size());
-    send(client_sock, &msg_size, sizeof(msg_size), 0);
     send(client_sock, msg.c_str(), msg.size(), 0);
 
     std::vector<std::string> res = menu.nextCommand();
@@ -43,12 +42,10 @@ TEST(SocketMenuTests, TestDisplayError) {
     std::string msg = "command arg1 arg2\n";
     menu.sendOutput(msg);
 
-    uint32_t recved_size;
-    recv(client_sock, &recved_size, sizeof(recved_size), 0);
-    recved_size = ntohl(recved_size);
+    uint32_t recved_size = 4095;
 
     char data[4096] = { 0 };
-    int recved = recv(client_sock, data, recved_size, 0);
+    int recved = recv(client_sock, data, 4095, 0);
 
     EXPECT_GT(recved, 0);
     EXPECT_EQ(std::string(data, recved), msg);

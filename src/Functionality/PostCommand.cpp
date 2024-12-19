@@ -5,6 +5,6 @@ std::pair<std::string, std::string> PostCommand::toString() {
     return {"POST", "[userid] [movieid1] [movieid2] ..."};
 }
 
-std::string PostCommand::execute(std::string command) {
+std::pair<std::string, StatusCode> PostCommand::execute(std::string command) {
     return executeSpecificAdd(command, POST);
 }

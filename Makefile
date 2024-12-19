@@ -1,43 +1,60 @@
-# Source and Header files directories
-SRCDIR = src
-INCDIR = $(SRCDIR)/Include
-OBJDIR = obj
-
 # Compiler and flags
-CXX = g++
-CXXFLAGS = -g -I$(INCDIR)
+CXX =g++
+CXXFLAGS = -Wall -Wextra -std=c++17 -pthread -g
 
-# Subdirectories to compile
-SUBDIRS = FileHandling Functionality Objects
+# Directories
+SRC_DIR = ./src
+OBJ_DIR = ./obj
+BIN_DIR = ./bin
+DATA_DIR = ./data
 
-# Find all .cpp files in the specified subdirectories
-SOURCES = $(foreach dir, $(SUBDIRS), $(wildcard $(SRCDIR)/$(dir)/*.cpp))
+PORT = 12357
+IP = 127.0.0.1
 
-# Create object files in the object directory
-OBJECTS = $(patsubst $(SRCDIR)/%.cpp, $(OBJDIR)/%.o, $(SOURCES))
+# Source files
+SRC_FILES = $(wildcard $(SRC_DIR)/Objects/*.cpp) $(wildcard $(SRC_DIR)/FileHandling/*.cpp) $(wildcard $(SRC_DIR)/Functionality/*.cpp)
 
-# Output executable name
-TARGET = run
+# Object files
+OBJ_FILES = $(SRC_FILES:$(SRC_DIR)/Objects/%.cpp=$(OBJ_DIR)/%.o)
+
+# Executables
+SERVER_EXEC = $(BIN_DIR)/server
+
+# Python client script
+PY_CLIENT = $(SRC_DIR)/Objects/Client.py
 
 # Default target
-all: $(OBJDIR) $(addprefix $(OBJDIR)/, $(SUBDIRS)) $(TARGET)
+all: server
 
-# Ensure the object directory exists
-$(OBJDIR):
-	mkdir -p $(OBJDIR)
-
-# Ensure subdirectories exist in the object directory
-$(OBJDIR)/%:
+# Create bin and obj directories if they don't exist
+$(BIN_DIR) $(OBJ_DIR):
 	mkdir -p $@
 
-# Rule to link object files into an executable
-$(TARGET): $(OBJECTS)
-	$(CXX) $(OBJECTS) -o $(TARGET)
+gdb: server
+	gdb --args ./bin/server $(PORT)
 
-# Rule to compile .cpp to .o object files in the object directory
-$(OBJDIR)/%.o: $(SRCDIR)/%.cpp
+# Compile server executable
+server: $(SERVER_EXEC)
+
+$(SERVER_EXEC): $(OBJ_FILES) | $(BIN_DIR)
+	$(CXX) $(CXXFLAGS) $(OBJ_FILES) -o $@
+
+$(OBJ_DIR)/%.o: $(SRC_DIR)/Objects/%.cpp | $(OBJ_DIR)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-# Clean up object and binary files
+$(OBJ_DIR)/%.o: $(SRC_DIR)/FileHandling/%.cpp | $(OBJ_DIR)
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+$(OBJ_DIR)/%.o: $(SRC_DIR)/Functionality/%.cpp | $(OBJ_DIR)
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+# Run the server with command-line arguments
+run-server: server
+	./$(SERVER_EXEC) $(PORT)
+# Run the Python client with command-line arguments
+run-client:
+	python3 $(PY_CLIENT) $(IP) $(PORT)
+
+# Clean build artifacts
 clean:
-	rm -rf $(OBJDIR) $(TARGET)
+	rm -rf $(OBJ_DIR) $(BIN_DIR)

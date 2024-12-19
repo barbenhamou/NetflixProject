@@ -1,7 +1,6 @@
 cmake_minimum_required(VERSION 3.14)
 project(FileStorageTest)
 
-# Enable testing
 enable_testing()
 
 # Find GoogleTest package
@@ -10,10 +9,10 @@ find_package(GTest REQUIRED)
 # Include directories for header files
 include_directories(
     ${GTEST_INCLUDE_DIRS}           # Google Test includes
-    ${CMAKE_SOURCE_DIR}/src/Include # Your project's include directory
+    ${CMAKE_SOURCE_DIR}/src/Include # Project's includes directory
 )
 
-# Add the executable for ConsoleMenuTest
+# Add the executables
 add_executable(
     Tests
     Tests/SocketMenuTests.cpp
@@ -26,7 +25,6 @@ add_executable(
     Tests/AddCommandTests.cpp    
     Tests/GetCommandTests.cpp
     Tests/DeleteCommandTests.cpp
-    #Tests/EndToEndTests.cpp
 
     src/Objects/SocketMenu.cpp
     src/Objects/ConsoleMenu.cpp
@@ -34,6 +32,9 @@ add_executable(
     src/Objects/Movie.cpp
     src/Objects/User.cpp
     src/Objects/Globals.cpp
+    src/Objects/TCPServer.cpp
+    src/Objects/ThreadClientManager.cpp
+    src/Objects/ClientHandler.cpp
 
     src/Functionality/AddCommand.cpp
     src/Functionality/HelpCommand.cpp
@@ -82,11 +83,6 @@ add_test(
     NAME RecommendationTests
     COMMAND RecommendationTests
 )
-
-#add_test(
-#    NAME EndToEndTests
-#    COMMAND EndToEndTests
-#)
 
 add_test(
     NAME SocketMenuTests

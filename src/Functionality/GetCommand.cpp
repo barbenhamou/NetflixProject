@@ -101,28 +101,36 @@ std::vector<Movie*> GetCommand::recommend(User* user, Movie* movie) {
     return GetCommand::sortByRelevance(relevanceValues, relevantMovies);
 }
 
-std::string GetCommand::execute(std::string command) {
+std::pair<std::string, StatusCode> GetCommand::execute(std::string command) {
     // Match numbers with potential spaces before and after them
-    auto extractedNumbers = ICommand::parseCommand(command, R"(\s*(\d+)\s*)");
+    auto extractedNumbers = ICommand::parseCommand(command, R"(\s*(\S+)\s*)");
 
     // Ensure we have one user ID and one movie ID, and that
     // they are numbers (parseCommand returns {} if a non-number was passed)
     if (extractedNumbers.size() != 2) {
-        ICommand::setStatus(BadRequest);
-        return "";
+        return {"", BadRequest};
     }
 
-    // Get user and movie index in the global list (if non-existant, ignore)
+    // Check for negative IDs
+    if (ICommand::checkForNegative(extractedNumbers)) {
+        return {"", NotFound};
+    }
+
+    // Entering critical section, but read only
+    std::shared_lock<std::shared_mutex> lock(commandMutex);
+
+    // Get user and movie index in the global list
     int userIndex = User::findUser(extractedNumbers[0]);
     int movieIndex = Movie::findMovie(extractedNumbers[1]);
+
+    // User doesn't exist, illogical command
     if (userIndex == -1) {
-        ICommand::setStatus(NotFound);
-        return "";
+        return {"", NotFound};
     }
 
+    // Movie doesn't exist, nothing to recommend
     if (movieIndex == -1) {
-        ICommand::setStatus(Ok);
-        return "";
+        return {"", Ok};
     }
 
     User* user = allUsers[userIndex].get();
@@ -130,7 +138,8 @@ std::string GetCommand::execute(std::string command) {
 
     std::vector<Movie*> recommendations = GetCommand::recommend(user, movie);
 
-    ICommand::setStatus(Ok);
+    // Exiting critical section
+    lock.unlock();
 
-    return GetCommand::printRecommendations(recommendations);
+    return {GetCommand::printRecommendations(recommendations), Ok};
 }

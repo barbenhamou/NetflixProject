@@ -10,7 +10,7 @@ class HelpCommand : public ICommand {
     public:
         std::pair<std::string, std::string> toString() override;
 
-        std::string execute(std::string command) override;
+        std::pair<std::string, StatusCode> execute(std::string command) override;
 
         std::vector<std::pair<std::string, ICommand*>> sortCommands();
 };

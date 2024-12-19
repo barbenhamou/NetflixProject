@@ -1,18 +1,23 @@
 #include "../Include/App.h"
 #include "../Include/Globals.h"
+#include "../Include/TCPServer.h"
 
-int main() {
+int main(int argc, char* argv[]) {
+    if (argc != 2) {
+        return -1;
+    }
+
+    int port = std::stoi(argv[1]);
+    
     // Get all info from the file into global variables
     AddCommand::initGlobals(DATA_FILE);
 
-    IMenu* menu = new ConsoleMenu();
-
     App::createCommands();
+    
+    ThreadClientManager* manager = new ThreadClientManager();
+    TCPServer server(port, manager);
+    server.activate();
 
-    App app(menu, commands);
-    app.run();
-
+    delete manager;
     App::deleteCommands();
-
-    delete menu;
 }

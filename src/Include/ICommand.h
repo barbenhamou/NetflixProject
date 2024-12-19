@@ -2,6 +2,8 @@
 
 #include <string>
 #include <regex>
+#include <mutex>
+#include <shared_mutex>
 
 #include "MovieUser.h"
 
@@ -16,27 +18,19 @@ enum StatusCode {
 
 // An interface which all the commands will implement
 class ICommand {
-    private:
-        // The command's HTTP status code
-        StatusCode status = None;
-
     protected:
-        void setStatus(StatusCode code) {
-            status = code;
-        }
+        // A mutex that ensures only one command executes at a time
+        // (except for commands that don't use shared resources)
+        static std::shared_mutex commandMutex;
 
     public:
         virtual ~ICommand() = default;
 
-        // All commands will override this function have their own implementation
-        virtual std::string execute(std::string command) = 0;
+        // Executes the command. Returns {command's output, command's status code}
+        virtual std::pair<std::string, StatusCode> execute(std::string command) = 0;
 
         // Returns {command, arguments}
         virtual std::pair<std::string, std::string> toString() = 0;
-        
-        StatusCode getStatus() const {
-            return status;
-        }
 
         // Parses the command's arguments and returns them according to the given pattern.
         // Upon error (an argument is not a number) returns an empty vector
@@ -49,7 +43,7 @@ class ICommand {
             std::string::const_iterator searchStart(command.cbegin());
 
             while (std::regex_search(searchStart, command.cend(), match, pattern)) {
-                // Extract the number as an integer (if not a number, ignore command)
+                // Extract the number as an integer (if not a number, return {})
                 try {
                     extractedNumbers.push_back(std::stoi(match[1].str()));
                 } catch (...) {return {};}
@@ -59,5 +53,14 @@ class ICommand {
             }
 
             return extractedNumbers;
+        }
+
+        // If `numbers` contains a negative number it returns true, otherwise false
+        static bool checkForNegative(std::vector<int> numbers) {
+            for (const auto& num : numbers) {
+                if (num < 0) return true;
+            }
+
+            return false;
         }
 };

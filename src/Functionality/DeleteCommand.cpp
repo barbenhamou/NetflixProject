@@ -5,7 +5,7 @@ std::pair<std::string, std::string> DeleteCommand::toString() {
     return {"DELETE", "[userid] [movieid1] [movieid2] ..."};
 }
 
-void DeleteCommand::remove(int userId, std::vector<int> movieIds) {
+void DeleteCommand::remove(unsigned int userId, std::vector<unsigned int> movieIds) {
     int userIndex = User::findUser(userId);
     int movieIndex;
 
@@ -15,7 +15,7 @@ void DeleteCommand::remove(int userId, std::vector<int> movieIds) {
     User* user = allUsers[userIndex].get();
     Movie* movie;
 
-    for (const int& movieId : movieIds) {
+    for (const auto& movieId : movieIds) {
         movieIndex = Movie::findMovie(movieId);
 
         // If the movie doesn't exist, skip it
@@ -31,34 +31,41 @@ void DeleteCommand::remove(int userId, std::vector<int> movieIds) {
     }
 }
 
-std::string DeleteCommand::execute(std::string command) {
+std::pair<std::string, StatusCode> DeleteCommand::execute(std::string command) {
     // Match numbers with potential spaces before and after them
-    auto extractedNumbers = ICommand::parseCommand(command, R"(\s*(\d+)\s*)");
+    auto extractedNumbers = ICommand::parseCommand(command, R"(\s*(\S+)\s*)");
 
     // Ensure we have at least one user ID and one movie ID, and that
     // they are numbers (parseCommand returns {} if a non-number was passed)
     if (extractedNumbers.size() < 2){
-        ICommand::setStatus(BadRequest);
-        return "";
+        return {"", BadRequest};
+    }
+
+    // Check for negative IDs
+    if (ICommand::checkForNegative(extractedNumbers)) {
+        return {"", NotFound};
     }
 
     // The first number is the user ID, the rest are movie IDs
-    int userId = extractedNumbers[0];
-    std::vector<int> watchedMovies(extractedNumbers.begin() + 1, extractedNumbers.end());
+    unsigned int userId = extractedNumbers[0];
+    std::vector<unsigned int> watchedMovies(extractedNumbers.begin() + 1, extractedNumbers.end());
+
+    // Entering critical section, read and write
+    std::unique_lock<std::shared_mutex> lock(commandMutex);
 
     IStorage* fileStorage = new FileStorage(DATA_FILE);
 
     // Remove info from the storage, and check for invalid logic in the command
     StatusCode error = fileStorage->updateUserData(userId, watchedMovies, FileStorage::Remove);
     if (error != None) {
-        ICommand::setStatus(error);
-        return "";
+        return {"", error};
     }
 
     // Remove info from the global vectors
     DeleteCommand::remove(userId, watchedMovies);
 
-    ICommand::setStatus(NoContent);
+    // Exiting critical section
+    lock.unlock();
 
-    return "";
+    return {"", NoContent};
 }

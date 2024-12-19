@@ -7,7 +7,7 @@
 #include <string>
 #include <vector>
 
-#include "ConsoleMenu.h"
+#include "IMenu.h"
 #include "AddCommand.h"
 #include "HelpCommand.h"
 #include "GetCommand.h"
@@ -27,9 +27,9 @@ class App {
         // Starts the app
         void run();
 
-        // Populate the global map of commands
+        // Populates the global map of commands
         static void createCommands();
 
-        // Delete all the command pointers from the global map of commands
+        // Deletes all the command pointers from the global map of commands
         static void deleteCommands();
 };
