@@ -39,8 +39,6 @@ int TCPServer::activate() {
             break;
         }
     }
-    
-    sleep(1);
 
     this->shutdown();
 

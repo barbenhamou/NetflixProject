@@ -17,7 +17,6 @@ add_executable(
     Tests
     Tests/TCPServerTests.cpp
     Tests/ThreadClientManagerTests.cpp
-    Tests/EndToEndTests2.cpp
     Tests/SocketMenuTests.cpp
     Tests/FileStorageTests.cpp
     Tests/ConsoleMenuTests.cpp
@@ -28,7 +27,7 @@ add_executable(
     Tests/AddCommandTests.cpp    
     Tests/GetCommandTests.cpp
     Tests/DeleteCommandTests.cpp
-    #Tests/EndToEndTests.cpp
+    Tests/EndToEndTests2.cpp
 
     src/Objects/SocketMenu.cpp
     src/Objects/ConsoleMenu.cpp
@@ -88,10 +87,10 @@ add_test(
     COMMAND RecommendationTests
 )
 
-#add_test(
-#    NAME EndToEndTests
-#    COMMAND EndToEndTests
-#)
+add_test(
+   NAME EndToEndTests2
+    COMMAND EndToEndTests2
+)
 
 add_test(
     NAME SocketMenuTests
@@ -111,4 +110,14 @@ add_test(
 add_test(
     NAME DeleteCommandTests
     COMMAND DeleteCommandTests
+)
+
+add_test(
+    NAME TCPServerTests
+    COMMAND TCPServerTests
+)
+
+add_test(
+    NAME ThreadClientManagerTests
+    COMMAND ThreadClientManagerTests
 )

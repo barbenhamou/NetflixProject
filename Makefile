@@ -1,6 +1,6 @@
 # Compiler and flags
 CXX = g++
-CXXFLAGS = -Wall -Wextra -std=c++17 -pthread -g -std=c++17
+CXXFLAGS = -Wall -Wextra -std=c++17 -pthread -g
 
 # Directories
 SRC_DIR = ./src
@@ -8,7 +8,7 @@ OBJ_DIR = ./obj
 BIN_DIR = ./bin
 DATA_DIR = ./data
 
-PORT = 12347
+PORT = 12350
 
 # Source files
 SRC_FILES = $(wildcard $(SRC_DIR)/Objects/*.cpp) $(wildcard $(SRC_DIR)/FileHandling/*.cpp) $(wildcard $(SRC_DIR)/Functionality/*.cpp)

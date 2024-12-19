@@ -1,7 +1,8 @@
 import socket
 import sys
 
-BYTES = 1024  # The maximum number of bytes to receive per chunk
+# The maximum number of bytes to receive per chunk
+BYTES = 4096
 
 # The client object
 class Client:
@@ -27,7 +28,7 @@ class Client:
                 # Send the message bytes directly
                 self.__sock.sendall(msg_bytes)
 
-                # Receive the response in chunks of 1024 bytes
+                # Receive the response in chunks of BYTES bytes
                 data = b""
                 while True:
                     # Receive a chunk of data
@@ -36,8 +37,12 @@ class Client:
                         break
                     data += chunk
 
-                    # If received chunk is less than 1024 bytes, the message has been received
+                    # If received chunk is less than BYTES bytes, the message has been received
                     if len(chunk) < BYTES:
+                        break
+                    
+                    # Check if the message is a multiple of BYTES
+                    if len(chunk) == BYTES and chunk.endswith(b'\n'):
                         break
 
                 print(data.decode())

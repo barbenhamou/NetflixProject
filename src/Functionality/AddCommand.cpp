@@ -104,7 +104,7 @@ std::pair<std::string, StatusCode> AddCommand::executeSpecificAdd(const std::str
     // The first number is the user ID, the rest are movie IDs
     int userId = extractedNumbers[0];
     std::vector<int> watchedMovies(extractedNumbers.begin() + 1, extractedNumbers.end());
-
+    
     // Entering critical section, read and write
     std::unique_lock<std::shared_mutex> lock(commandMutex);
 
