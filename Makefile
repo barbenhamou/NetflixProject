@@ -8,7 +8,7 @@ OBJ_DIR = ./obj
 BIN_DIR = ./bin
 DATA_DIR = ./data
 
-PORT = 12350
+PORT = 12354
 IP = 127.0.0.1
 
 # Source files

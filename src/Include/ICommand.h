@@ -43,7 +43,7 @@ class ICommand {
             std::string::const_iterator searchStart(command.cbegin());
 
             while (std::regex_search(searchStart, command.cend(), match, pattern)) {
-                // Extract the number as an integer (if not a number, ignore command)
+                // Extract the number as an integer (if not a number, return {})
                 try {
                     extractedNumbers.push_back(std::stoi(match[1].str()));
                 } catch (...) {return {};}
@@ -53,5 +53,14 @@ class ICommand {
             }
 
             return extractedNumbers;
+        }
+
+        // If `numbers` contains a negative number it returns true, otherwise false
+        static bool checkForNegative(std::vector<int> numbers) {
+            for (const auto& num : numbers) {
+                if (num < 0) return true;
+            }
+
+            return false;
         }
 };

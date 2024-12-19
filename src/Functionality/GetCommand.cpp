@@ -103,12 +103,17 @@ std::vector<Movie*> GetCommand::recommend(User* user, Movie* movie) {
 
 std::pair<std::string, StatusCode> GetCommand::execute(std::string command) {
     // Match numbers with potential spaces before and after them
-    auto extractedNumbers = ICommand::parseCommand(command, R"(\s*(\d+)\s*)");
+    auto extractedNumbers = ICommand::parseCommand(command, R"(\s*([-]?\d+)\s*)");
 
     // Ensure we have one user ID and one movie ID, and that
     // they are numbers (parseCommand returns {} if a non-number was passed)
     if (extractedNumbers.size() != 2) {
         return {"", BadRequest};
+    }
+
+    // Check for negative IDs
+    if (ICommand::checkForNegative(extractedNumbers)) {
+        return {"", NotFound};
     }
 
     // Entering critical section, but read only

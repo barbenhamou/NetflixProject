@@ -3,7 +3,7 @@
 
 std::shared_mutex ICommand::commandMutex;
 
-void AddCommand::add(int userId, std::vector<int> movieIds) {
+void AddCommand::add(unsigned int userId, std::vector<unsigned int> movieIds) {
     int userIndex = User::findUser(userId);
     int movieIndex;
 
@@ -16,7 +16,7 @@ void AddCommand::add(int userId, std::vector<int> movieIds) {
     User* user = allUsers[userIndex].get();
     Movie* movie;
 
-    for (const int& movieId : movieIds) {
+    for (const auto& movieId : movieIds) {
         movieIndex = Movie::findMovie(movieId);
 
         // If the movie doesn't exist, add it to the global list
@@ -51,13 +51,13 @@ void AddCommand::initGlobals(const std::string& fileName) {
         if (parts.size() != 2) return;
 
         // User ID before the colon
-        int userId = std::stoi(parts[0]); 
+        unsigned int userId = std::stoi(parts[0]); 
 
         // Movie IDs after the colon
         auto movieIdsStr = FileStorage::split(parts[1], ',');
 
         // Convert movieIds to ints
-        std::vector<int> movieIds;
+        std::vector<unsigned int> movieIds;
         for (const auto& movieStr : movieIdsStr) {
             movieIds.push_back(std::stoi(movieStr));
         }
@@ -68,7 +68,7 @@ void AddCommand::initGlobals(const std::string& fileName) {
     inputFile.close();
 }
 
-std::pair<bool, StatusCode> AddCommand::checkAddValidity(IStorage* storage, int userId, Functionality func) {
+std::pair<bool, StatusCode> AddCommand::checkAddValidity(IStorage* storage, unsigned int userId, Functionality func) {
     auto userMovies = storage->isUserInStorage(userId);
     // Decide if the command is valid
     switch(func) {
@@ -93,7 +93,7 @@ std::pair<bool, StatusCode> AddCommand::checkAddValidity(IStorage* storage, int 
 
 std::pair<std::string, StatusCode> AddCommand::executeSpecificAdd(const std::string& command, Functionality func){
     // Match numbers with potential spaces before and after them
-    auto extractedNumbers = ICommand::parseCommand(command, R"(\s*(\d+)\s*)");
+    auto extractedNumbers = ICommand::parseCommand(command, R"(\s*([-]?\d+)\s*)");
 
     // Ensure we have at least one user ID and one movie ID, and that
     // they are numbers (parseCommand returns {} if a non-number was passed)
@@ -101,9 +101,14 @@ std::pair<std::string, StatusCode> AddCommand::executeSpecificAdd(const std::str
         return {"", BadRequest};
     }
 
+    // Check for negative IDs
+    if (ICommand::checkForNegative(extractedNumbers)) {
+        return {"", NotFound};
+    }
+
     // The first number is the user ID, the rest are movie IDs
-    int userId = extractedNumbers[0];
-    std::vector<int> watchedMovies(extractedNumbers.begin() + 1, extractedNumbers.end());
+    unsigned int userId = extractedNumbers[0];
+    std::vector<unsigned int> watchedMovies(extractedNumbers.begin() + 1, extractedNumbers.end());
     
     // Entering critical section, read and write
     std::unique_lock<std::shared_mutex> lock(commandMutex);
