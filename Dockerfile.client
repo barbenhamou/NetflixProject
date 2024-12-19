@@ -1,0 +1,10 @@
+# Use an official Python image as the base
+FROM python:3.10
+# Set the working directory for the container
+WORKDIR /usr/src/project
+
+# Copy the entire project into the container
+COPY . .
+
+# Default entry point to run the Python client script
+CMD ["python3", "./src/Objects/Client.py"]
