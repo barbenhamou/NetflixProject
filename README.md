@@ -104,9 +104,13 @@ Displays all available commands and their arguments.
 <br>
 
 ## Run Example
-Here is an example of how the project compiles and runs:<br>
+Here is an example of some commands functionality and communication from the server:<br>
 
-![Run Example](RunExample.png)
+![Run Example](OneClientRun.png)
+
+Here is an example of two clients working, one posts and the other one tries and fails:<br>
+
+![Run Example](TwoClientRun.png)
 
 Here is an example of how the tests run:<br>
 
