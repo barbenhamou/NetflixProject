@@ -16,17 +16,16 @@ TEST(PatchCommandTests, RandomizedUsersAndMovieId) {
 
         // Check if the user already exists in the file
         FileStorage fileStorage(TEST_FILE);
-        if (fileStorage.isUserInStorage(newUserId) == USER_NOT_FOUND) {
-            Patch->execute(command);
 
+        // Execute the command
+        auto execution = Patch->execute(command);
+
+        if (fileStorage.isUserInStorage(newUserId) == USER_NOT_FOUND) {
             // Check the status
-            EXPECT_EQ(Patch->getStatus(), NotFound);
+            EXPECT_EQ(execution.second, NotFound);
 
             continue;
         }
-
-        // Execute the command
-        Patch->execute(command);
 
         // 1. Check if the new user is in the global users list
         bool userFound = false;

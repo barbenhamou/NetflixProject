@@ -5,7 +5,7 @@
 
 #include "ClientHandler.h"
 
-// Thread manager for the multi-threaded
+// Thread manager for multi-threaded operations
 class IThreadManager {
     public:
         // Destructor / Destroyer

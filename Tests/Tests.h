@@ -15,6 +15,11 @@
 #include <arpa/inet.h>
 #include <thread>
 #include <unistd.h>
+#include <atomic>
+#include <condition_variable>
+#include <mutex>
+#include <chrono>
+#include <sstream>
 
 #include "../src/Include/MovieUser.h"
 #include "../src/Include/App.h"
@@ -39,7 +44,7 @@ inline bool compareVec(std::vector<Movie*> a, std::vector<Movie*> b) {
 }
 
 inline int randomPort() {
-    const int minPort = 1024;  // Avoid system-reserved ports
+    const int minPort = 1025;  // Avoid system-reserved ports
     const int maxPort = 65535;
     return randInt(minPort, maxPort);
 }

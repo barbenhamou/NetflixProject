@@ -7,7 +7,7 @@ TEST(HelpCommandTests, ExecuteCommandOutput) {
 
     App::createCommands();
 
-    std::string output = helpCommand->execute("");
+    auto output = helpCommand->execute("");
 
     std::string expectedOutput =
         "DELETE, arguments: [userid] [movieid1] [movieid2] ...\n"
@@ -16,7 +16,8 @@ TEST(HelpCommandTests, ExecuteCommandOutput) {
         "POST, arguments: [userid] [movieid1] [movieid2] ...\n"
         "help";
 
-    EXPECT_EQ(output, expectedOutput);
+    EXPECT_EQ(output.first, expectedOutput);
+    EXPECT_EQ(output.second, Ok);
     
     App::deleteCommands();
 }

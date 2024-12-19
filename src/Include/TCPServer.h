@@ -7,7 +7,7 @@
 
 #include "IServer.h"
 
-// TCP server
+// A TCP protocol server
 class TCPServer : public IServer {
     private:
         uint32_t port;
