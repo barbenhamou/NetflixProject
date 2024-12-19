@@ -1,8 +1,4 @@
-#include <gtest/gtest.h>
-#include <sys/socket.h>
-#include <arpa/inet.h>
-#include <unistd.h>
-#include <thread>
+#include "Tests.h"
 #include "../src/Include/ThreadClientManager.h"
 
 // Helper function to create a simple server socket

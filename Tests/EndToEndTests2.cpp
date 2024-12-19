@@ -1,8 +1,4 @@
-#include <gtest/gtest.h>
-#include <sys/socket.h>
-#include <arpa/inet.h>
-#include <unistd.h>
-#include <sstream>
+#include "Tests.h"
 #include "../src/Include/TCPServer.h"
 #include "../src/Include/ThreadClientManager.h"
 #include "../src/Include/AddCommand.h"
@@ -45,18 +41,20 @@ std::string simulateClientRequest(const std::string& serverIp, int port, const s
 
     return "";
 }
+
 TEST(EndToEndTests2, FullFunctionalityWithPosts) {
     App::createCommands();
 
     ThreadClientManager manager;
-    TCPServer server("0.0.0.0", 12345, &manager);
+    TCPServer server(12345, &manager);
 
     // Start server in a separate thread
     std::thread serverThread([&server]() {
         EXPECT_EQ(server.activate(), 0);
     });
 
-    sleep(1); // Allow server to start
+    // Allow server to start
+    sleep(1);
 
     // -------- Initialize data using POST commands --------
     std::vector<std::pair<int, std::vector<int>>> initialData = {
@@ -90,8 +88,8 @@ TEST(EndToEndTests2, FullFunctionalityWithPosts) {
     std::string expectedOutput = "105 106 111 110 112 113 107 108 109 114";
     EXPECT_EQ(getResponse, "200 Ok\n\n" + expectedOutput + "\n");
 
-    // -------- Test Case 2: POST - Add a new user --------
-    std::string postRequest = "POST 11 120 121 122\n";
+    // -------- Test Case 2: POST - Add a new user + multiple spaces --------
+    std::string postRequest = "POST  11   120    121        122\n";
     std::string postResponse = simulateClientRequest("127.0.0.1", 12345, postRequest);
     EXPECT_EQ(postResponse, "201 Created\n");
 
@@ -114,9 +112,10 @@ TEST(EndToEndTests2, FullFunctionalityWithPosts) {
     std::string helpRequest = "help\n";
     std::string helpResponse = simulateClientRequest("127.0.0.1", 12345, helpRequest);
     std::string expectedHelpOutput = 
-        "POST, arguments: [userid] [movieid1] [movieid2] ...\n"
-        "PATCH, arguments: [userid] [movieid1] [movieid2] ...\n"
+        "DELETE, arguments: [userid] [movieid1] [movieid2] ...\n"
         "GET, arguments: [userid] [movieid]\n"
+        "PATCH, arguments: [userid] [movieid1] [movieid2] ...\n"
+        "POST, arguments: [userid] [movieid1] [movieid2] ...\n"
         "help\n";
     EXPECT_EQ(helpResponse, "200 Ok\n\n" + expectedHelpOutput);
 
