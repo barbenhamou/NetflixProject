@@ -16,6 +16,9 @@ include_directories(
 # Add the executable for ConsoleMenuTest
 add_executable(
     Tests
+    Tests/TCPServerTests.cpp
+    Tests/ThreadClientManagerTests.cpp
+    Tests/EndToEndTests2.cpp
     Tests/SocketMenuTests.cpp
     Tests/FileStorageTests.cpp
     Tests/ConsoleMenuTests.cpp
@@ -34,6 +37,9 @@ add_executable(
     src/Objects/Movie.cpp
     src/Objects/User.cpp
     src/Objects/Globals.cpp
+    src/Objects/TCPServer.cpp
+    src/Objects/ThreadClientManager.cpp
+    src/Objects/ClientHandler.cpp
 
     src/Functionality/AddCommand.cpp
     src/Functionality/HelpCommand.cpp
