@@ -1,7 +1,7 @@
 #include "../Include/TCPServer.h"
 
-TCPServer::TCPServer(std::string ip, uint32_t port, IThreadManager* manager)
-    : ip(std::move(ip)), port(port), threadManager(manager), active(false) {
+TCPServer::TCPServer(uint32_t port, IThreadManager* manager)
+    : port(port), threadManager(manager), active(false) {
     this->serverSocket = socket(AF_INET, SOCK_STREAM, 0);
     if (this->serverSocket < 0) {
         this->serverSocket = -1;
@@ -15,7 +15,7 @@ int TCPServer::activate() {
 
     sockaddr_in serverAddress{};
     serverAddress.sin_family = AF_INET;
-    serverAddress.sin_addr.s_addr = inet_addr(this->ip.c_str());
+    serverAddress.sin_addr.s_addr = INADDR_ANY;
     serverAddress.sin_port = htons(port);
 
     if (bind(this->serverSocket, (struct sockaddr*)&serverAddress, sizeof(serverAddress)) < 0) {

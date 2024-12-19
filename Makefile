@@ -30,7 +30,7 @@ $(BIN_DIR) $(OBJ_DIR):
 	mkdir -p $@
 
 gdb: server
-	gdb --args ./bin/server $(PORT) 0.0.0.0
+	gdb --args ./bin/server $(PORT)
 
 # Compile server executable
 server: $(SERVER_EXEC)
@@ -49,8 +49,7 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/Functionality/%.cpp | $(OBJ_DIR)
 
 # Run the server with command-line arguments
 run-server: server
-	./$(SERVER_EXEC) $(PORT) 0.0.0.0
-
+	./$(SERVER_EXEC) $(PORT)
 # Run the Python client with command-line arguments
 run-client:
 	python3 $(PY_CLIENT) 127.0.0.1 $(PORT)

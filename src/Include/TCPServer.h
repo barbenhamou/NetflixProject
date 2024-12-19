@@ -10,7 +10,6 @@
 // TCP server
 class TCPServer : public IServer {
     private:
-        std::string ip;
         uint32_t port;
         int serverSocket;
         IThreadManager* threadManager;
@@ -18,7 +17,7 @@ class TCPServer : public IServer {
 
     public:
         // Constructor
-        TCPServer(std::string ip, uint32_t port, IThreadManager* manager);
+        TCPServer(uint32_t port, IThreadManager* manager);
 
         // Destructor / Destoyer
         ~TCPServer() {this->shutdown();}

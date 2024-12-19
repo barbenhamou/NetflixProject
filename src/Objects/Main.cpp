@@ -3,7 +3,7 @@
 #include "../Include/TCPServer.h"
 
 int main(int argc, char* argv[]) {
-    if (argc != 3) {
+    if (argc != 2) {
         return -1;
     }
 
@@ -22,7 +22,7 @@ int main(int argc, char* argv[]) {
     // delete menu;
 
     ThreadClientManager* manager = new ThreadClientManager();
-    TCPServer server(argv[2], port, manager);
+    TCPServer server(port, manager);
     server.activate();
 
     delete manager;
