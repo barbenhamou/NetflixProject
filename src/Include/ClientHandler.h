@@ -17,4 +17,7 @@ class ClientHandler {
 
         // Initiate the interaction with the client, in thread
         void interact();
+
+        // Destructor / Destoyer
+        ~ClientHandler() {close(this->clientSocket);}
 };
