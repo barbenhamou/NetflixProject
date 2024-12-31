@@ -5,6 +5,7 @@
 
 #include "ClientHandler.h"
 #include "ThreadClientManager.h"
+#include "ThreadPoolManager.h"
 
 // An interface for servers that run the app
 class IServer {

@@ -14,7 +14,7 @@ int main(int argc, char* argv[]) {
 
     App::createCommands();
     
-    ThreadClientManager* manager = new ThreadClientManager();
+    ThreadPoolManager* manager = new ThreadPoolManager(5);
     TCPServer server(port, manager);
     server.activate();
 
