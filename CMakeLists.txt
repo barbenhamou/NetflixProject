@@ -15,6 +15,8 @@ include_directories(
 # Add the executables
 add_executable(
     Tests
+    #Tests/TCPServerTests.cpp
+    #Tests/ThreadManagerTests.cpp
     Tests/SocketMenuTests.cpp
     Tests/FileStorageTests.cpp
     Tests/ConsoleMenuTests.cpp
@@ -25,6 +27,7 @@ add_executable(
     Tests/AddCommandTests.cpp    
     Tests/GetCommandTests.cpp
     Tests/DeleteCommandTests.cpp
+    #Tests/EndToEndTests2.cpp
 
     src/Objects/SocketMenu.cpp
     src/Objects/ConsoleMenu.cpp
@@ -85,6 +88,11 @@ add_test(
 )
 
 add_test(
+   NAME EndToEndTests2
+    COMMAND EndToEndTests2
+)
+
+add_test(
     NAME SocketMenuTests
     COMMAND SocketMenuTests
 )
@@ -103,3 +111,13 @@ add_test(
     NAME DeleteCommandTests
     COMMAND DeleteCommandTests
 )
+
+#add_test(
+#    NAME TCPServerTests
+#    COMMAND TCPServerTests
+#)
+
+#add_test(
+#    NAME ThreadClientManagerTests
+#    COMMAND ThreadClientManagerTests
+#)
