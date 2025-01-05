@@ -55,10 +55,8 @@ const getCategories = async () => {
 const updateCategory = async (id, title) => {
     try {
         const category = await getById(id);
-        if (!category) return null;
         category.title = title;
         await category.save();
-        return category;
     } catch (error) {
         errorClass.errorCatch(error);
     }
@@ -67,9 +65,7 @@ const updateCategory = async (id, title) => {
 const deleteCategory = async (id) => {
     try {
         const category = await getById(id);
-        if (!category) return null;
         await category.deleteOne();
-        return category;
     } catch (error) {
         errorClass.errorCatch(error);
     }
