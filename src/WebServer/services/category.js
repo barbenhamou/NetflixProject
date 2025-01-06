@@ -1,7 +1,7 @@
 const Category = require('../models/category');
 const errorClass = require("../ErrorHandling");
 
-const displayedCategory = (category) => {
+const displayedCategory = async (category) => {
     return {
         id: category._id,
         title: category.title,
@@ -23,6 +23,7 @@ const getIdByName = async (title) => {
     try {
         const category = await Category.findOne({title : title});
         if (!category) throw { statusCode: 404, message: 'Category not found' };
+        return category._id;
     } catch (error) {
         errorClass.errorCatch(error);
     }
@@ -39,9 +40,9 @@ const createCategory = async (title, promoted) => {
 
 const getCategoryById = async (id) => {
     try {
-        return displayedCategory(await getById(id));
+        return await displayedCategory(await getById(id));
     } catch (error) {
-        errorClass.errorCatch(error);
+        throw error;// change!!
     }
 };
 
@@ -49,7 +50,7 @@ const getCategories = async () => {
     try {
         return (await Category.find({})).map(category => displayedCategory(category));
     } catch (error) {
-        errorClass.errorCatch(error);
+        errorClass.errorCatch(error); 
     }
 };
 
