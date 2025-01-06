@@ -3,7 +3,7 @@ const categoryService = require('../services/category');
 const createCategory = async (req, res) => {
     try {
         const categoryId = await categoryService.createCategory(req.body.title, req.body.promoted);
-        res.status(201).set('Location', `/api/categories/${categoryId}`);
+        res.status(201).set('Location', `/api/categories/${categoryId}`).end();
     } catch (error) {
         res.status(error.statusCode).json({ error: error.message });
     }
@@ -30,6 +30,7 @@ const getCategory = async (req, res) => {
 const updateCategory = async (req, res) => {
     try {
         await categoryService.updateCategory(req.params.id, req.body.title);
+        res.status(204).end();
     } catch (error) {
         res.status(error.statusCode).json({ error: error.message });
     }
@@ -38,6 +39,7 @@ const updateCategory = async (req, res) => {
 const deleteCategory = async (req, res) => {
     try {
         await categoryService.deleteCategory(req.params.id);
+        res.status(204).end();
     } catch (error) {
         res.status(error.statusCode).json({ error: error.message });
     }

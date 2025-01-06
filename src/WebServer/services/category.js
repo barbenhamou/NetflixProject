@@ -13,6 +13,7 @@ const getById = async (id) => {
     try {
         const category = await Category.findById(id);
         if (!category) throw { statusCode: 404, message: 'Category not found' };
+        return category;
     } catch (error) {
         errorClass.errorCatch(error);
     }
@@ -38,7 +39,7 @@ const createCategory = async (title, promoted) => {
 
 const getCategoryById = async (id) => {
     try {
-        return displayedCategory(getById(id));
+        return displayedCategory(await getById(id));
     } catch (error) {
         errorClass.errorCatch(error);
     }
