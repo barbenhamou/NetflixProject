@@ -22,7 +22,11 @@ const UserSchema = new Schema({
         type: String,
         default: "none",
     },
-   
+    location: {
+        type: String,
+        required: true,
+    },
+
     
 });
 

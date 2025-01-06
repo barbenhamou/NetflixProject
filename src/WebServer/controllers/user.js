@@ -15,18 +15,6 @@ const createUser = async (req, res) => {
             return res.status(400).json({ message: "A user with this email already exists." });
         }
 
-        // Check if a user already exists with the same name
-        const existingNameUser = await users.getUserByName(name);
-        if (existingNameUser) {
-            return res.status(400).json({ message: "A user with this name already exists." });
-        }
-
-        // Check if a user already exists with the same phone number
-        const existingPhoneUser = await users.getUserByPhone(phone);
-        if (existingPhoneUser) {
-            return res.status(400).json({ message: "A user with this phone number already exists." });
-        }
-
         // Create a new user
         const newUser = await users.createUser({ name, password, email, phone, picture });
         res.status(201).json(newUser);
