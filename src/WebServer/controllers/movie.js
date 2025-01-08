@@ -33,7 +33,7 @@ const createMovie = async (req, res) => {
         }
 
         const movie = await movieService.createMovie(req.body);
-        res.status(201).send();
+        res.status(201).set('Location', `/api/categories/${movie._id}`).end();
     } catch (err) {
         res.status(err.statusCode).json({ error: err.message });
     }

@@ -1,4 +1,4 @@
-const users = require('../services/user');
+const userService = require('../services/user');
 
 const createUser = async (req, res) => {
     const { name, password, email, phone, picture, location } = req.body;
@@ -10,14 +10,14 @@ const createUser = async (req, res) => {
 
     try {
         // Check if a user already exists with the same email
-        const existingEmailUser = await users.getUserByEmail(email);
+        const existingEmailUser = await userService.getUserByEmail(email);
 
         if (existingEmailUser) {
             return res.status(400).json({ message: "A user with this email already exists." });
         }
 
         // Create a new user
-        const newUser = await users.createUser({ name, password, email, phone, picture, location });
+        const newUser = await userService.createUser({ name, password, email, phone, picture, location });
         res.status(201).json(newUser);
     } catch (error) {
         console.error("Error in createUser controller:", error);
@@ -31,7 +31,7 @@ const authenticateUser = async (req, res) => {
 
     try {
         // Call the service to authenticate the user
-        const user = await users.authenticateUser(name, password);
+        const user = await userService.authenticateUser(name, password);
         if (!user) {
             return res.status(401).json({ message: "Invalid username or password." });
         }

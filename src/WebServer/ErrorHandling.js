@@ -1,7 +1,7 @@
 const filterError = (error) => {
     // Handle invalid ObjectId (CastError) errors
     if (error.name === 'CastError')
-        throw {statusCode: 400, message: `Invalid ID format: ${error.value}`};
+        throw {statusCode: 404, message: `Invalid format: ${error.value}`};
     
     // Handle MongoDB ValidationError (e.g., schema validation issues)
     if (error.name === 'ValidationError')

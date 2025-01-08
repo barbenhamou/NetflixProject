@@ -11,13 +11,13 @@ require('custom-env').env(process.env.NODE_ENV, './config');
 
 mongoose.connect(process.env.CONNECTION_STRING);
 
-var app = express();
+const app = express();
 
 app.use(cors());
 app.use(bodyParser.urlencoded({extended : true}));
 app.use(express.json());
 
-app.use('/api/users', users);
+app.use('/api', users);
 app.use('/api/movies', movies);
 app.use('/api/categories', categories);
 
