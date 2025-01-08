@@ -1,10 +1,16 @@
 const Movie = require('../models/movie');
+const Category = require('../models/category');
 const categoryService = require('./category');
 const errorClass = require("../ErrorHandling");
 
 const getMovies = async () => {
     try {
-        return await Movie.find({}).exec();
+        const movies = await Movie.find({});
+        if (!movies) {
+            throw {statusCode: 404, message: 'Movies could not be retrieved'};
+        }
+
+        return movies;
     } catch (err) {
         errorClass.filterError(err);
     }
@@ -36,7 +42,13 @@ const createMovie = async (movieData) => {
         }
 
         const movie = new Movie(movieData);
+        
+        if (!movie) {
+            throw {statusCode: 400, message: 'Movie could not be created'};
+        }
+        
         movie.shortId = await generateShortId();
+        
         return await movie.save();
     } catch (err) {
         errorClass.filterError(err);
@@ -45,7 +57,12 @@ const createMovie = async (movieData) => {
 
 const getMovieById = async (id) => {
     try {
-        return await Movie.findById(id).populate('categories').exec();
+        const movie = await Movie.findById(id);
+        if (!movie) {
+            throw {statusCode: 404, message: 'Movie not found'};
+        }
+
+        return movie;
     } catch (err) {
         errorClass.filterError(err);
     }
@@ -54,7 +71,9 @@ const getMovieById = async (id) => {
 const replaceMovie = async (id, movieData) => {
     try {
         const movie = await getMovieById(id);
-        if (!movie) return null;
+        if (!movie) {
+            throw {statusCode: 404, message: 'Movie not found'};
+        }
         
         // Set the new data
         movie.set(movieData);
@@ -68,7 +87,9 @@ const replaceMovie = async (id, movieData) => {
 const deleteMovie = async (id) => {
     try {
         const movie = await getMovieById(id);
-        if (!movie) return null;
+        if (!movie) {
+            throw {statusCode: 404, message: 'Movie not found'};
+        }
 
         // TODO: also delete from recommendation system
         
@@ -86,13 +107,12 @@ const searchInMovies = async (query) => {
         const movies = await Movie.find({
             $or: [
                 { title: stringRegex },
-                { categories: stringRegex },
                 // Convert numbers to strings:
                 { $expr: {
                     $regexMatch: {
                         input: { $toString: "$lengthMinutes" },
                         regex: query,
-                        options: "i"
+                        options: "i" // Case insensitive
                     } } },
                 { $expr: {
                     $regexMatch: {
@@ -103,7 +123,30 @@ const searchInMovies = async (query) => {
             ]
         }).exec();
 
-        return movies;
+        // Find the categories that contain the query
+        const categories = await Category.find({ name: stringRegex }).exec();
+        if (!movies || !categories) {
+            throw {statusCode: 400, message: 'Invalid query'};
+        }
+
+        // No categories match the query
+        if (categories.length === 0) {
+            return movies;
+        }
+
+        const categoryIds = categories.map(category => category._id);
+
+        // Find the movies that have a category that was found
+        const categorySearch = await Movie.find({
+            categories: { $in: categoryIds }
+        }).exec();
+
+        const result = movies.concat(categorySearch);
+
+        // Remove duplicates
+        return Array.from(
+            new Map(result.map(movie => [movie._id.toString(), movie])).values()
+        );
     } catch (err) {
         errorClass.filterError(err);
     }

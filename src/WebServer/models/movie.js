@@ -6,7 +6,7 @@ const Movie = new Schema({
         type: String,
         required: [true, 'Movie title is required.']
     },
-    // An array of Category IDs:
+    // An array of the movie's Categories, saved as IDs (category names can be changed):
     categories: [{
         type: Schema.Types.ObjectId,
         ref: 'Category',

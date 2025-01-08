@@ -13,7 +13,7 @@ const filterError = (error) => {
         throw {statusCode: 400, message: `Duplicate value for field: ${field}`};
     }
     
-    // if the error has `statusCode` and `message`, just pass it on
+    // If the error has a status code and a message, just pass it on
     if (error.statusCode && error.message)
         throw {statusCode: error.statusCode, message: error.message};
     
