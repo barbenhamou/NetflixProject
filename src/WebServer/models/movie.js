@@ -6,10 +6,12 @@ const Movie = new Schema({
         type: String,
         required: [true, 'Movie title is required.']
     },
-    categories: {
-        type: [String], // Categories must exist
+    // An array of Category IDs:
+    categories: [{
+        type: Schema.Types.ObjectId,
+        ref: 'Category',
         required: [true, 'You must enter the movie\'s categories.']
-    },
+    }],
     lengthMinutes: {
         type: Number,
         required: [true, 'Movie length (in minutes) is required.']

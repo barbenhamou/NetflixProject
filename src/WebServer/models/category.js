@@ -1,16 +1,16 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const CategorySchema = new Schema({
-    title: {
+const Category = new Schema({
+    name: {
         type: String,
         unique: true,
-        required: true
+        required: [true, 'Name is required.']
     },
     promoted: {
         type: Boolean,
-        required: true
+        required: [true, '`Promoted` field is required.']
     }
 });
 
-module.exports = mongoose.model('Category', CategorySchema);
+module.exports = mongoose.model('Category', Category);

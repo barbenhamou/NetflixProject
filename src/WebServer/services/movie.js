@@ -1,10 +1,12 @@
 const Movie = require('../models/movie');
+const categoryService = require('./category');
+const errorClass = require("../ErrorHandling");
 
 const getMovies = async () => {
     try {
-        return await Movie.find({});
+        return await Movie.find({}).exec();
     } catch (err) {
-        throw err; // temp
+        errorClass.filterError(err);
     }
 };
 
@@ -17,26 +19,35 @@ const generateShortId = async () => {
         // Returns 1 more than the max ID, or 0 if no movies exist
         return maxIdMovie ? maxIdMovie.shortId + 1 : 0;
     } catch (err) {
-        throw err; // temp
+        errorClass.filterError(err);
     }
 };
 
 const createMovie = async (movieData) => {
     try {
-        // TODO: Check category validity
+        if (movieData.categories) {
+            // Find the categories by name
+            const categoryIds = await Promise.all(
+                movieData.categories.map(async (categoryName) => await categoryService.getCategoryIdByName(categoryName))
+            );
+
+            // Replace the names with ObjectIds
+            movieData.categories = categoryIds;
+        }
+
         const movie = new Movie(movieData);
         movie.shortId = await generateShortId();
         return await movie.save();
     } catch (err) {
-        throw err; // temp
+        errorClass.filterError(err);
     }
 };
 
 const getMovieById = async (id) => {
     try {
-        return await Movie.findById(id);
+        return await Movie.findById(id).populate('categories').exec();
     } catch (err) {
-        throw err; // temp
+        errorClass.filterError(err);
     }
 };
 
@@ -50,7 +61,7 @@ const replaceMovie = async (id, movieData) => {
     
         return await movie.save();
     } catch (err) {
-        throw err; // temp
+        errorClass.filterError(err);
     }
 };
 
@@ -64,7 +75,7 @@ const deleteMovie = async (id) => {
         await movie.deleteOne();
         return movie;
     } catch (err) {
-        throw err; // temp
+        errorClass.filterError(err);
     }
 };
 
@@ -94,7 +105,7 @@ const searchInMovies = async (query) => {
 
         return movies;
     } catch (err) {
-        throw err; // temp
+        errorClass.filterError(err);
     }
 };
 

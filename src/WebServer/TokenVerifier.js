@@ -9,7 +9,7 @@ const tokenValidating = (req, res, next) => {
     }
 
     req.token = token;
-    next()
+    next();
 };
 
 module.exports = { tokenValidating };

@@ -1,6 +1,7 @@
 const express = require('express');
 var router = express.Router();
 
+const tokenVerifier = require('../TokenVerifier');
 const movieController = require('../controllers/movie');
 
 router.route('/')

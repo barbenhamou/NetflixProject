@@ -17,6 +17,6 @@ app.use(bodyParser.urlencoded({extended : true}));
 app.use(express.json());
 
 app.use('/api/movies', movies);
-app.use('/api/category', categories);
+app.use('/api/categories', categories);
 
 app.listen(process.env.PORT);

@@ -1,10 +1,13 @@
 const movieService = require('../services/movie');
 
 // Only show relevant info
-const presentMovie = (movie) => {
+const presentMovie = async (movie) => {
+    await movie.populate('categories');
+    
     return {
+        id: movie._id,
         title: movie.title,
-        categories: movie.categories,
+        categories: movie.categories.map(category => category.name),
         lengthMinutes: movie.lengthMinutes,
         releaseYear: movie.releaseYear
     };
@@ -14,9 +17,10 @@ const getMovies = async (req, res) => {
     try {
         const movies = await movieService.getMovies();
         if (!movies) {
-            return res.status(400).json({ error: 'Movies could not be retrieved' });
+            throw {statusCode: 404, message: 'Movies could not be retrieved'};
         }
-        res.json(movies.map(presentMovie));
+        
+        res.json(await Promise.all(movies.map(async (movie) => await presentMovie(movie))));
     } catch (err) {
         res.status(err.statusCode).json({ error: err.message });
     }
@@ -25,11 +29,11 @@ const getMovies = async (req, res) => {
 const createMovie = async (req, res) => {
     try {
         if (req.body.shortId) {
-            return res.status(400).json({ error: 'Do not enter the ID' });
+            throw {statusCode: 400, message: 'Do not enter ID'};
         }
         const movie = await movieService.createMovie(req.body);
         if (!movie) {
-            return res.status(400).json({ error: 'Movie could not be created' });
+            throw {statusCode: 400, message: 'Movie could not be created'};
         }
         res.status(201).send();
     } catch (err) {
@@ -41,7 +45,7 @@ const getMovie = async (req, res) => {
     try {
         const movie = await movieService.getMovieById(req.params.id);
         if (!movie) {
-            return res.status(404).json({ error: 'Movie not found' });
+            throw {statusCode: 404, message: 'Movie not found'};
         }
 
         res.json(presentMovie(movie));
@@ -54,7 +58,7 @@ const replaceMovie = async (req, res) => {
     try {
         const replacedMovie = await movieService.replaceMovie(req.params.id, req.body);
         if (!replacedMovie) {
-            return res.status(404).json({ error: 'Movie not found or could not be replced' });
+            throw {statusCode: 404, message: 'Movie not found or could not be replced'};
         }
     
         res.status(204).send();
@@ -67,7 +71,7 @@ const deleteMovie = async (req, res) => {
     try {
         const deletedMovie = await movieService.deleteMovie(req.params.id);
         if (!deletedMovie) {
-            return res.status(404).json({ error: 'Movie not found or could not be deleted' });
+            throw {statusCode: 404, message: 'Movie not found or could not be deleted'};
         }
     
         res.status(204).send();
@@ -88,7 +92,7 @@ const searchInMovies = async (req, res) => {
     try {
         const movies = await movieService.searchInMovies(req.params.query);
         if (!movies) {
-            return res.status(404).json({ error: 'No movies match the query' });
+            throw {statusCode: 404, message: 'No movies match the query'};
         }
 
         res.json(movies.map(presentMovie));
