@@ -7,7 +7,7 @@ const errorClass = require("../ErrorHandling");
 const ClientClass = require("../Client");
 
 const getMovies = async (userId) => {
-    const MOVIES_PER_CATEGORY = 20
+    const MOVIES_PER_CATEGORY = 20;
 
     try {
         // Get the user's watched movies
@@ -26,26 +26,42 @@ const getMovies = async (userId) => {
         const promotedCategories = await Category.find({ promoted: true }).exec();
 
         if (!promotedCategories || promotedCategories.length === 0) {
-            // No promoted categories, return just the watched movies
-            return watchedMovies;
+            // No promoted categories, return just the watched movies with a title
+            return {
+                watchedMovies: {
+                    title: 'Movies Watched by User',
+                    movies: watchedMovies
+                }
+            };
         }
 
         // Get up to `MOVIES_PER_CATEGORY` unwatched movies of each promoted category
         const moviesByCategory = await Promise.all(
             promotedCategories.map(async (category) => {
-                return movies = await Movie.find({
+                const movies = await Movie.find({
                     categories: category._id,
                     _id: { $nin: watchedMovieIds } // Exclude watched movies
                 }).limit(MOVIES_PER_CATEGORY).exec();
+                
+                return {
+                    categoryName: category.name, // Include the category name
+                    movies
+                };
             })
         );
 
         if (!moviesByCategory) {
-            throw {statusCode: 404, message: 'Movies could not be retrieved'};
+            throw { statusCode: 404, message: 'Movies could not be retrieved' };
         }
 
-        // Make into one big array
-        return moviesByCategory.flat().concat(watchedMovies); // TODO: change to list of lists?
+        // Return the movies grouped by category and watched movies with titles
+        return {
+            moviesByCategory,
+            watchedMovies: {
+                title: 'Movies Watched by User',
+                movies: watchedMovies
+            }
+        };
     } catch (err) {
         errorClass.filterError(err);
     }
@@ -205,6 +221,7 @@ const watchMovie = async (userId, movieId) => {
             }
 
             user.hasWatched = true;
+            await user.save();
         }
 
         // Add the movie to the user's watched list in mongoDB
