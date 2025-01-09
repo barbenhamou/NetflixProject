@@ -1,0 +1,33 @@
+version: "3.8"  # The "version" field is obsolete but doesn't break functionality.
+
+services:
+  nodejs-server:
+    build: .
+    container_name: nodejs-server
+    ports:
+      - "3000:3000"
+    env_file:
+      - ./src/WebServer/config/.env.main
+    depends_on:
+      - mongo
+    networks:
+      - app-network
+
+  mongo:
+    image: mongo:latest
+    container_name: mongo
+    command: ["mongod", "--quiet", "--bind_ip_all"]
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  mongo-data:
+    driver: local
