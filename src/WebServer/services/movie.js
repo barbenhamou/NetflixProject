@@ -213,6 +213,29 @@ const watchMovie = async (userId, movieId) => {
     }
 }
 
+const recommendMovies = async (userId, movieId) => {
+    try {
+        const user = await userService.getUserById(userId);
+        const movie = await getMovieById(movieId);
+
+        // Recommendation system address
+        const PORT = process.env.CPP_PORT;
+        const IP = process.env.SERVER_IP;
+
+        const client = new ClientClass(IP, PORT);  // Creating a new client
+        const response = await client.run(`GET ${user.shortId} ${movie.shortId}`);
+        client.close();
+
+        if (response !== '200 OK') {
+            const statusCode = response.split(' ')[0];
+            const message = response.split(' ')[1];
+            throw { statusCode: statusCode, message: `${message}: Could not GET from recommendation system` };
+        }
+    } catch (err) {
+        errorClass.filterError(err);
+    }
+}
+
 const searchInMovies = async (query) => {
     try {
         const stringRegex = { $regex: query, $options: "i" };
