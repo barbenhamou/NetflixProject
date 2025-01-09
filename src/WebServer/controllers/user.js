@@ -1,50 +1,45 @@
 const userService = require('../services/user');
 
-const createUser = async (req, res) => {
-    const { name, password, email, phone, picture, location } = req.body;
-
-    // Validate input fields
-    if (!name || !password || !email || !phone || !location) {
-        return res.status(400).json({ message: "All fields are required." });
+const presentUser = async (user) => {
+    try {
+        return {
+            id: user._id,
+            name: user.title,
+            email: user.email,
+            phone: user.phone,
+            picture: user.picture,
+            location: user.location
+        }
+    } catch(err) {
+        res.status(500).json({ error: 'Error displaying movie' });
     }
+}
 
+const createUser = async (req, res) => {
     try {
         // Check if a user already exists with the same email
-        const existingEmailUser = await userService.getUserByEmail(email);
+        const existingEmailUser = await userService.getUserByEmail(req.body.email);
 
         if (existingEmailUser) {
-            return res.status(400).json({ message: "A user with this email already exists." });
+            return res.status(400).json({ error: "A user with this email already exists" });
         }
 
         // Create a new user
-        const newUser = await userService.createUser({ name, password, email, phone, picture, location });
-        res.status(201).json(newUser);
-    } catch (error) {
-        console.error("Error in createUser controller:", error);
-        res.status(500).json({ message: "Error creating user.", error: error.message });
+        const newUser = await userService.createUser(req.body);
+        res.status(201).set('Location', `/api/users/${newUser._id}`).end();
+    } catch (err) {
+        res.status(err.statusCode).json({ error: err.message });
     }
 };
 
-
-const authenticateUser = async (req, res) => {
-    const { name, password } = req.body;
-
+const getUser = async (req, res) => {
     try {
-        // Call the service to authenticate the user
-        const user = await userService.authenticateUser(name, password);
-        if (!user) {
-            return res.status(401).json({ message: "Invalid username or password." });
-        }
+        const user = await userService.getUserById(req.params.id);
 
-        // Respond with the user ID
-        res.json({ userId: user._id });
-    } catch (error) {
-        console.error("Error in authenticateUser controller:", error);
-        res.status(500).json({ message: "Error authenticating user." });
+        res.json(await presentUser(user));
+    } catch (err) {
+        res.status(err.statusCode).json({ error: err.message });
     }
-};
+}
 
-module.exports = {
-    createUser,
-    authenticateUser,
-};
+module.exports = { createUser, getUser, presentUser };

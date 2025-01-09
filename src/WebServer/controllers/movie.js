@@ -13,7 +13,7 @@ const presentMovie = async (movie) => {
             releaseYear: movie.releaseYear
         };
     } catch (err) {
-        res.status(500).json({ error: err.message });
+        res.status(500).json({ error: 'Error displaying movie' });
     }
 };
 
@@ -90,5 +90,5 @@ const searchInMovies = async (req, res) => {
 };
 
 module.exports = {
-    getMovies, createMovie, getMovie, replaceMovie, deleteMovie, recommendMovies, watchMovie, searchInMovies
+    getMovies, createMovie, getMovie, replaceMovie, deleteMovie, recommendMovies, watchMovie, searchInMovies, presentMovie
 };
