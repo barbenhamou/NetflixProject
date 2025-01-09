@@ -203,6 +203,8 @@ const watchMovie = async (userId, movieId) => {
                 const message = response.split(' ')[1];
                 throw { statusCode: statusCode, message: `${message}: Could not POST to recommendation system` };
             }
+
+            user.hasWatched = true;
         }
 
         // Add the movie to the user's watched list in mongoDB
