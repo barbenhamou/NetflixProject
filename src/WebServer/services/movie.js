@@ -29,17 +29,28 @@ const generateShortId = async () => {
     }
 };
 
-const createMovie = async (movieData) => {
+// Convert the categories field from strings to ObjectId
+const categoriesStringToId = async (movieData) => {
     try {
         if (movieData.categories) {
             // Find the categories by name
             const categoryIds = await Promise.all(
                 movieData.categories.map(async (categoryName) => await categoryService.getCategoryIdByName(categoryName))
             );
-
+    
             // Replace the names with ObjectIds
             movieData.categories = categoryIds;
         }
+    
+        return movieData
+    } catch (err) {
+        errorClass.filterError(err);
+    }
+}
+
+const createMovie = async (movieData) => {
+    try {
+        movieData = await categoriesStringToId(movieData);
 
         const movie = new Movie(movieData);
         
@@ -74,6 +85,11 @@ const replaceMovie = async (id, movieData) => {
         if (!movie) {
             throw {statusCode: 404, message: 'Movie not found'};
         }
+
+        movieData = await categoriesStringToId(movieData);
+
+        // Check for missing fields (this will throw an error upon a missing field)
+        new Movie(movieData);
         
         // Set the new data
         movie.set(movieData);
@@ -152,4 +168,4 @@ const searchInMovies = async (query) => {
     }
 };
 
-module.exports = { createMovie, getMovieById, getMovies, replaceMovie, deleteMovie, searchInMovies };
+module.exports = { createMovie, getMovieById, getMovies, replaceMovie, deleteMovie, searchInMovies, categoriesStringToId };

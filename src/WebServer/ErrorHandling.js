@@ -13,12 +13,13 @@ const filterError = (error) => {
         throw {statusCode: 400, message: `Duplicate value for field: ${field}`};
     }
     
-    // If the error has a status code and a message, just pass it on
-    if (error.statusCode && error.message)
-        throw {statusCode: error.statusCode, message: error.message};
-    
-    // Default case for unhandled errors
-    throw {statusCode: 400, message: 'Bad Request'};
+    // If the error has a status code or a message, just pass it on, else bad request
+    const message = error.message ? ` ${error.message}` : "";
+    if (error.statusCode) {
+        throw {statusCode: error.statusCode, message: message};
+    } else {
+        throw {statusCode: 400, message: `Bad Request${message}`};
+    }
 };
 
 module.exports = { filterError };

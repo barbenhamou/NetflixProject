@@ -4,7 +4,7 @@ const movieService = require('../services/movie');
 const presentMovie = async (movie) => {
     try {
         await movie.populate('categories');
-        
+        await movie.save();
         return {
             id: movie._id,
             title: movie.title,
@@ -33,7 +33,7 @@ const createMovie = async (req, res) => {
         }
 
         const movie = await movieService.createMovie(req.body);
-        res.status(201).set('Location', `/api/categories/${movie._id}`).end();
+        res.status(201).set('Location', `/api/movies/${movie._id}`).end();
     } catch (err) {
         res.status(err.statusCode).json({ error: err.message });
     }

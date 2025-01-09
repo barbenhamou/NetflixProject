@@ -26,8 +26,10 @@ const User = new Schema({
         type: String,
         required: [true, 'Location is required']
     },
-
-    
+    watchedMovies: [{
+        type: Schema.Types.ObjectId,
+        ref: 'Movie',
+    }]
 });
 
 module.exports = mongoose.model('User', User);

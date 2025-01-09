@@ -10,7 +10,7 @@ const Movie = new Schema({
     categories: [{
         type: Schema.Types.ObjectId,
         ref: 'Category',
-        required: [true, 'You must enter the movie\'s categories.']
+        default: []
     }],
     lengthMinutes: {
         type: Number,

@@ -1,4 +1,5 @@
 const Category = require('../models/category');
+const Movie = require('../models/movie');
 const errorClass = require("../ErrorHandling");
 
 const getById = async (id) => {
@@ -46,10 +47,10 @@ const getCategories = async () => {
     }
 };
 
-const updateCategory = async (id, name) => {
+const updateCategory = async (id, body) => {
     try {
         const category = await getById(id);
-        category.name = name;
+        category.set(body);
         await category.save();
     } catch (err) {
         errorClass.filterError(err);
@@ -59,6 +60,13 @@ const updateCategory = async (id, name) => {
 const deleteCategory = async (id) => {
     try {
         const category = await getById(id);
+        
+        // Remove the category from the movies
+        await Movie.updateMany(
+            { categories: id }, // Find the movies that have this category
+            { $pull: { categories: id } } // Remove them
+        );
+
         await category.deleteOne();
     } catch (err) {
         errorClass.filterError(err);
