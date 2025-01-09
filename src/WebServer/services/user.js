@@ -1,12 +1,31 @@
 const User = require('../models/user');
 const errorClass = require("../ErrorHandling");
 
+const generateShortId = async () => {
+    try {
+        const maxIdUser = await User.findOne()
+            .sort({ shortId: -1 }) // Sort by shortId in descending order
+            .exec();
+    
+        // Returns 1 more than the max ID, or 0 if no movies exist
+        return maxIdUser ? maxIdUser.shortId + 1 : 0;
+    } catch (err) {
+        errorClass.filterError(err);
+    }
+};
+
 const createUser = async (userData) => {
     try {
+        if (userData.shortId) {
+            throw {statusCode: 400, message: 'Do not enter ID'};
+        }
+
         const user = new User(userData);
         if (!user) {
             throw {statusCode: 400, message: 'User could not be created'};
         }
+
+        user.shortId = await generateShortId();
 
         return await user.save();
     } catch (err) {

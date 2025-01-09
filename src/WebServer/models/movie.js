@@ -20,7 +20,7 @@ const Movie = new Schema({
         type: Number,
         default: new Date().getFullYear() // Defaults to the current year
     },
-    shortId: { // For the movie system (_id is too large)
+    shortId: { // For the cpp system (_id is too large)
         type: Number, 
     }
 });

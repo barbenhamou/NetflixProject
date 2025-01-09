@@ -30,7 +30,10 @@ const User = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'Movie',
         default: []
-    }]
+    }],
+    shortId: { // For the cpp system (_id is too large)
+        type: Number, 
+    }
 });
 
 module.exports = mongoose.model('User', User);

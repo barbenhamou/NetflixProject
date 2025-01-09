@@ -1,10 +1,13 @@
 const movieService = require('../services/movie');
+const Client = require('../../Objects/Client');
 
 // Only show relevant info
 const presentMovie = async (movie) => {
     try {
+        // Turn the category IDs into actual category documents
         await movie.populate('categories');
         await movie.save();
+        
         return {
             id: movie._id,
             title: movie.title,
@@ -28,10 +31,6 @@ const getMovies = async (req, res) => {
 
 const createMovie = async (req, res) => {
     try {
-        if (req.body.shortId) {
-            throw {statusCode: 400, message: 'Do not enter ID'};
-        }
-
         const movie = await movieService.createMovie(req.body);
         res.status(201).set('Location', `/api/movies/${movie._id}`).end();
     } catch (err) {
@@ -62,7 +61,7 @@ const replaceMovie = async (req, res) => {
 
 const deleteMovie = async (req, res) => {
     try {
-        if (!await movieService.deleteMovie(req.params.id))
+        if (!(await movieService.deleteMovie(req.params.id)))
             throw {statusCode: 404, message: 'Movie could not be deleted'};
     
         res.status(204).send();
@@ -72,11 +71,16 @@ const deleteMovie = async (req, res) => {
 };
 
 const recommendMovies = async (req, res) => {
-    //
+    
 };
 
 const watchMovie = async (req, res) => {
-    //
+    try {
+        await movieService.watchMovie(req.token, req.params.id);
+        res.status(204).send();
+    } catch (err) {
+        res.status(err.statusCode).json({ error: err.message });
+    }
 };
 
 const searchInMovies = async (req, res) => {

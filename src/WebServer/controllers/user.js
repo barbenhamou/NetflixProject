@@ -1,5 +1,6 @@
 const userService = require('../services/user');
 
+// Only show relevant and public info (not password)
 const presentUser = async (user) => {
     try {
         return {

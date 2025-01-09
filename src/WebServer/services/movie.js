@@ -1,4 +1,5 @@
 const Movie = require('../models/movie');
+const User = require('../models/user');
 const Category = require('../models/category');
 const categoryService = require('./category');
 const userService = require('./user');
@@ -6,7 +7,7 @@ const errorClass = require("../ErrorHandling");
 
 const getMovies = async (userId) => {
     const MOVIES_PER_CATEGORY = 20
-    
+
     try {
         // Get the user's watched movies
         const user = await userService.getUserById(userId);
@@ -43,7 +44,7 @@ const getMovies = async (userId) => {
         }
 
         // Make into one big array
-        return moviesByCategory.flat().concat(watchedMovies);
+        return moviesByCategory.flat().concat(watchedMovies); // TODO: change to list of lists?
     } catch (err) {
         errorClass.filterError(err);
     }
@@ -65,15 +66,13 @@ const generateShortId = async () => {
 // Convert the categories field from strings to ObjectId
 const categoriesStringToId = async (movieData) => {
     try {
-        if (movieData.categories) {
-            // Find the categories by name
-            const categoryIds = await Promise.all(
-                movieData.categories.map(async (categoryName) => await categoryService.getCategoryIdByName(categoryName))
-            );
-    
-            // Replace the names with ObjectIds
-            movieData.categories = categoryIds;
-        }
+        // Find the categories by name
+        const categoryIds = await Promise.all(
+            movieData.categories.map(async (categoryName) => await categoryService.getCategoryIdByName(categoryName))
+        );
+
+        // Replace the names with ObjectIds
+        movieData.categories = categoryIds;
     
         return movieData
     } catch (err) {
@@ -83,6 +82,10 @@ const categoriesStringToId = async (movieData) => {
 
 const createMovie = async (movieData) => {
     try {
+        if (movieData.shortId) {
+            throw {statusCode: 400, message: 'Do not enter ID'};
+        }
+
         movieData = await categoriesStringToId(movieData);
 
         const movie = new Movie(movieData);
@@ -149,6 +152,26 @@ const deleteMovie = async (id) => {
     }
 };
 
+const watchMovie = async (userId, movieId) => {
+    try {
+        // Add the movie to the user's watched list in the recommendation system
+        const user = userService.getUserById(userId);
+    
+        // Add the movie to the user's watched list in mongoDB
+        const updatedUser = await User.findByIdAndUpdate(
+            userId, 
+            { $addToSet: { watchedMovies: movieId } }, // Prevent duplicates
+            { new: true } // To return the updated user
+        );
+    
+        if (!updatedUser) {
+            throw { statusCode: 400, message: 'Could not update watched movies list' };
+        }
+    } catch (err) {
+        errorClass.filterError(err);
+    }
+}
+
 const searchInMovies = async (query) => {
     try {
         const stringRegex = { $regex: query, $options: "i" };
@@ -201,4 +224,4 @@ const searchInMovies = async (query) => {
     }
 };
 
-module.exports = { createMovie, getMovieById, getMovies, replaceMovie, deleteMovie, searchInMovies, categoriesStringToId };
+module.exports = { createMovie, getMovieById, getMovies, replaceMovie, deleteMovie, searchInMovies, categoriesStringToId, watchMovie };
