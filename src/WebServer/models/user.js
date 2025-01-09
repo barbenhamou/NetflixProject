@@ -31,10 +31,10 @@ const User = new Schema({
         ref: 'Movie',
         default: []
     }],
-    shortId: { // For the cpp system (_id is too large)
+    shortId: { // For the recommendation system (_id is too large)
         type: Number, 
     }, 
-    hasWatched: {
+    hasWatched: { // Has the user watch any movies or none at all
         type: Boolean,
         default: false
     }

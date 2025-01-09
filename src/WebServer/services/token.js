@@ -12,7 +12,7 @@ const authenticateUser = async (name, password) => {
         }
 
         return user; // Return the user object if authentication succeeds
-    } catch (error) {
+    } catch (err) {
         throw {statusCode: 500, message: 'Failed to authenticate user'};
     }
 };

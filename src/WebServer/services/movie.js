@@ -5,6 +5,11 @@ const categoryService = require('./category');
 const userService = require('./user');
 const errorClass = require("../ErrorHandling");
 const ClientClass = require("../Client");
+const movie = require('../models/movie');
+
+// Recommendation system address
+const PORT = process.env.CPP_PORT;
+const IP = process.env.SERVER_IP;
 
 const getMovies = async (userId) => {
     const MOVIES_PER_CATEGORY = 20
@@ -45,8 +50,7 @@ const getMovies = async (userId) => {
         }
         
         moviesByCategory.push(watchedMovies)
-        // Make into one big array
-        return moviesByCategory; // TODO: change to list of lists?
+        return moviesByCategory;
     } catch (err) {
         errorClass.filterError(err);
     }
@@ -119,7 +123,7 @@ const getMovieById = async (id) => {
 
 const getMovieByShortId = async (shortId) => { 
     try {
-        const movie = await Movie.findOne({ shortId : shortId });
+        const movie = await Movie.findOne({ shortId });
         if (!movie) {
             throw {statusCode: 404, message: 'Movie not found'};
         }
@@ -160,11 +164,8 @@ const deleteMovie = async (id) => {
 
         
         const users = await User.find({ watchedMovies: id }).exec();
-
-        const PORT = process.env.CPP_PORT;
-        const IP = process.env.SERVER_IP;
         
-        const client = new ClientClass(IP, PORT);  // Creating a new client
+        const client = new ClientClass(IP, PORT);
         
         for (const user of users) {
             const response = await client.run(`DELETE ${user.shortId} ${movie.shortId}`);
@@ -190,37 +191,33 @@ const deleteMovie = async (id) => {
     }
 };
 
+// For POST/PATCH
+const runCommand = async (client, user, movie, command, statusCode) => {
+    const response = await client.run(`${command} ${user.shortId} ${movie.shortId}`);
+    if (response !== statusCode) {
+        const statusCode = parseInt(response.split(' ')[0], 10);
+        const message = response.split(' ')[1];
+        throw { statusCode: statusCode, message: `${message}: Could not execute ${command} in the recommendation system` };
+    }
+};
+
 const watchMovie = async (userId, movieId) => {
     try {
-        // Add the movie to the user's watched list in the recommendation system
         const user = await userService.getUserById(userId);
         const movie = await getMovieById(movieId);
-
-        // Recommendation system address
-        const PORT = process.env.CPP_PORT;
-        const IP = process.env.SERVER_IP;
-
-        const client = new ClientClass(IP, PORT);  // Creating a new client
+        const client = new ClientClass(IP, PORT);
+        
+        // Add the movie to the user's watched list in the recommendation system
         if (user.hasWatched) {
-            const response = await client.run(`PATCH ${user.shortId} ${movie.shortId}`); // TODO: post/patch
-            if (response !== '200 OK') {
-                const statusCode = parseInt(response.split(' ')[0], 10);
-                const message = response.split(' ')[1];
-                throw { statusCode: statusCode, message: `${message}: Could not PATCH to recommendation system` };
-            }
+            runCommand(client, user, movie, "PATCH", "200 Ok");
         } else {
-            const response = await client.run(`POST ${user.shortId} ${movie.shortId}`); // TODO: post/patch
-            client.close();
+            runCommand(client, user, movie, "POST", "201 Created");
             
-            if (response !== '201 Created') {
-                const statusCode = parseInt(response.split(' ')[0], 10);
-                const message = response.split(' ')[1];
-                throw { statusCode: statusCode, message: `${message}: Could not POST to recommendation system` };
-            }
-
             user.hasWatched = true;
             await user.save();
         }
+
+        client.close();
 
         // Add the movie to the user's watched list in mongoDB
         const updatedUser = await User.findByIdAndUpdate(
@@ -228,12 +225,10 @@ const watchMovie = async (userId, movieId) => {
             { $addToSet: { watchedMovies: movieId } }, // Prevent duplicates
             { new: true } // To return the updated user
         );
-    
+
         if (!updatedUser) {
             throw { statusCode: 400, message: 'Could not update watched movies list' };
         }
-
-
     } catch (err) {
         errorClass.filterError(err);
     }
@@ -244,20 +239,16 @@ const recommendMovies = async (userId, movieId) => {
         const user = await userService.getUserById(userId);
         const movie = await getMovieById(movieId);
 
-        // Recommendation system address
-        const PORT = process.env.CPP_PORT;
-        const IP = process.env.SERVER_IP;
-
-        const client = new ClientClass(IP, PORT);  // Creating a new client
+        const client = new ClientClass(IP, PORT);
         const response = await client.run(`GET ${user.shortId} ${movie.shortId}`);
         client.close();
 
-        status = response.split('\n\n')[0].trim();
+        statusMessage = response.split('\n\n')[0].trim();
         data = response.split('\n\n')[1].trim();
 
         if (!response.includes('200 Ok')) {
-            const statusCode = parseInt(status.split(' ')[0], 10);
-            const message = status.split(' ')[1];
+            const statusCode = parseInt(statusMessage.split(' ')[0], 10);
+            const message = statusMessage.split(' ')[1];
             throw { statusCode: statusCode, message: `${message}: Could not GET from recommendation system` };
         }
 
