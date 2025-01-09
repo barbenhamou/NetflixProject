@@ -4,11 +4,26 @@ const categoryService = require('./category');
 const errorClass = require("../ErrorHandling");
 
 const getMovies = async () => {
+    const MOVIES_PER_CATEGORY = 20
     try {
-        const movies = await Movie.find({});
-        if (!movies) {
+        // Get all promoted categories
+        const promotedCategories = await Category.find({ promoted: true }).exec();
+
+        if (!promotedCategories || promotedCategories.length === 0) {
+            return []; // TODO: make this list of watched movies
+        }
+
+        // Get up to 20 movies of each promoted category
+        const moviesByCategory = await Promise.all(promotedCategories.map(async (category) => {
+            return await Movie.find({ categories: category._id }).limit(MOVIES_PER_CATEGORY).exec();
+        }));
+
+        if (!moviesByCategory) {
             throw {statusCode: 404, message: 'Movies could not be retrieved'};
         }
+
+        // Make into one array
+        const movies = moviesByCategory.flat();
 
         return movies;
     } catch (err) {
