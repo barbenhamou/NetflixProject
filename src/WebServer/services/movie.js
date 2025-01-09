@@ -187,13 +187,22 @@ const watchMovie = async (userId, movieId) => {
         const IP = process.env.SERVER_IP;
 
         const client = new ClientClass(IP, PORT);  // Creating a new client
-        const response = await client.run(`POST ${user.shortId} ${movie.shortId}`); // TODO: post/patch
-        client.close();
-        
-        if (response !== '201 Created') {
-            const statusCode = response.split(' ')[0];
-            const message = response.split(' ')[1];
-            throw { statusCode: statusCode, message: `${message}: Could not POST to recommendation system` };
+        if (user.hasWatched) {
+            const response = await client.run(`PATCH ${user.shortId} ${movie.shortId}`); // TODO: post/patch
+            if (response !== '200 OK') {
+                const statusCode = response.split(' ')[0];
+                const message = response.split(' ')[1];
+                throw { statusCode: statusCode, message: `${message}: Could not PATCH to recommendation system` };
+            }
+        } else {
+            const response = await client.run(`POST ${user.shortId} ${movie.shortId}`); // TODO: post/patch
+            client.close();
+            
+            if (response !== '201 Created') {
+                const statusCode = response.split(' ')[0];
+                const message = response.split(' ')[1];
+                throw { statusCode: statusCode, message: `${message}: Could not POST to recommendation system` };
+            }
         }
 
         // Add the movie to the user's watched list in mongoDB

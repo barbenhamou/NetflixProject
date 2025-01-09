@@ -33,6 +33,10 @@ const User = new Schema({
     }],
     shortId: { // For the cpp system (_id is too large)
         type: Number, 
+    }, 
+    hasWatched: {
+        type: Boolean,
+        default: false
     }
 });
 
