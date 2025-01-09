@@ -7,7 +7,7 @@ const errorClass = require("../ErrorHandling");
 const ClientClass = require("../Client");
 
 const getMovies = async (userId) => {
-    const MOVIES_PER_CATEGORY = 20;
+    const MOVIES_PER_CATEGORY = 20
 
     try {
         // Get the user's watched movies
@@ -17,7 +17,7 @@ const getMovies = async (userId) => {
         }
         const watchedMovieIds = user.watchedMovies;
 
-        // Get up to `MOVIES_PER_CATEGORY` movies the user has watched
+        // Get up to MOVIES_PER_CATEGORY movies the user has watched
         const watchedMovies = await Movie.find({
             _id: { $in: watchedMovieIds } // Include only watched movies
         }).limit(MOVIES_PER_CATEGORY).exec();
@@ -26,46 +26,31 @@ const getMovies = async (userId) => {
         const promotedCategories = await Category.find({ promoted: true }).exec();
 
         if (!promotedCategories || promotedCategories.length === 0) {
-            // No promoted categories, return just the watched movies with a title
-            return {
-                watchedMovies: {
-                    title: 'Movies Watched by User',
-                    movies: watchedMovies
-                }
-            };
+            // No promoted categories, return just the watched movies
+            return watchedMovies;
         }
 
-        // Get up to `MOVIES_PER_CATEGORY` unwatched movies of each promoted category
+        // Get up to MOVIES_PER_CATEGORY unwatched movies of each promoted category
         const moviesByCategory = await Promise.all(
             promotedCategories.map(async (category) => {
-                const movies = await Movie.find({
+                return movies = await Movie.find({
                     categories: category._id,
                     _id: { $nin: watchedMovieIds } // Exclude watched movies
                 }).limit(MOVIES_PER_CATEGORY).exec();
-                
-                return {
-                    categoryName: category.name, // Include the category name
-                    movies
-                };
             })
         );
 
         if (!moviesByCategory) {
-            throw { statusCode: 404, message: 'Movies could not be retrieved' };
+            throw {statusCode: 404, message: 'Movies could not be retrieved'};
         }
-
-        // Return the movies grouped by category and watched movies with titles
-        return {
-            moviesByCategory,
-            watchedMovies: {
-                title: 'Movies Watched by User',
-                movies: watchedMovies
-            }
-        };
+        
+        moviesByCategory.push(watchedMovies)
+        // Make into one big array
+        return moviesByCategory; // TODO: change to list of lists?
     } catch (err) {
         errorClass.filterError(err);
     }
-};
+}
 
 const generateShortId = async () => {
     try {
@@ -132,6 +117,19 @@ const getMovieById = async (id) => {
     }
 };
 
+const getMovieByShortId = async (shortId) => { 
+    try {
+        const movie = await Movie.findOne({ shortId : shortId });
+        if (!movie) {
+            throw {statusCode: 404, message: 'Movie not found'};
+        }
+
+        return movie;
+    } catch (err) {
+        errorClass.filterError(err);
+    }
+};
+
 const replaceMovie = async (id, movieData) => {
     try {
         const movie = await getMovieById(id);
@@ -172,7 +170,7 @@ const deleteMovie = async (id) => {
             const response = await client.run(`DELETE ${user.shortId} ${movie.shortId}`);
 
             if (response !== '204 No Content') {
-                const statusCode = response.split(' ')[0];
+                const statusCode = parseInt(response.split(' ')[0], 10);
                 const message = response.split(' ')[1];
                 throw { statusCode: statusCode, message: `${message}: Could not DELETE from recommendation system` };
             }
@@ -206,7 +204,7 @@ const watchMovie = async (userId, movieId) => {
         if (user.hasWatched) {
             const response = await client.run(`PATCH ${user.shortId} ${movie.shortId}`); // TODO: post/patch
             if (response !== '200 OK') {
-                const statusCode = response.split(' ')[0];
+                const statusCode = parseInt(response.split(' ')[0], 10);
                 const message = response.split(' ')[1];
                 throw { statusCode: statusCode, message: `${message}: Could not PATCH to recommendation system` };
             }
@@ -215,7 +213,7 @@ const watchMovie = async (userId, movieId) => {
             client.close();
             
             if (response !== '201 Created') {
-                const statusCode = response.split(' ')[0];
+                const statusCode = parseInt(response.split(' ')[0], 10);
                 const message = response.split(' ')[1];
                 throw { statusCode: statusCode, message: `${message}: Could not POST to recommendation system` };
             }
@@ -254,11 +252,23 @@ const recommendMovies = async (userId, movieId) => {
         const response = await client.run(`GET ${user.shortId} ${movie.shortId}`);
         client.close();
 
-        if (response !== '200 OK') {
-            const statusCode = response.split(' ')[0];
-            const message = response.split(' ')[1];
+        status = response.split('\n\n')[0].trim();
+        data = response.split('\n\n')[1].trim();
+
+        if (!response.includes('200 Ok')) {
+            const statusCode = parseInt(status.split(' ')[0], 10);
+            const message = status.split(' ')[1];
             throw { statusCode: statusCode, message: `${message}: Could not GET from recommendation system` };
         }
+
+        const idList = data.split(" ").map(id => parseInt(id, 10)); // Convert to numbers
+        const recommendedMovies = [];
+
+        for (const id of idList) {
+            recommendedMovies.push(await getMovieByShortId(id));
+        }
+
+        return recommendedMovies;
     } catch (err) {
         errorClass.filterError(err);
     }
@@ -316,4 +326,4 @@ const searchInMovies = async (query) => {
     }
 };
 
-module.exports = { createMovie, getMovieById, getMovies, replaceMovie, deleteMovie, searchInMovies, categoriesStringToId, watchMovie, recommendMovies };
+module.exports = { createMovie, getMovieById, getMovieByShortId, getMovies, replaceMovie, deleteMovie, searchInMovies, categoriesStringToId, watchMovie, recommendMovies };

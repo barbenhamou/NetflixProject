@@ -22,8 +22,15 @@ const presentMovie = async (movie) => {
 
 const getMovies = async (req, res) => {
     try {
-        const movies = await movieService.getMovies(req.token);
-        res.json(await Promise.all(movies.map(async (movie) => await presentMovie(movie))));
+        const moviesLists = await movieService.getMovies(req.token);
+        res.json(
+            await Promise.all(
+                moviesLists.map((moviesList) =>
+                    Promise.all(moviesList.map((movie) => presentMovie(movie)))
+                )
+            )
+        );
+        
     } catch (err) {
         res.status(err.statusCode).json({ error: err.message });
     }
@@ -72,8 +79,8 @@ const deleteMovie = async (req, res) => {
 
 const recommendMovies = async (req, res) => {
     try {
-        await movieService.recommendMovies(req.token, req.params.id);
-        res.status(200).send();
+        const data = await movieService.recommendMovies(req.token, req.params.id);
+        res.json(data.map((movie) => presentMovie(movie)));
     } catch (err) {
         res.status(err.statusCode).json({ error: err.message });
     }
