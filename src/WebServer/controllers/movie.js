@@ -1,5 +1,5 @@
 const movieService = require('../services/movie');
-const Client = require('../../Objects/Client');
+const Client = require('../Client');
 
 // Only show relevant info
 const presentMovie = async (movie) => {
@@ -71,6 +71,12 @@ const deleteMovie = async (req, res) => {
 };
 
 const recommendMovies = async (req, res) => {
+    try {
+        await movieService.recommendMovies(req.token, req.params.id);
+        res.status(200).send();
+    } catch (err) {
+        res.status(err.statusCode).json({ error: err.message });
+    }
     
 };
 

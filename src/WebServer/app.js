@@ -24,4 +24,4 @@ app.use('/api/users', users);
 app.use('/api/movies', movies);
 app.use('/api/categories', categories);
 
-app.listen(process.env.PORT);
+app.listen(process.env.WEB_PORT);
