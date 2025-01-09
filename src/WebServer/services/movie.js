@@ -1,31 +1,49 @@
 const Movie = require('../models/movie');
 const Category = require('../models/category');
 const categoryService = require('./category');
+const userService = require('./user');
 const errorClass = require("../ErrorHandling");
 
-const getMovies = async () => {
+const getMovies = async (userId) => {
     const MOVIES_PER_CATEGORY = 20
+    
     try {
+        // Get the user's watched movies
+        const user = await userService.getUserById(userId);
+        if (!user) {
+            throw { statusCode: 404, message: 'User not found' };
+        }
+        const watchedMovieIds = user.watchedMovies;
+
+        // Get up to `MOVIES_PER_CATEGORY` movies the user has watched
+        const watchedMovies = await Movie.find({
+            _id: { $in: watchedMovieIds } // Include only watched movies
+        }).limit(MOVIES_PER_CATEGORY).exec();
+
         // Get all promoted categories
         const promotedCategories = await Category.find({ promoted: true }).exec();
 
         if (!promotedCategories || promotedCategories.length === 0) {
-            return []; // TODO: make this list of watched movies
+            // No promoted categories, return just the watched movies
+            return watchedMovies;
         }
 
-        // Get up to 20 movies of each promoted category
-        const moviesByCategory = await Promise.all(promotedCategories.map(async (category) => {
-            return await Movie.find({ categories: category._id }).limit(MOVIES_PER_CATEGORY).exec();
-        }));
+        // Get up to `MOVIES_PER_CATEGORY` unwatched movies of each promoted category
+        const moviesByCategory = await Promise.all(
+            promotedCategories.map(async (category) => {
+                return movies = await Movie.find({
+                    categories: category._id,
+                    _id: { $nin: watchedMovieIds } // Exclude watched movies
+                }).limit(MOVIES_PER_CATEGORY).exec();
+            })
+        );
 
         if (!moviesByCategory) {
             throw {statusCode: 404, message: 'Movies could not be retrieved'};
         }
 
-        // Make into one array
-        const movies = moviesByCategory.flat();
-
-        return movies;
+        // Make into one big array
+        return moviesByCategory.flat().concat(watchedMovies);
     } catch (err) {
         errorClass.filterError(err);
     }

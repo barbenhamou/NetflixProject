@@ -5,7 +5,7 @@ const movieController = require('../controllers/movie');
 const tokenVerifier = require('../TokenVerifier');
 
 router.route('/')
-    .get(movieController.getMovies)
+    .get(tokenVerifier.tokenValidation, movieController.getMovies)
     .post(tokenVerifier.tokenValidation, movieController.createMovie);
 
 router.route('/:id')

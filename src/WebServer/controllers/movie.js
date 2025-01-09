@@ -19,7 +19,7 @@ const presentMovie = async (movie) => {
 
 const getMovies = async (req, res) => {
     try {
-        const movies = await movieService.getMovies();
+        const movies = await movieService.getMovies(req.token);
         res.json(await Promise.all(movies.map(async (movie) => await presentMovie(movie))));
     } catch (err) {
         res.status(err.statusCode).json({ error: err.message });

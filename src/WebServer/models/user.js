@@ -29,6 +29,7 @@ const User = new Schema({
     watchedMovies: [{
         type: Schema.Types.ObjectId,
         ref: 'Movie',
+        default: []
     }]
 });
 
