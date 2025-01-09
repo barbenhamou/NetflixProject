@@ -288,4 +288,4 @@ const searchInMovies = async (query) => {
     }
 };
 
-module.exports = { createMovie, getMovieById, getMovies, replaceMovie, deleteMovie, searchInMovies, categoriesStringToId, watchMovie };
+module.exports = { createMovie, getMovieById, getMovies, replaceMovie, deleteMovie, searchInMovies, categoriesStringToId, watchMovie, recommendMovies };
