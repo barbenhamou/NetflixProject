@@ -3,7 +3,7 @@ This is a Netflix project for the course "Advanced System programming" in Bar-Il
 <br>
 There is a server and a client. You can have as many clients as you want.
 
-## Running the server
+## Running the server - Recommendation system
 This project uses Docker for easy building.
 
 To compile the server, run this command (it might take a while):
@@ -32,27 +32,24 @@ If you want to delete the container:
 docker rm server_container
 ```
 
-## Running the client
-To compile the client, run this command (it might take a while):
+## Running the WebServer
+Before running the server there is something you need to do and is to create a config file for the mongo.
+After downloading the code, do the follwing
 ```bash
-docker build -t client -f Dockerfile.client .
+cd ./src/WebServer/
+mkdir -p config
+touch config/.env.main
 ```
-To run the client, run this:
-```bash
-docker run -it client --name client_container <SERVER_IP> <PORT>
+After creating the '.env.main' file, write the following lines in it:
+ ```bash
+CONNECTION_STRING="mongodb://mongo:27017/db"
+WEB_PORT=<PORT FOR THE WEB>
+CPP_PORT=<PORT USED IN CPP-SERVER>
+CPP_IP=<CPP SERVER IP>
 ```
-Replace `<SERVER_IP>` with the IP you want your server to run on, and `<PORT>` is the same from before.
-<br>
-`client_container` is the name of the Docker container, and `client` is the name of the image.
-
-If you want to stop the client, press ctrl+C, or run this (from a different terminal):
+After you had configured that, you are ready to go, execute the following command:
 ```bash
-docker stop client_container
-```
-
-If you want to delete the container:
-```bash
-docker rm client_container
+docker-compose up --build
 ```
 
 ### Running our tests
