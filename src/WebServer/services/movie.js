@@ -5,11 +5,10 @@ const categoryService = require('./category');
 const userService = require('./user');
 const errorClass = require("../ErrorHandling");
 const ClientClass = require("../Client");
-const movie = require('../models/movie');
 
 // Recommendation system address
 const PORT = process.env.CPP_PORT;
-const IP = process.env.SERVER_IP;
+const IP = process.env.CPP_IP;
 
 const getMovies = async (userId) => {
     const MOVIES_PER_CATEGORY = 20
@@ -72,6 +71,8 @@ const generateShortId = async () => {
 // Convert the categories field from strings to ObjectId
 const categoriesStringToId = async (movieData) => {
     try {
+        if (!movieData.categories) return movieData;
+
         // Find the categories by name
         const categoryIds = await Promise.all(
             movieData.categories.map(async (categoryName) => await categoryService.getCategoryIdByName(categoryName))
@@ -155,6 +156,20 @@ const replaceMovie = async (id, movieData) => {
     }
 };
 
+// For commands that only output a status code (POST, PATCH, DELETE)
+const runCommand = async (user, movie, command, statusCode) => {
+    const client = new ClientClass(IP, PORT);
+
+    const response = await client.run(`${command} ${user.shortId} ${movie.shortId}`);
+    if (response !== statusCode) {
+        const actualCode = parseInt(response.split(' ')[0], 10);
+        const message = response.split(' ')[1];
+        throw { statusCode: actualCode, message: `${message}: Could not execute ${command} in the recommendation system` };
+    }
+
+    client.close();
+};
+
 const deleteMovie = async (id) => {
     try {
         const movie = await getMovieById(id);
@@ -162,23 +177,15 @@ const deleteMovie = async (id) => {
             throw {statusCode: 404, message: 'Movie not found'};
         }
 
-        
+        // Find the users that watched the movie
         const users = await User.find({ watchedMovies: id }).exec();
         
-        const client = new ClientClass(IP, PORT);
-        
+        // Delete the movie from their watched list (in the recommendation system database)
         for (const user of users) {
-            const response = await client.run(`DELETE ${user.shortId} ${movie.shortId}`);
-
-            if (response !== '204 No Content') {
-                const statusCode = parseInt(response.split(' ')[0], 10);
-                const message = response.split(' ')[1];
-                throw { statusCode: statusCode, message: `${message}: Could not DELETE from recommendation system` };
-            }
+            await runCommand(user, movie, "DELETE", "204 No Content");
         }
-
-        client.close();
         
+        // Delete the movie from their watched list (in the mongo database)
         await User.updateMany (
                     { watchedMovies: id }, // Find the users that have this movie
                     { $pull: { watchedMovies: id } } // Remove them
@@ -191,33 +198,20 @@ const deleteMovie = async (id) => {
     }
 };
 
-// For POST/PATCH
-const runCommand = async (client, user, movie, command, statusCode) => {
-    const response = await client.run(`${command} ${user.shortId} ${movie.shortId}`);
-    if (response !== statusCode) {
-        const statusCode = parseInt(response.split(' ')[0], 10);
-        const message = response.split(' ')[1];
-        throw { statusCode: statusCode, message: `${message}: Could not execute ${command} in the recommendation system` };
-    }
-};
-
 const watchMovie = async (userId, movieId) => {
     try {
         const user = await userService.getUserById(userId);
         const movie = await getMovieById(movieId);
-        const client = new ClientClass(IP, PORT);
         
         // Add the movie to the user's watched list in the recommendation system
         if (user.hasWatched) {
-            runCommand(client, user, movie, "PATCH", "200 Ok");
+            await runCommand(user, movie, "PATCH", "204 No Content");
         } else {
-            runCommand(client, user, movie, "POST", "201 Created");
+            await runCommand(user, movie, "POST", "201 Created");
             
             user.hasWatched = true;
             await user.save();
         }
-
-        client.close();
 
         // Add the movie to the user's watched list in mongoDB
         const updatedUser = await User.findByIdAndUpdate(
@@ -243,6 +237,11 @@ const recommendMovies = async (userId, movieId) => {
         const response = await client.run(`GET ${user.shortId} ${movie.shortId}`);
         client.close();
 
+        // Check for empty recommendation
+        if (!response.includes('\n\n')) {
+            return [];
+        }
+
         statusMessage = response.split('\n\n')[0].trim();
         data = response.split('\n\n')[1].trim();
 
@@ -253,6 +252,7 @@ const recommendMovies = async (userId, movieId) => {
         }
 
         const idList = data.split(" ").map(id => parseInt(id, 10)); // Convert to numbers
+        
         const recommendedMovies = [];
 
         for (const id of idList) {

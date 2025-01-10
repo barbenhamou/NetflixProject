@@ -79,8 +79,8 @@ const deleteMovie = async (req, res) => {
 
 const recommendMovies = async (req, res) => {
     try {
-        const data = await movieService.recommendMovies(req.token, req.params.id);
-        res.json(data.map((movie) => presentMovie(movie)));
+        const recommendation = await movieService.recommendMovies(req.token, req.params.id);
+        res.json(await Promise.all(recommendation.map((movie) => presentMovie(movie))));
     } catch (err) {
         res.status(err.statusCode).json({ error: err.message });
     }
@@ -100,7 +100,7 @@ const searchInMovies = async (req, res) => {
     try {
         const movies = await movieService.searchInMovies(req.params.query);
 
-        res.json(await Promise.all(movies.map(async (movie) => await presentMovie(movie))));
+        res.json(await Promise.all(movies.map((movie) => presentMovie(movie))));
     } catch (err) {
         res.status(err.statusCode).json({ error: err.message });
     }

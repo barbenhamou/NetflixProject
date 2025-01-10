@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 const Movie = new Schema({
     title : {
         type: String,
-        required: [true, 'Movie title is required.']
+        required: [true, 'Title is required']
     },
     // An array of the movie's Categories, saved as IDs (category names can be changed):
     categories: [{
@@ -14,14 +14,19 @@ const Movie = new Schema({
     }],
     lengthMinutes: {
         type: Number,
-        required: [true, 'Movie length (in minutes) is required.']
+        min: [0, "Length must be a positive number"],
+        required: [true, 'Length (in minutes) is required']
     },
     releaseYear: {
         type: Number,
-        default: new Date().getFullYear() // Defaults to the current year
+        default: new Date().getFullYear(), // Defaults to the current year
+        validate: {
+            validator: Number.isInteger, // Ensures it is an integer
+            message: 'Release year must be a whole number'
+        }
     },
     shortId: { // For the cpp system (_id is too large)
-        type: Number, 
+        type: Number,
     }
 });
 

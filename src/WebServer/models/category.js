@@ -5,11 +5,11 @@ const Category = new Schema({
     name: {
         type: String,
         unique: true,
-        required: [true, 'Name is required.']
+        required: [true, 'Name is required']
     },
     promoted: {
         type: Boolean,
-        required: [true, '`Promoted` field is required.']
+        required: [true, 'Promoted field is required']
     }
 });
 

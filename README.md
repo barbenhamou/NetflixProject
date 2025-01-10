@@ -6,7 +6,7 @@ There is a server and a client. You can have as many clients as you want.
 ## Running the server - Recommendation system
 This project uses Docker for easy building.
 
-To compile the server, run this command (it might take a while):
+To compile the recommend server, run this command (it might take a while):
 ```bash
 docker build -f Dockerfile.server -t serverimage .
 ```
