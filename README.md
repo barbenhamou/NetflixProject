@@ -10,7 +10,7 @@ To compile the recommend server, run this command (it might take a while):
 ```bash
 docker build -f Dockerfile.server -t serverimage .
 ```
-To run the server, run this (replace `<PORT>` with the port number that you want the client to connect to):
+To run the server, run this (replace `<PORT>` with the port number that you want the recommend server to run on):
 ```bash
 docker run -it -p <PORT>:<PORT> --name server_container serverimage <PORT>
 ```
@@ -44,15 +44,17 @@ After creating the '.env.main' file, write the following lines in it:
  ```bash
 CONNECTION_STRING="mongodb://mongo:27017/db"
 WEB_PORT=<PORT FOR THE WEB>
-CPP_PORT=<PORT USED IN CPP-SERVER>
+CPP_PORT=<PORT USED IN CPP-SERVER SAME PORT FROM BEFORE>
 CPP_IP=<CPP SERVER IP>
 ```
+different ports
+<PORT FOR THE WEB> = port that the web server runs on
 After you had configured that, you are ready to go, execute the following command:
 ```bash
 docker-compose up --build
 ```
 
-### Running our tests
+### Running our tests (Exercise 2 - irrelevant for the web server)
 We wrote some tests for the project.
 
 To run the tests, run these two commands:
