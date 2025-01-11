@@ -111,14 +111,19 @@ curl -i http://localhost:3000/api/categories
 ```
 For other operations add `-X <OPERATION>` after the `-i`, and for operations that require input add `-H "Content-Type: application/json" -d '{<INPUT>}'` after the URL. For example, this is how you create a user:
 ```bash
-curl -i -X POST http://localhost:3000/api/users -H "Content-Type: application/json" -d '{"name":"your_name", "password":"your_password", "email":"your_email", "phone":"your_phone_number", "location":"your_country"}'
+curl -i -X POST http://localhost:3000/api/users \
+-H "Content-Type: application/json" \
+-d '{"name":"your_name", "password":"your_password", "email":"your_email", "phone":"your_phone_number", "location":"your_country"}'
 ```
 Once creating something, you will get it's id in the output, under the `Location` field.
 
 Only operations that have `*` next to them in the table can be executed without logging in.
 To perform operations that require you to be logged in, add `-H "Authorization: Bearer <your_user_ID>"` to the command. For example, this is how you create a promoted category:
 ```bash
-curl -i -X POST http://localhost:3000/api/categories -H "Content-Type: application/json" -H "Authorization: Bearer <your_user_ID> -d '{"name":"category_name", "promoted":true}'
+curl -i -X POST http://localhost:3000/api/categories \
+-H "Content-Type: application/json" \
+-H "Authorization: Bearer <your_user_ID>" \
+-d '{"name":"category_name", "promoted":true}'
 ```
 
 For GET operations that don't require you to be loggen in, you can also just enter the url.
