@@ -1,4 +1,4 @@
-const tokenValidating = (req, res, next) => {
+const tokenValidation = (req, res, next) => {
     if (!req.headers['authorization']) {
         return res.status(401).json({ error: 'Token is missing' });
     }
@@ -9,7 +9,7 @@ const tokenValidating = (req, res, next) => {
     }
 
     req.token = token;
-    next()
+    next();
 };
 
-module.exports = { tokenValidating };
+module.exports = { tokenValidation };

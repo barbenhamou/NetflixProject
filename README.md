@@ -1,23 +1,27 @@
 # Netflix Project
-This is a Netflix project for the course "Advanced System programming" in Bar-Ilan University.
+This is a Netflix project for the course "Advanced System programming" of Bar-Ilan University.
 <br>
-There is a server and a client. You can have as many clients as you want.
+This project is a web server that presents a RESTful API.
+<br>
+We use Docker for easy building.
 
-## Running the server
-This project uses Docker for easy building.
+## Running the Project
 
-To compile the server, run this command (it might take a while):
+### Movie Recommendation System
+Out project has a movie recommendation system that run on a separate server. You must run it before running the web server.
+
+To compile this server, run this command (it might take a while):
 ```bash
-docker build -f Dockerfile.server -t serverimage .
+docker build -f Dockerfile.server -t server_image .
 ```
-To run the server, run this (replace `<PORT>` with the port number that you want the client to connect to):
+To run the server, run this (replace `<PORT>` with the port number that you want the server to run on):
 ```bash
-docker run -it -p <PORT>:<PORT> --name server_container serverimage <PORT>
+docker run -it -p <PORT>:<PORT> --name server_container server_image <PORT>
 ```
 and then the server will be running.
-`server_container` is the name of the Docker container, and `serverimage` is the name of the image.
+`server_container` is the name of the Docker container, and `server_image` is the name of the image.
 
-If you want to stop the program, run this (from a different terminal):
+If you want to stop the server, run this (from a different terminal):
 ```bash
 docker stop server_container
 ```
@@ -27,35 +31,43 @@ If you want to run the program again (in the same container, keeping the data fr
 docker start -i server_container
 ```
 
-If you want to delete the container:
+If you want to delete the container (this will also delete the data from previous runs in this container):
 ```bash
 docker rm server_container
 ```
 
-## Running the client
-To compile the client, run this command (it might take a while):
+### The Web Server
+Before running the server you need to create a config file for the MongoDB system that we use.
+After downloading the code, run these commands:
 ```bash
-docker build -t client -f Dockerfile.client .
+cd ./src/WebServer/
+mkdir -p config
+touch config/.env.main
 ```
-To run the client, run this:
-```bash
-docker run -it client --name client_container <SERVER_IP> <PORT>
+Now, inside the `.env.main` file, write the following lines:
+ ```bash
+CONNECTION_STRING="mongodb://mongo:27017/db"
+WEB_PORT=<PORT1>
+CPP_PORT=<PORT2>
+CPP_IP=<IP>
 ```
-Replace `<SERVER_IP>` with the IP you want your server to run on, and `<PORT>` is the same from before.
-<br>
-`client_container` is the name of the Docker container, and `client` is the name of the image.
+And replace `<PORT1>` with the port you want the web server to run on, `<PORT2>` with the same port of the recommendation system and `<IP>` with the IP that you want the recommendation system to connect to. `<PORT1>` and `<PORT2>` must be different.
 
-If you want to stop the client, press ctrl+C, or run this (from a different terminal):
+One last step before you can run the server, go to this part of the `docker-compose.yml` file (in the main directory) 
+```yml
+    ports:
+      - "3000:3000"
+```
+and change `3000:3000` to `<PORT1>:<PORT1>`, with the same `<PORT1>` from before.
+
+You are now ready to go, execute this command to run the web server:
 ```bash
-docker stop client_container
+docker-compose up --build
 ```
 
-If you want to delete the container:
-```bash
-docker rm client_container
-```
+To stop it, press `CTRL+C`.
 
-### Running our tests
+### Running our tests (Exercise 2 - irrelevant for the web server)
 We wrote some tests for the project.
 
 To run the tests, run these two commands:
@@ -67,53 +79,108 @@ docker run tests
 ```
 
 ## Usage
-When running the project, a command-line interface starts. It supports 5 commands:
-### POST
-**Syntax:** `POST [userid] [movieid1] [movieid2] ...` (supports multiple spaces)
+When the project is running an API is available through CRUD operations (`http://localhost:<PORT1>/api/`):
 
-Creates a user and adds movies to the user's watched list. The user must not already exist in the system for you to use this command on them. The movies can be either new or existing.
+| Route      | CRUD Operation | Action                                |
+|------------|----------------|---------------------------------------|
+|* `/users`      | **POST**     | Create a new user (sign-up). Fields (all strings): Required - name, password, phone, email, location. Optional - picture.|
+|* `/users/id`      | **GET**     | Show the info of the user with ID id.|
+|* `/tokens`      | **POST**     | Sign in to a user with a name and a password.|
+|* `/categories`      | **GET**     | Show all categories.|
+| `/categories`      | **POST**     | Create a new category. Fields (all required): name, promoted (boolean).|
+|* `/categories/id`      | **GET**     | Show the category with ID id.|
+| `/categories/id`      | **PATCH**     | Edit the category with ID id.|
+| `/categories/id`      | **DELETE**     | Delete the category with ID id.|
+| `/movies`      | **GET**     | Show unwatched movies sorted by promoted categories. Last category is watched movies.|
+| `/movies`      | **POST**    | Create a new Movie. Fields: Required - title, lengthMinutes. Optional - releaseYear (defaults to current year), categories, cast, description.|
+|* `/movies/id`  | **GET**     | Show the info of the movie with ID id.|
+| `/movies/id`  | **PUT**     | Replace the movie with ID id.|
+| `/movies/id`  | **DELETE**  | Delete the movie with ID id.|
+| `/movies/id/recommend`  | **GET**  | Shows up to 10 recommended movies for the logged-in user based on the movie with ID id. The recommendation algorithm is described after this table.|
+| `/movies/id/recommend`  | **POST**  | Watch the movie with ID movie.|
+|* `/movies/search/query`  | **GET**  | Shows all the movies with a field that contains `query`.|
 
-### PATCH
-**Syntax:** `PATCH [userid] [movieid1] [movieid2] ...`
-
-Adds movies to an existing user's watched list. The user must already exist in the system for you to use this command on them. The movies can be either new or existing.
-
-### DELETE
-**Syntax:** `DELETE [userid] [movieid1] [movieid2] ...`
-
-Deletes movies from an existing user's watched list.
-
-### GET
-**Syntax:** `GET [userid] [movieid]`
-
-This command recommends up to 10 movies to the specified user (`userid`) based on the specified movie (`movieid`). The recommendation algorithm calculates a relevance value to each movie, excluding movies that the user already watched and the specified `movieid`. The IDs of the most relevant movies are printed in descending order of relevance.
+The recommendation algorithm calculates a relevance value to each movie, excluding movies that the user already watched and the movie with ID id. The most relevant movies are showed in descending order of relevance.
 #### The Algoritm:
-Each user is assigned a "Movies in Common" (MiC) value - how many movies both them and `userid` watched. The relevance of a movie is then calculated as the sum of the MiC values of all the users who have watched both this movie and `movieid`.
+Each user is assigned a "Movies in Common" (MiC) value - how many movies both them and the logged-in user watched. The relevance of a movie is then calculated as the sum of the MiC values of all the users who have watched both that movie and the movie with ID id.
 
-### Help
-**Syntax:** `help`
+### Examples
+This is how you use the `curl` command on Linux to preform CRUD operations (instead of 3000 use `<PORT1>`):
 
-Displays all available commands and their arguments.
+For GET operations, just run `curl -i <URL>`, For example:
+```bash
+curl -i http://localhost:3000/api/categories
+```
+For other operations add `-X <OPERATION>` after the `-i`, and for operations that require input add `-H "Content-Type: application/json" -d '{<INPUT>}'` after the URL. For example, this is how you create a user:
+```bash
+curl -i -X POST http://localhost:3000/api/users \
+-H "Content-Type: application/json" \
+-d '{"name":"your_name", "password":"your_password", "email":"your_email", "phone":"your_phone_number", "location":"your_country"}'
+```
+Once creating something, you will get it's id in the output, under the `Location` field.
 
-<br>
+Only operations that have `*` next to them in the table can be executed without logging in.
+To perform operations that require you to be logged in, add `-H "Authorization: Bearer <your_user_ID>"` to the command. For example, this is how you create a promoted category:
+```bash
+curl -i -X POST http://localhost:3000/api/categories \
+-H "Content-Type: application/json" \
+-H "Authorization: Bearer <your_user_ID>" \
+-d '{"name":"category_name", "promoted":true}'
+```
+
+For GET operations that don't require you to be loggen in, you can also just enter the url.
 
 ## Run Example
-Here is an example of some commands functionality and communication from the server:<br>
+Let's Compile and run the recommendation system server:
 
-![Run Example](OneClientRun.png)
+![](ExampleImages/CPP_Server_Compile_Run.png)
 
-Here is an example of two clients working, one posts and the other one tries and fails:<br>
+The `.env.main` file:
 
-![Run Example](TwoClientsRun.png)
+![](ExampleImages/env_main.png)
 
-Here is an example of how the tests run:<br>
+Running the web server:
 
-![Tests Run](TestsRun.png)
+![](ExampleImages/Web_Server_Run.png)
 
-<br>
+We'll now create a user named Dan:
 
-## Questions about ways of implemntation
-* The fact that the names of the functions changed, caused us to change the code. We had to change the global vector of commands because it goes by name. In addition, we decided to turn the add command to a mother-class of the two new commands patch and post.
-* The fact that new functions were added ddin't caused us to change the code, aprat from thr change mentioned above. We had an ICommand interface, we've just added the delete command.
-* The fact that the output of the commands changed caused us to change the code a bit. In previous exercise we printed the ouput and now we return it as a string and send to the client (socket or terminal clients).
-* The fact that the data came from sockets and not console, didn't cause us to change the code. We've created an IMenu interface and we have two classed that implements it - ConsoleMenu (previous exercise) and SocketMenu (current exercise), the app uses an IMenu object to handle request, and it unaware of the of the IMenu, so this part didn't need to be changed.
+![](ExampleImages/Create_User.png)
+
+We can now see the user's info here:
+
+![](ExampleImages/Show_User.png)
+
+And the 'Drama' category:
+
+![](ExampleImages/Create_Category.png)
+
+We can see all the categories here (currently there is only one):
+
+![](ExampleImages/Show_Categories.png)
+
+Let's now create a movie:
+
+![](ExampleImages/Create_Movie1.png)
+
+And we'll see it here in the last section (currently there is only one, because there is only one category and we didn't watch any movies):
+
+![](ExampleImages/Show_Movies.png)
+
+We can look at the movie directly here:
+
+![](ExampleImages/Movie_Info.png)
+
+Let's create another movie:
+
+![](ExampleImages/Create_Movie2.png)
+
+We can "watch" it like this:
+
+![](ExampleImages/Watch_Movie.png)
+
+We can also look at movies with the search functionality:
+
+![](ExampleImages/Search1.png)
+
+![](ExampleImages/Search2.png)
