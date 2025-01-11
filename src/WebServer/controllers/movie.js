@@ -13,7 +13,9 @@ const presentMovie = async (movie) => {
             title: movie.title,
             categories: movie.categories.map(category => category.name),
             lengthMinutes: movie.lengthMinutes,
-            releaseYear: movie.releaseYear
+            releaseYear: movie.releaseYear,
+            cast: movie.cast,
+            description: movie.description
         };
     } catch (err) {
         res.status(500).json({ error: 'Error displaying movie' });

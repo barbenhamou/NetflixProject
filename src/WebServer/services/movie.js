@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const Movie = require('../models/movie');
 const User = require('../models/user');
 const Category = require('../models/category');
@@ -111,6 +112,10 @@ const createMovie = async (movieData) => {
 
 const getMovieById = async (id) => {
     try {
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            throw {statusCode: 404, message: 'Movie not found'};
+        }
+
         const movie = await Movie.findById(id);
         if (!movie) {
             throw {statusCode: 404, message: 'Movie not found'};

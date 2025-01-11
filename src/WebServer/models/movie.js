@@ -25,6 +25,14 @@ const Movie = new Schema({
             message: 'Release year must be a whole number'
         }
     },
+    cast: [{
+        type: String,
+        default: []
+    }],
+    description: {
+        type: String,
+        default: ""
+    },
     shortId: { // For the cpp system (_id is too large)
         type: Number,
     }

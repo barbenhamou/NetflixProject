@@ -1,16 +1,7 @@
+const mongoose = require('mongoose');
 const Category = require('../models/category');
 const Movie = require('../models/movie');
 const errorClass = require("../ErrorHandling");
-
-const getById = async (id) => {
-    try {
-        const category = await Category.findById(id);
-        if (!category) throw { statusCode: 404, message: 'Category not found' };
-        return category;
-    } catch (err) {
-        errorClass.filterError(err);
-    }
-}
 
 const getCategoryIdByName = async (name) => {
     try {
@@ -33,7 +24,16 @@ const createCategory = async (name, promoted) => {
 
 const getCategoryById = async (id) => {
     try {
-        return await getById(id);
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            throw {statusCode: 404, message: 'Category not found'};
+        }
+
+        const category = await Category.findById(id);
+        if (!category) {
+            throw {statusCode: 404, message: 'Category not found'};
+        }
+
+        return category;
     } catch (err) {
         errorClass.filterError(err);
     }
@@ -49,7 +49,7 @@ const getCategories = async () => {
 
 const updateCategory = async (id, body) => {
     try {
-        const category = await getById(id);
+        const category = await getCategoryById(id);
         category.set(body);
         await category.save();
     } catch (err) {
@@ -59,7 +59,7 @@ const updateCategory = async (id, body) => {
 
 const deleteCategory = async (id) => {
     try {
-        const category = await getById(id);
+        const category = await getCategoryById(id);
         
         // Remove the category from the movies
         await Movie.updateMany(

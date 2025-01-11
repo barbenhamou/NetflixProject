@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const User = require('../models/user');
 const errorClass = require("../ErrorHandling");
 
@@ -35,6 +36,10 @@ const createUser = async (userData) => {
 
 const getUserById = async (id) => {
     try {
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            throw {statusCode: 404, message: 'User not found'};
+        }
+
         const user = await User.findById(id);
         if (!user) {
             throw {statusCode: 404, message: 'User not found'};
