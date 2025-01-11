@@ -179,7 +179,7 @@ We can "watch" it like this:
 
 ![](ExampleImages/Watch_Movie.png)
 
-We can look at movies with the search functionality:
+We can also look at movies with the search functionality:
 
 ![](ExampleImages/Search1.png)
 
