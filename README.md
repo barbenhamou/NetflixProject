@@ -65,6 +65,8 @@ You are now ready to go, execute this command to run the web server:
 docker-compose up --build
 ```
 
+To stop it, press `CTRL+C`.
+
 ### Running our tests (Exercise 2 - irrelevant for the web server)
 We wrote some tests for the project.
 
@@ -89,7 +91,7 @@ When the project is running an API is available through CRUD operations (`http:/
 |* `/categories/id`      | **GET**     | Show the category with ID id.|
 | `/categories/id`      | **PATCH**     | Edit the category with ID id.|
 | `/categories/id`      | **DELETE**     | Delete the category with ID id.|
-| `/movies`      | **GET**     | Show movies sorted by promoted categories. Last category is watched movies.|
+| `/movies`      | **GET**     | Show unwatched movies sorted by promoted categories. Last category is watched movies.|
 | `/movies`      | **POST**    | Create a new Movie. Fields: Required - title, lengthMinutes. Optional - releaseYear (defaults to current year), categories, cast, description.|
 |* `/movies/id`  | **GET**     | Show the info of the movie with ID id.|
 | `/movies/id`  | **PUT**     | Replace the movie with ID id.|
@@ -127,3 +129,45 @@ curl -i -X POST http://localhost:3000/api/categories \
 ```
 
 For GET operations that don't require you to be loggen in, you can also just enter the url.
+
+## Run Example
+Let's Compile and run the recommendation system server:
+![](ExampleImages/CPP_Server_Compile_Run.png)
+
+The `.env.main` file:
+![](ExampleImages/env_main.png)
+
+Running the web server:
+![](ExampleImages/Web_Server_Run.png)
+
+We'll now create a user named Dan:
+![](ExampleImages/Create_User.png)
+
+We can now see the user's info here:
+![](ExampleImages/Show_User.png)
+
+And the 'Drama' category:
+![](ExampleImages/Create_Category.png)
+
+We can see all the categories here (currently there is only one):
+![](ExampleImages/Show_Categories.png)
+
+Let's now create a movie:
+![](ExampleImages/Create_Movie1.png)
+
+And we'll see it here in the last section (currently there is only one, because there is only one category and we didn't watch any movies):
+![](ExampleImages/Show_Movies.png)
+
+We can look at the movie directly here:
+![](ExampleImages/Movie_Info.png)
+
+Let's create another movie:
+![](ExampleImages/Create_Movie2.png)
+
+We can "watch" it like this:
+![](ExampleImages/Watch_Movie.png)
+
+We can look at movies with the search functionality:
+![](ExampleImages/Search1.png)
+
+![](ExampleImages/Search2.png)

@@ -10,7 +10,6 @@ const presentUser = async (user) => {
             phone: user.phone,
             picture: user.picture,
             location: user.location,
-            watchedMovies: user.watchedMovies
         }
     } catch(err) {
         res.status(500).json({ error: 'Error displaying movie' });
