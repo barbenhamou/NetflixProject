@@ -132,42 +132,55 @@ For GET operations that don't require you to be loggen in, you can also just ent
 
 ## Run Example
 Let's Compile and run the recommendation system server:
+
 ![](ExampleImages/CPP_Server_Compile_Run.png)
 
 The `.env.main` file:
+
 ![](ExampleImages/env_main.png)
 
 Running the web server:
+
 ![](ExampleImages/Web_Server_Run.png)
 
 We'll now create a user named Dan:
+
 ![](ExampleImages/Create_User.png)
 
 We can now see the user's info here:
+
 ![](ExampleImages/Show_User.png)
 
 And the 'Drama' category:
+
 ![](ExampleImages/Create_Category.png)
 
 We can see all the categories here (currently there is only one):
+
 ![](ExampleImages/Show_Categories.png)
 
 Let's now create a movie:
+
 ![](ExampleImages/Create_Movie1.png)
 
 And we'll see it here in the last section (currently there is only one, because there is only one category and we didn't watch any movies):
+
 ![](ExampleImages/Show_Movies.png)
 
 We can look at the movie directly here:
+
 ![](ExampleImages/Movie_Info.png)
 
 Let's create another movie:
+
 ![](ExampleImages/Create_Movie2.png)
 
 We can "watch" it like this:
+
 ![](ExampleImages/Watch_Movie.png)
 
 We can look at movies with the search functionality:
+
 ![](ExampleImages/Search1.png)
 
 ![](ExampleImages/Search2.png)
