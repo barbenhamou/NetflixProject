@@ -1,0 +1,62 @@
+.movie-card {
+    position: relative; /* Make the card a positioned container */
+    background-color: #141414;
+    color: #fff;
+    width: 300px;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.movie-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+}
+
+.image-container {
+    position: relative; /* Needed for positioning the play button */
+    width: 100%;
+    height: 180px; /* Match the image dimensions */
+    overflow: hidden;
+}
+
+.image-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.play-button {
+    position: absolute; /* Position relative to the image container */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: 2rem;
+    opacity: 0; /* Hidden by default */
+    transition: opacity 0.3s ease;
+    pointer-events: none; /* Prevent interaction when hidden */
+}
+
+.movie-card:hover .play-button {
+    opacity: 1; /* Show the play button when the card is hovered */
+    pointer-events: auto; /* Enable interaction when visible */
+}
+
+.movie-card h3, .movie-card p {
+    margin: 8px 12px;
+    font-size: 0.9rem;
+    line-height: 1.4;
+    color: #b3b3b3;
+}
+
+.movie-card p:first-of-type {
+    font-size: 0.8rem;
+    color: #808080;
+}
+
+.movie-card p:last-of-type {
+    margin-bottom: 16px;
+    color: #fff;
+}

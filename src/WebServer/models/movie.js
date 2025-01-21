@@ -33,6 +33,14 @@ const Movie = new Schema({
         type: String,
         default: ""
     },
+    image: {
+        type: String,
+        default: ""
+    },
+    trailer: {
+        type: String,
+        default: ""
+    },
     shortId: { // For the cpp system (_id is too large)
         type: Number,
     }

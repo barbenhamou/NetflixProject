@@ -1,23 +1,22 @@
-import logo from './logo.svg';
 import './App.css';
+import MovieInfo from './MovieInfo/MovieInfo';
+import MovieCard from './MovieCard/MovieCard';
+import MI1 from './MovieCard/MI1.jpg';
+import {BrowserRouter, Routes, Route, useParams} from 'react-router-dom';
+
+function MovieInfoWrapper() {
+  const { id } = useParams();
+  return <MovieInfo id={id} />;
+}
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/api/movies/:id" element={<MovieInfoWrapper />} />
+        </Routes>
+      </BrowserRouter>
     </div>
   );
 }
