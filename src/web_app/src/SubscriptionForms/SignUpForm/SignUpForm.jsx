@@ -60,7 +60,7 @@ function SignUpForm() {
         {error && <div className="alert alert-danger">{error}</div>}
         <form onSubmit={handleSubmit}>
           {/* Using the createField function for dynamic field generation */}
-          {createField('Full Name', 'text', 'name', 'Enter your full name', name, (e) => setName(e.target.value))}
+          {createField('Name', 'text', 'name', 'Enter your name', name, (e) => setName(e.target.value))}
           {createField('Email Address', 'email', 'email', 'Enter your email', email, (e) => setEmail(e.target.value))}
           {createField('Password', 'password', 'password', 'Create a password', password, (e) => setPassword(e.target.value))}
           {createField('Confirm Password', 'password', 'confirmPassword', 'Confirm your password', confirmPassword, (e) => setConfirmPassword(e.target.value))}

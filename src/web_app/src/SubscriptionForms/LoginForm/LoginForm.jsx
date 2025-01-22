@@ -3,21 +3,34 @@ import './LoginForm.css';
 import createField from '../fieldItem';
 
 function LoginForm() {
-  const [email, setEmail] = useState('');
+  const [name, setName] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (!email || !password) {
+    if (!name || !password) {
       setError('Please fill in all fields');
       return;
     }
 
-    // Normally, you'd handle the login here (API call, etc.)
-    alert('Login successful');
-  };
+    try {
+      const response = fetch('http://localhost:3001/api/token', {
+        'method': 'POST',
+        'headers': {
+          'Content-Type': 'application/json',
+        },
+        'body': JSON.stringify({ name, password })
+      });
+
+      console.log(response);
+
+    } catch (err) {
+      setError('Error while sending data to server');
+      console.error(err);
+    }
+  };  
 
   return (
     <div className="login-container">
@@ -26,8 +39,8 @@ function LoginForm() {
         {error && <div className="alert alert-danger">{error}</div>}
 
         <form onSubmit={handleSubmit}>
-          {/* Email Field */}
-          {createField("Email address", "email", "email", "Enter your email", email, (e) => setEmail(e.target.value))}
+          {/* Name Field */}
+          {createField('Name', 'text', 'name', 'Enter your name', name, (e) => setName(e.target.value))}
           
           {/* Password Field */}
           {createField("Password", "password", "password", "Enter your password", password, (e) => setPassword(e.target.value))}
