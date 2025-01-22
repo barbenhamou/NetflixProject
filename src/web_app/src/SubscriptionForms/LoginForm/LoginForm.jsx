@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import './LoginForm.css'; // Import custom CSS for additional styling
-import createField from './fieldItem';
+import './LoginForm.css';
+import createField from '../fieldItem';
 
 function LoginForm() {
   const [email, setEmail] = useState('');
@@ -22,7 +22,7 @@ function LoginForm() {
   return (
     <div className="login-container">
       <div className="login-form">
-        <h3 className="text-center">Sign In</h3>
+        <h3 className="text-center">Login</h3>
         {error && <div className="alert alert-danger">{error}</div>}
 
         <form onSubmit={handleSubmit}>
