@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './LoginForm.css';
 import createField from '../fieldItem';
 
@@ -6,8 +6,9 @@ function LoginForm() {
   const [name, setName] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [userId, setUserId] = useState(null);  // To store user_id returned from server
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!name || !password) {
@@ -16,21 +17,32 @@ function LoginForm() {
     }
 
     try {
-      const response = fetch('http://localhost:3001/api/token', {
-        'method': 'POST',
-        'headers': {
+      const response = await fetch('http://localhost:3001/api/tokens', {
+        method: 'POST',
+        headers: {
           'Content-Type': 'application/json',
         },
-        'body': JSON.stringify({ name, password })
+        body: JSON.stringify({ name, password })
       });
 
-      console.log(response);
-
+      if (response.ok) {
+        const data = await response.json(); // Parse the response JSON
+        setUserId(data.userId);  // Set the userId from the response data
+      } else {
+        setError('Invalid credentials');
+      }
     } catch (err) {
       setError('Error while sending data to server');
       console.error(err);
     }
-  };  
+  };
+
+  // useEffect to show the userId alert after it is set
+  useEffect(() => {
+    if (userId) {
+      alert(`User ID: ${userId}`);  // Alert userId when it's set
+    }
+  }, [userId]);  // Dependency array ensures this effect runs only when userId changes
 
   return (
     <div className="login-container">

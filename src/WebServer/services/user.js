@@ -63,9 +63,6 @@ const getUserByEmail = async (email) => {
 const getUserByName = async (name) => {
     try {
         const user = await User.findOne({ name });
-        if (!user) {
-            throw {statusCode: 404, message: 'User not found'};
-        }
 
         return user;
     } catch (err) {

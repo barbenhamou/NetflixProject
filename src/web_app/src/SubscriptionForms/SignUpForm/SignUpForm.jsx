@@ -46,7 +46,13 @@ function SignUpForm() {
         'body': JSON.stringify(userData),
       });
 
-      alert(response.Location);
+      if (!response.ok) {
+        const errorData = await response.json(); // Assuming the server returns a JSON error message
+        console.error('Error response:', errorData);
+        setError('Error: ' + errorData.message || 'Unknown error');
+      } else {
+        alert('Account created successfully');
+      }
     } catch (err) {
       setError('Error while sending data to server');
       console.error(err);
