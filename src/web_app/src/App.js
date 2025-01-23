@@ -1,7 +1,6 @@
 import './App.css';
 import MovieInfo from './MovieInfo/MovieInfo';
-import MovieCard from './MovieCard/MovieCard';
-import MI1 from './MovieCard/MI1.jpg';
+import MovieWatch from './MovieWatch/MovieWatch';
 import {BrowserRouter, Routes, Route, useParams} from 'react-router-dom';
 
 function MovieInfoWrapper() {
@@ -9,14 +8,22 @@ function MovieInfoWrapper() {
   return <MovieInfo id={id} />;
 }
 
+function MoviePlayWrapper() {
+  const { id } = useParams();
+  return <MovieWatch id={id} />;
+}
+
 function App() {
   return (
     <div className="App">
       <BrowserRouter>
         <Routes>
-          <Route path="/api/movies/:id" element={<MovieInfoWrapper />} />
+          <Route path="/api/movies/:id/info" element={<MovieInfoWrapper />} />
+          <Route path="/api/movies/:id/watch" element={<MoviePlayWrapper />} />
         </Routes>
       </BrowserRouter>
+      {/* TODO: Put the iframe in <Route path="/" /> */}
+      {/* <iframe title="hidden" src="http://localhost:3000/api/movies/679128f92a7b20941e6ca005/info"></iframe> */}
     </div>
   );
 }

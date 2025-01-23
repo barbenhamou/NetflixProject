@@ -20,7 +20,7 @@ function MovieInfo({ id }) {
     return (
       <div className="movie-info">
         <p>Loading...</p>
-        <Recommendations />
+        <Recommendations id={id} />
       </div>
     );
   }
@@ -29,20 +29,35 @@ function MovieInfo({ id }) {
 
   return (
     <div className="movie-info">
-      <div className="image-container">
-        <img src={image} alt={title} />
-        <button className="play-button">
-          Play
-        </button>
+      <div className="movie-trailer">
+        <video
+          src={`/Media/MovieTrailers/${trailer}`}
+          controls
+          poster={`/Media/MovieImages/${image}`}>
+          Your browser does not support the video tag.
+        </video>
+
       </div>
-      <h3>{title}</h3>
-      <p>
-        {releaseYear} | {Math.floor(lengthMinutes / 60)}h {lengthMinutes % 60}m
-      </p>
-      <p>Genres: {categories.join(", ")}</p>
-      <p>Cast: {cast.join(", ")}</p>
-      <p>{description}</p>
-      <Recommendations />
+      <section className="movie-details">
+        <h1>{title}</h1>
+        <button
+          className="btn btn-light play-btn-main"
+          type="button"
+          aria-label="Play"
+          onClick={() => window.location.href = `/api/movies/${id}/watch`}>
+          ▶ Play Movie
+        </button>
+        <p>
+          {releaseYear} | {Math.floor(lengthMinutes / 60)}h {lengthMinutes % 60}m
+        </p>
+        <p>Genres: {categories.join(", ")}</p>
+        <p>Cast: {cast.join(", ")}</p>
+        <p>{description}</p>
+      </section>
+      <section className="recommendations">
+        <h2>Movies for you, based on "{title}"</h2>
+        <Recommendations id={id} />
+      </section>
     </div>
   );
 }

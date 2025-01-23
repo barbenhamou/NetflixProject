@@ -2,14 +2,15 @@ import "./Recommendations.css";
 import { useState, useEffect } from "react";
 import MovieCard from "../MovieCard/MovieCard";
 
-function Recommendations() {
+function Recommendations({ id }) {
     const [movies, setMovies] = useState(null);
 
     useEffect(() => {
         async function fetchMovie() {
-            const response = await fetch(`http://localhost:3001/api/movies`, {
+            const response = await fetch(`http://localhost:3001/api/movies/${id}/recommend`, {
                 headers: {
-                    "Authorization": "Bearer 678ff093f99c3ec60000fafe",
+                    // TODO: add token
+                    "Authorization": "Bearer 6791285f2a7b20941e6ca000",
                 }
             });
             const data = await response.json();
@@ -19,10 +20,10 @@ function Recommendations() {
         fetchMovie();
     }, []);
 
-    // Show loading text until movie is fetched
+    // Show loading text until movies are fetched
     if (!movies) {
         return (
-            <div className="recommendations">
+            <div className="loading">
                 <p>Loading...</p>
             </div>
         );

@@ -15,6 +15,9 @@ const presentMovie = async (movie) => {
             lengthMinutes: movie.lengthMinutes,
             releaseYear: movie.releaseYear,
             cast: movie.cast,
+            image: movie.image,
+            trailer: movie.trailer,
+            film: movie.film,
             description: movie.description
         };
     } catch (err) {
