@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import createField from '../fieldItem'; // Import the helper function to create fields
-import './SignUpForm.css'; // Custom CSS for styling
+import createField from '../fieldItem';
+import './SignUpForm.css';
 
 function SignUpForm() {
   const [name, setName] = useState('');
@@ -8,7 +8,7 @@ function SignUpForm() {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [phone, setPhone] = useState('');
-  const [picture, setPicture] = useState(''); // Optional field for picture
+  const [picture, setPicture] = useState('');
   const [location, setLocation] = useState('');
   const [error, setError] = useState('');
 

@@ -4,7 +4,6 @@ const userService = require('./user');
 const authenticateUser = async (name, password) => {
     try {
         const user = await userService.getUserByName(name);
-        console.log(user);
         if (!user) {
             return null; // Return null if the user does not exist
         }
