@@ -1,23 +1,29 @@
-import logo from './logo.svg';
 import './App.css';
+import MovieInfo from './MovieInfo/MovieInfo';
+import MovieWatch from './MovieWatch/MovieWatch';
+import {BrowserRouter, Routes, Route, useParams} from 'react-router-dom';
+
+function MovieInfoWrapper() {
+  const { id } = useParams();
+  return <MovieInfo id={id} />;
+}
+
+function MoviePlayWrapper() {
+  const { id } = useParams();
+  return <MovieWatch id={id} />;
+}
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/api/movies/:id/info" element={<MovieInfoWrapper />} />
+          <Route path="/api/movies/:id/watch" element={<MoviePlayWrapper />} />
+        </Routes>
+      </BrowserRouter>
+      {/* TODO: Put the iframe in <Route path="/" /> */}
+      {/* <iframe title="hidden" src="http://localhost:3000/api/movies/679128f92a7b20941e6ca005/info"></iframe> */}
     </div>
   );
 }

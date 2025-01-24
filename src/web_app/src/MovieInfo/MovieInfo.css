@@ -1,0 +1,40 @@
+.movie-info {
+    background-color: #1e1e1e;
+}
+
+.movie-trailer {
+    background-color: #1e1e1e;
+}
+
+.movie-trailer video {
+    width: 100%;
+    height: auto;
+}
+
+.play-btn-main {
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: #000;
+    text-align: center;
+}
+
+.movie-details {
+    padding: 20px;
+    background-color: #1e1e1e;
+    color: #ffffff;
+}
+
+.movie-details h1 {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+}
+
+.movie-details p {
+    font-size: 1rem;
+    line-height: 1.5;
+    margin: 5px 0;
+}
+
+.recommendations {
+    overflow: hidden;
+}
