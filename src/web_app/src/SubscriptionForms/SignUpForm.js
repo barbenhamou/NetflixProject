@@ -60,14 +60,16 @@ function SignUpForm() {
   };
 
   return (
-    <div className="form-container">
+    <div className="form-container center">
       <div className="form">
-        <h3 className="text-center">Create an Account</h3>
+        <h3>Create an Account</h3>
         <form onSubmit={handleSubmit}>
           {/* Using the createField function for dynamic field generation */}
           <StandAloneField label={'Username'} type={'text'} id={'name'} placeholder={'Enter your name'} value={name} onChange={(e) => setName(e.target.value)} />
-          <SideBySideField label={'Password'} type={'password'} id={'password'} placeholder={'Create a password'} value={password} onChange={(e) => setPassword(e.target.value)} />
-          <SideBySideField label={'Confirm Password'} type={'password'} id={'confirmPassword'} placeholder={'Confirm your password'} value={email} onChange={(e) => setConfirmPassword(e.target.value)} />
+          <div className='row'>
+            <SideBySideField label={'Password'} type={'password'} id={'password'} placeholder={'Create a password'} value={password} onChange={(e) => setPassword(e.target.value)} />
+            <SideBySideField label={'Confirm Password'} type={'password'} id={'confirmPassword'} placeholder={'Confirm your password'} value={email} onChange={(e) => setConfirmPassword(e.target.value)} />
+          </div>
           <StandAloneField label={'Email Address'} type={'email'} id={'email'} placeholder={'Enter your email'} value={email} onChange={(e) => setEmail(e.target.value)} />
           <StandAloneField label={'Phone (no dashes)'} type={'text'} id={'phone'} placeholder={'Enter your phone number'} value={phone} onChange={(e) => setPhone(e.target.value)} />
           <StandAloneField label={'Location'} type={'text'} id={'location'} placeholder={'Enter your location'} value={location} onChange={(e) => setLocation(e.target.value)} />

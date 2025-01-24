@@ -1,19 +1,21 @@
-.form-container {
-    height: 100vh;
-    background-color: #141414;
+.center {
     display: flex;
     justify-content: center;
     align-items: center;
+    height: 100vh;
+    text-align: center;
+}
+
+.form-container {
+    background-color: #141414;
 }
 
 .form {
-    display: flex;
     background-color: white;
     padding: 40px;
     border-radius: 8px;
     width: 100%;
-    max-width: 400px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    max-width: 700px;
 }
 
 h3 {
@@ -24,40 +26,38 @@ h3 {
 
 .form-label {
     display: flex;
-    font-weight: 600;
+    font-weight: 400;
+    margin-bottom: 5px;
 }
 
 .form-control {
-    display: flex;
     border-radius: 8px;
     height: 40px;
     padding: 10px;
     font-size: 16px;
+    margin-bottom: 10px;
 }
 
 .btn-danger {
-    display: flex;
     background-color: #e50914;
     border: none;
     color: white;
     font-size: 16px;
     font-weight: bold;
-    vertical-align: middle;
+    width: 100%;
     padding: 12px;
     border-radius: 8px;
-    transition: background-color 0.3s;
-    margin-left: auto;
-    margin-right: auto;
+    transition: background-color 0.1s;
+    margin-top: 10px;
 }
 
 .btn-danger:hover {
-    display: flex;
-    background-color: #f40612;
+    background-color: #5f1717;
 }
 
 .alert {
     border-radius: 8px;
-    margin-bottom: 15px;
+    margin: 15px;
     padding: 12px;
     font-weight: 500;
     background-color: #f8d7da;
@@ -65,18 +65,10 @@ h3 {
 }
 
 p a {
-    color: #e90606;
+    color: #e50914;
     text-decoration: none;
 }
 
 p a:hover {
     text-decoration: underline;
-}
-
-.mb-3 {
-    margin-bottom: 1.5rem;
-}
-
-.d-grid {
-    margin-top: 20px;
 }
