@@ -1,4 +1,5 @@
 import './MovieWatch.css';
+import VideoPlayer from './VideoPlayer';
 import React, { useEffect, useState } from 'react';
 
 function MovieWatch({ id }) {
@@ -14,15 +15,20 @@ function MovieWatch({ id }) {
         fetchMovie();
     }, [id]);
 
-    const {film} = movie;
+    // Show loading text until movie is fetched
+    if (!movie) {
+        return (
+            <div className="movie-watch">
+                <p>Loading...</p>
+            </div>
+        );
+    }
+
+    const { film } = movie;
 
     return (
         <div className="movie-watch">
-            <video
-                src={`/Media/Movies/${film}`}
-                controls>
-                Your browser does not support the video tag.
-            </video>
+            <VideoPlayer film={film} />
         </div>
     );
 }

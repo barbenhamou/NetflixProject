@@ -1,13 +1,18 @@
 import "./MovieCard.css";
 
-function MovieCard({ title, categories, lengthMinutes, releaseYear, description, image }) {
+function MovieCard({ id, title, categories, lengthMinutes, releaseYear, description, image }) {
     categories = categories.map((category) => category.name);
-    
+
     return (
         <div className="card movie-card">
             <div className="image-container">
-                <img src={`/Media/MovieImages/${image}`} alt={title} className="card-img-top" />
-                <i className="bi bi-play-circle play-btn"></i>
+                <img
+                    src={`/Media/MovieImages/${image}`}
+                    alt={title}
+                    className="card-img-top" />
+                <i
+                className="bi bi-play-circle play-btn"
+                onClick={() => window.location.href = `/api/movies/${id}/watch`}></i>
             </div>
             <div className="card-body">
                 <h5 className="card-title">{title}</h5>
