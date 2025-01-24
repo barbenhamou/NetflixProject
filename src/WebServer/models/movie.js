@@ -33,6 +33,18 @@ const Movie = new Schema({
         type: String,
         default: ""
     },
+    image: {
+        type: String,
+        required: [true, 'The image field is required (path to the image file)']
+    },
+    trailer: {
+        type: String,
+        required: [true, 'The trailer field is required (path to the trailer file)']
+    },
+    film: {
+        type: String,
+        required: [true, 'The film field is required (path to the movie file)']
+    },
     shortId: { // For the cpp system (_id is too large)
         type: Number,
     }

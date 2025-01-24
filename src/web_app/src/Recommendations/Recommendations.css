@@ -1,0 +1,23 @@
+.recommendations,
+.loading {
+    padding: 20px;
+    background-color: #1e1e1e;
+    text-align: left;
+}
+
+.recommendations h2 {
+    font-size: 1.8rem;
+    color: #ffffff;
+    margin-bottom: 10px;
+}
+
+.recommendations {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+}
+
+.recommendations .movie-card {
+    margin: 5px;
+}
