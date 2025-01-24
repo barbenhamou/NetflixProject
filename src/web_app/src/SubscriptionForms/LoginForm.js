@@ -42,7 +42,7 @@ function LoginForm() {
   }, [userId]);
 
   return (
-    <div className='container'>
+    <div className='form-container'>
       <div className='form'>
         <form className="row g-3" onSubmit={handleSubmit}>
           <StandAloneField label={'Username'} type={'text'} id={ 'name'} placeholder={'Enter your name'} value={name} onChange={(e) => setName(e.target.value)} />

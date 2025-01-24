@@ -1,7 +1,7 @@
-.container {
+.form-container {
     display: flex;
     height: 100vh;
-    background-color: #0f0f0e;
+    background-color: #141414;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -9,7 +9,7 @@
 
 .form {
     display: flex;
-    background-color: rgb(117, 23, 23);
+    background-color: white;
     padding: 40px;
     border-radius: 8px;
     width: 100%;
@@ -18,7 +18,7 @@
 }
 
 h3 {
-    color: #141414;
+    color: #333;
     margin-bottom: 20px;
     font-weight: 600;
 }
@@ -50,14 +50,14 @@ h3 {
 
 .btn-danger:hover {
     display: flex;
-    background-color: #570505;
+    background-color: #f40612;
 }
 
 .alert {
     border-radius: 8px;
     margin-bottom: 15px;
     padding: 12px;
-    font-weight: 100;
+    font-weight: 500;
     background-color: #f8d7da;
     color: #721c24;
 }
