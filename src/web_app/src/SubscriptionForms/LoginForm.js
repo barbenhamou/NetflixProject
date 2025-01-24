@@ -45,10 +45,14 @@ function LoginForm() {
     <div className='form-container'>
       <div className='form'>
         <form className="row g-3" onSubmit={handleSubmit}>
+        <h3 className="text-center">Login</h3>
           <StandAloneField label={'Username'} type={'text'} id={ 'name'} placeholder={'Enter your name'} value={name} onChange={(e) => setName(e.target.value)} />
           <StandAloneField label={'Password'} type={'password'} id={'password'} placeholder={'Create a password'} value={password} onChange={(e) => setPassword(e.target.value)} />
           <div className="col-12">
             <button type="submit" className="btn btn-primary btn-danger">Sign in</button>
+          </div>
+          <div className="col-12">
+            <p>New to Netflix? <a href='/signup'>Sign Up</a></p>
           </div>
         </form>
         {error && <div className="alert alert-danger">{error}</div>}

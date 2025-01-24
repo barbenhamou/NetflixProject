@@ -1,5 +1,4 @@
 .form-container {
-    display: flex;
     height: 100vh;
     background-color: #141414;
     display: flex;
@@ -43,9 +42,12 @@ h3 {
     color: white;
     font-size: 16px;
     font-weight: bold;
+    vertical-align: middle;
     padding: 12px;
     border-radius: 8px;
     transition: background-color 0.3s;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .btn-danger:hover {
@@ -63,7 +65,7 @@ h3 {
 }
 
 p a {
-    color: #007bff;
+    color: #e90606;
     text-decoration: none;
 }
 

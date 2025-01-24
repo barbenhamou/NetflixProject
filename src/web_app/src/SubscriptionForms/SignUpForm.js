@@ -60,7 +60,7 @@ function SignUpForm() {
   };
 
   return (
-    <div className="container">
+    <div className="form-container">
       <div className="form">
         <h3 className="text-center">Create an Account</h3>
         <form onSubmit={handleSubmit}>
