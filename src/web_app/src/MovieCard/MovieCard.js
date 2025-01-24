@@ -2,8 +2,7 @@ import "./MovieCard.css";
 
 function MovieCard({ title, categories, lengthMinutes, releaseYear, description, image }) {
     categories = categories.map((category) => category.name);
-    categories = ["Action", "Adventure", "Drama"];
-    description = "A description of the movie A description of the movie A description of the movie";
+    
     return (
         <div className="card movie-card">
             <div className="image-container">
