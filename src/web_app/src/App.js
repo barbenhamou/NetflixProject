@@ -1,7 +1,7 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import LoginForm from './SubscriptionForms/LoginForm/LoginForm'; // Assuming LoginForm is in the LoginForm folder
-import SignUpForm from './SubscriptionForms/SignUpForm/SignUpForm';
+import { BrowserRouter, Route, Routes, useParams } from 'react-router-dom';
+import LoginForm from './SubscriptionForms/LoginForm';
+import SignUpForm from './SubscriptionForms/SignUpForm';
 import MovieInfo from './MovieInfo/MovieInfo';
 import MovieWatch from './MovieWatch/MovieWatch';
 
