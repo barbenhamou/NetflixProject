@@ -157,8 +157,14 @@ function VideoPlayer({ video, folder }) {
                 </button>
                 <div className="volume-control">
                     {volume > 0 ?
-                        <i className="bi bi-volume-up volume-btn" onClick={() => setVolume(0)}></i> :
-                        <i class="bi bi-volume-mute volume-btn" onClick={() => setVolume(1)}></i>}
+                        <i className="bi bi-volume-up volume-btn" onClick={() => {
+                            setVolume(0);
+                            handleVolumeChange({ target: { value: 0 } });
+                        }}></i> :
+                        <i class="bi bi-volume-mute volume-btn" onClick={() => {
+                            setVolume(1);
+                            handleVolumeChange({ target: { value: 1 } });
+                        }}></i>}
                     <input
                         type="range"
                         className="volume-bar"
