@@ -1,0 +1,149 @@
+.video-container {
+    position: relative;
+    margin: auto;
+    box-shadow: 0 0 50px rgba(0, 0, 0, 1);
+    z-index: 1;
+}
+
+.video-container.fullscreen {
+    width: 100vw;
+    height: 100vh;
+}
+
+.movie-watch-video {
+    width: 100%;
+    position: relative;
+    display: flex;
+}
+
+.video-controls {
+    position: absolute;
+    bottom: 10px;
+    height: 50px;
+    left: 15px;
+    right: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(45, 40, 40, 0.5);
+    border-radius: 8px;
+    padding: 10px;
+    color: white;
+    opacity: 1;
+    transition: opacity 0.3s;
+}
+
+.video-container.fullscreen .video-controls:not(:hover) {
+    transition: opacity 1.5s 0.5s;
+    opacity: 0;
+}
+
+.video-container.fullscreen .video-controls:hover {
+    opacity: 1;
+}
+
+.bi-pause,
+.bi-play-fill,
+.skip-btn {
+    height: 50px;
+    font-size: 3.2rem;
+    display: inline-block;
+    line-height: 1;
+    vertical-align: middle;
+    transition: transform 0.3s ease;
+}
+
+.bi-arrow-clockwise,
+.bi-arrow-counterclockwise {
+    height: 32px;
+}
+
+.skip-btn {
+    font-size: 2.3rem;
+}
+
+.bi-pause:hover,
+.bi-play-fill:hover,
+.bi-fullscreen:hover,
+.bi-fullscreen-exit:hover,
+.skip-btn:hover,
+.volume-btn:hover {
+    transform: scale(1.3);
+}
+
+.bi-fullscreen,
+.bi-fullscreen-exit,
+.volume-btn {
+    color: #000;
+    font-size: 1.8rem;
+    display: inline-block;
+    line-height: 1;
+    vertical-align: middle;
+    transition: transform 0.3s ease;
+}
+
+.play-pause,
+.fullscreen-btn,
+.skip-btn,
+.volume-btn {
+    width: 50px;
+    height: 50px;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: transparent;
+    border: none;
+}
+
+.volume-btn {
+    font-size: 2.2rem;
+    margin-left: 4px;
+}
+
+.volume-control {
+    display: flex;
+    align-items: center;
+}
+
+.volume-bar {
+    width: 90px;
+}
+
+.progress-bar {
+    width: 65%;
+    margin: 0 10px;
+    appearance: none;
+    height: 8px;
+    border-radius: 4px;
+    transition: background 0.1s ease-in-out;
+}
+
+/* For webkit browsers like Chrome */
+.progress-bar::-webkit-slider-runnable-track {
+    height: 8px;
+    background: transparent;
+    border-radius: 4px;
+}
+
+.progress-bar::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 8px;
+    height: 8px;
+    background: white;
+    border-radius: 50%;
+    cursor: pointer;
+    position: relative;
+}
+
+.time-display {
+    font-size: 0.9rem;
+    color: white;
+    margin: 0 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100px;
+    text-align: center;
+}
