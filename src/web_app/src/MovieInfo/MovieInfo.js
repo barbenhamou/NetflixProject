@@ -1,5 +1,6 @@
 import "./MovieInfo.css";
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom"
 import Recommendations from "../Recommendations/Recommendations";
 import VideoPlayer from "../VideoPlayer/VideoPlayer";
 
@@ -36,13 +37,14 @@ function MovieInfo({ id }) {
       <section className="movie-details">
         <section className="info-header">
           <h1>{title}</h1>
-          <button
-            className="btn btn-light play-btn-main"
-            type="button"
-            aria-label="Play"
-            onClick={() => window.location.href = `/api/movies/${id}/watch`}>
-            ▶ Play Movie
-          </button>
+          <Link to={`/api/movies/${id}/watch`}>
+            <button
+              className="btn btn-light play-btn-main"
+              type="button"
+              aria-label="Play"
+            >
+              ▶ Play Movie
+            </button></Link>
         </section>
         <p>
           {releaseYear} | {Math.floor(lengthMinutes / 60)}h {lengthMinutes % 60}m
