@@ -1,5 +1,5 @@
 import './MovieWatch.css';
-import VideoPlayer from './VideoPlayer';
+import VideoPlayer from '../VideoPlayer/VideoPlayer';
 import React, { useEffect, useState } from 'react';
 
 function MovieWatch({ id }) {
@@ -28,9 +28,12 @@ function MovieWatch({ id }) {
 
     return (
         <div className="movie-watch">
-            <VideoPlayer film={film} />
+            <i className="bi bi-arrow-left" onClick={() => window.history.back()}></i>
+            <div className="movie-video">
+                <VideoPlayer video={film} folder={"Movies"} />
+            </div>
         </div>
-    );
+    );    
 }
 
 export default MovieWatch;

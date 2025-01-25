@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect } from "react";
 import "./VideoPlayer.css";
 
-function VideoPlayer({ film }) {
+function VideoPlayer({ video , folder}) {
     const videoRef = useRef(null);
     const [isPlaying, setIsPlaying] = useState(false);
     const [isFullscreen, setIsFullscreen] = useState(false);
@@ -96,23 +96,43 @@ function VideoPlayer({ film }) {
         };
     }, []);
 
+    const formatTime = (time) => {
+        const hours = Math.floor(time / 3600);
+        const minutes = Math.floor((time % 3600) / 60);
+        const seconds = Math.floor(time % 60);
+
+        if (hours > 0) {
+            return `${hours}:${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
+        } else {
+            return `${minutes}:${seconds.toString().padStart(2, "0")}`;
+        }
+    };
+
     const progress = (currentTime / duration) * 100;
     const barColor = "rgba(255, 255, 255, 0.3)";
     const progressBarStyle = {
         background: `linear-gradient(to right, red ${progress}%, ${barColor} ${progress}%, ${barColor} 100%)`,
     };
 
+    if (progress === 100 && isPlaying) {
+        setCurrentTime(0);
+        setIsPlaying(false);
+    }
+
     return (
         <div className={`video-container ${isFullscreen ? "fullscreen" : ""}`}>
             <video
                 className="movie-watch-video"
                 ref={videoRef}
-                src={`/Media/Movies/${film}`}
+                src={`/Media/${folder}/${video}`}
                 onClick={togglePlay} />
             <div className="video-controls">
                 <button className="play-pause" onClick={togglePlay}>
-                    {isPlaying ? <i className="bi bi-pause"></i> : <i className="bi bi-play-fill"></i>}
+                    {isPlaying ? <i className="bi bi-pause"></i>: <i className="bi bi-play-fill"></i>}
                 </button>
+                <div className="time-display">
+                    {formatTime(currentTime)} / {formatTime(duration)}
+                </div>
                 <input
                     type="range"
                     className="progress-bar"

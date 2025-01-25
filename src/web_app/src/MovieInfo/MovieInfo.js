@@ -1,6 +1,7 @@
 import "./MovieInfo.css";
 import { useState, useEffect } from "react";
 import Recommendations from "../Recommendations/Recommendations";
+import VideoPlayer from "../VideoPlayer/VideoPlayer";
 
 function MovieInfo({ id }) {
   const [movie, setMovie] = useState(null);
@@ -30,23 +31,19 @@ function MovieInfo({ id }) {
   return (
     <div className="movie-info">
       <div className="movie-trailer">
-        <video
-          src={`/Media/MovieTrailers/${trailer}`}
-          controls
-          poster={`/Media/MovieImages/${image}`}>
-          Your browser does not support the video tag.
-        </video>
-
+        <VideoPlayer video={trailer} folder={"MovieTrailers"} />
       </div>
       <section className="movie-details">
-        <h1>{title}</h1>
-        <button
-          className="btn btn-light play-btn-main"
-          type="button"
-          aria-label="Play"
-          onClick={() => window.location.href = `/api/movies/${id}/watch`}>
-          ▶ Play Movie
-        </button>
+        <section className="info-header">
+          <h1>{title}</h1>
+          <button
+            className="btn btn-light play-btn-main"
+            type="button"
+            aria-label="Play"
+            onClick={() => window.location.href = `/api/movies/${id}/watch`}>
+            ▶ Play Movie
+          </button>
+        </section>
         <p>
           {releaseYear} | {Math.floor(lengthMinutes / 60)}h {lengthMinutes % 60}m
         </p>
@@ -55,7 +52,7 @@ function MovieInfo({ id }) {
         <p>{description}</p>
       </section>
       <section className="recommendations">
-        <h2>Movies for you, based on "{title}"</h2>
+        <h2>Movies for you, based on "{title}":</h2>
         <Recommendations id={id} />
       </section>
     </div>
