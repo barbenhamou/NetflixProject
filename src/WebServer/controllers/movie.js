@@ -1,13 +1,11 @@
 const movieService = require('../services/movie');
-const Client = require('../Client');
 
 // Only show relevant info
 const presentMovie = async (movie) => {
     try {
         // Turn the category IDs into actual category documents
         await movie.populate('categories');
-        await movie.save();
-        
+
         return {
             id: movie._id,
             title: movie.title,
@@ -21,7 +19,7 @@ const presentMovie = async (movie) => {
             description: movie.description
         };
     } catch (err) {
-        res.status(500).json({ error: 'Error displaying movie' });
+        throw {statusCode: 500, message: 'Error displaying movie'};
     }
 };
 
