@@ -60,9 +60,9 @@ const getUserByEmail = async (email) => {
     }
 };
 
-const getUserByName = async (name) => {
+const getUserByName = async (username) => {
     try {
-        const user = await User.findOne({ name });
+        const user = await User.findOne({ username });
 
         return user;
     } catch (err) {

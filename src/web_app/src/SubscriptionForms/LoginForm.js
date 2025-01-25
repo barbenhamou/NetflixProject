@@ -1,17 +1,24 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import './Form.css';
 import StandAloneField from './fieldItem';
 
 function LoginForm() {
-  const [name, setName] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [userId, setUserId] = useState(null);  // To store user_id returned from server
 
+  const handleInput = (setter) => (e) => {
+    setError('');
+    setter(e.target.value);
+  }
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!name || !password) {
+
+    if (!username || !password) {
       setError('Please fill in all fields');
       return;
     }
@@ -20,7 +27,7 @@ function LoginForm() {
       const response = await fetch('http://localhost:3001/api/tokens', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', },
-        body: JSON.stringify({ name, password })
+        body: JSON.stringify({ username, password })
       });
 
       if (response.ok) {
@@ -43,11 +50,14 @@ function LoginForm() {
 
   return (
     <div className='form-container center'>
+      <Link to="/">
+        <i className="bi bi-arrow-left"></i>
+      </Link>
       <div className='form'>
-        <form className="row g-3" onSubmit={handleSubmit}>
         <h3>Login</h3>
-          <StandAloneField label={'Username'} type={'text'} id={ 'name'} placeholder={'Enter your name'} value={name} onChange={(e) => setName(e.target.value)} />
-          <StandAloneField label={'Password'} type={'password'} id={'password'} placeholder={'Create a password'} value={password} onChange={(e) => setPassword(e.target.value)} />
+        <form className="row g-3" onSubmit={handleSubmit}>
+          <StandAloneField label={'Username'} type={'text'} id={'username'} placeholder={'Enter your username'} value={username} onChange={handleInput(setUsername)} />
+          <StandAloneField label={'Password'} type={'password'} id={'password'} placeholder={'Create a password'} value={password} onChange={handleInput(setPassword)} />
           <div className="col-12">
             <button type="submit" className="btn btn-primary btn-danger">Sign in</button>
           </div>

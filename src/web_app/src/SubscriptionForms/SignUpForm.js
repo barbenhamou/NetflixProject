@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { StandAloneField, SideBySideField } from './fieldItem';
 import './Form.css';
 
 function SignUpForm() {
-  const [name, setName] = useState('');
+  const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -12,11 +13,16 @@ function SignUpForm() {
   const [location, setLocation] = useState('');
   const [error, setError] = useState('');
 
+  const handleInput = (setter) => (e) => {
+    setError('');
+    setter(e.target.value);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     // Validation
-    if (!name || !email || !password || !confirmPassword || !phone || !location) {
+    if (!username || !email || !password || !confirmPassword || !phone || !location) {
       setError('Please fill in all fields');
       return;
     }
@@ -28,7 +34,7 @@ function SignUpForm() {
 
     // Create the form data
     const userData = {
-      name,
+      username,
       email,
       password,
       phone,
@@ -48,10 +54,10 @@ function SignUpForm() {
 
       if (!response.ok) {
         const errorData = await response.json(); // Assuming the server returns a JSON error message
-        console.error('Error response:', errorData);
-        setError('Error: ' + errorData.message || 'Unknown error');
+        setError('Error: ' + errorData.error);
       } else {
         alert('Account created successfully');
+        <Link to="/login" />;
       }
     } catch (err) {
       setError('Error while sending data to server');
@@ -61,19 +67,22 @@ function SignUpForm() {
 
   return (
     <div className="form-container center">
+      <Link to="/">
+        <i className="bi bi-arrow-left"></i>
+      </Link>
       <div className="form">
         <h3>Create an Account</h3>
         <form onSubmit={handleSubmit}>
           {/* Using the createField function for dynamic field generation */}
-          <StandAloneField label={'Username'} type={'text'} id={'name'} placeholder={'Enter your name'} value={name} onChange={(e) => setName(e.target.value)} />
+          <StandAloneField label={'Username'} type={'text'} id={'username'} placeholder={'Enter your username'} value={username} onChange={handleInput(setUsername)} />
           <div className='row'>
-            <SideBySideField label={'Password'} type={'password'} id={'password'} placeholder={'Create a password'} value={password} onChange={(e) => setPassword(e.target.value)} />
-            <SideBySideField label={'Confirm Password'} type={'password'} id={'confirmPassword'} placeholder={'Confirm your password'} value={email} onChange={(e) => setConfirmPassword(e.target.value)} />
+            <SideBySideField label={'Password'} type={'password'} id={'password'} placeholder={'Create a password'} value={password} onChange={handleInput(setPassword)} />
+            <SideBySideField label={'Confirm Password'} type={'password'} id={'confirmPassword'} placeholder={'Confirm your password'} value={confirmPassword} onChange={handleInput(setConfirmPassword)} />
           </div>
-          <StandAloneField label={'Email Address'} type={'email'} id={'email'} placeholder={'Enter your email'} value={email} onChange={(e) => setEmail(e.target.value)} />
-          <StandAloneField label={'Phone (no dashes)'} type={'text'} id={'phone'} placeholder={'Enter your phone number'} value={phone} onChange={(e) => setPhone(e.target.value)} />
-          <StandAloneField label={'Location'} type={'text'} id={'location'} placeholder={'Enter your location'} value={location} onChange={(e) => setLocation(e.target.value)} />
-          <StandAloneField label={'Picture'} type={'text'} id={'pic'} placeholder={'Choose a profile picture'} value={picture} onChange={(e) => setPicture(e.target.value)} />
+          <StandAloneField label={'Email Address'} type={'email'} id={'email'} placeholder={'Enter your email'} value={email} onChange={handleInput(setEmail)} />
+          <StandAloneField label={'Phone (no dashes)'} type={'text'} id={'phone'} placeholder={'Enter your phone number'} value={phone} onChange={handleInput(setPhone)} />
+          <StandAloneField label={'Location'} type={'text'} id={'location'} placeholder={'Enter your location'} value={location} onChange={handleInput(setLocation)} />
+          <StandAloneField label={'Picture'} type={'text'} id={'pic'} placeholder={'Choose a profile picture'} value={picture} onChange={handleInput(setPicture)} />
           <div className="col-12">
             <button type="submit" className="btn btn-primary btn-danger">Sign up</button>
           </div>

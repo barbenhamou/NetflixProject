@@ -1,9 +1,9 @@
 const User = require('../models/user');
 const userService = require('./user');
 
-const authenticateUser = async (name, password) => {
+const authenticateUser = async (username, password) => {
     try {
-        const user = await userService.getUserByName(name);
+        const user = await userService.getUserByName(username);
         if (!user) {
             return null; // Return null if the user does not exist
         }

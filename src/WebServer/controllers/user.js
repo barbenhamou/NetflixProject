@@ -5,7 +5,7 @@ const presentUser = async (user) => {
     try {
         return {
             id: user._id,
-            name: user.name,
+            username: user.username,
             email: user.email,
             phone: user.phone,
             picture: user.picture,
@@ -19,10 +19,10 @@ const presentUser = async (user) => {
 const createUser = async (req, res) => {
     try {
         // Check if a user already exists with the same email
-        const existingUserName = await userService.getUserByName(req.body.name);
+        const existingUserName = await userService.getUserByName(req.body.username);
 
         if (existingUserName) {
-            return res.status(400).json({ error: "A user with this name already exists" });
+            return res.status(400).json({ error: "A user with this username already exists" });
         }
 
         // Create a new user

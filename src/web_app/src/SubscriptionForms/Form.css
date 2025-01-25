@@ -72,3 +72,17 @@ p a {
 p a:hover {
     text-decoration: underline;
 }
+
+.bi-arrow-left {
+    font-size: 2rem;
+    color: #fff;
+    position: absolute;
+    top: 10px;
+    left: 18px;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.bi-arrow-left:hover {
+    transform: scale(1.35);
+}

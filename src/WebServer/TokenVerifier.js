@@ -17,7 +17,7 @@ const tokenValidation = (adminActionBool) => {
         try {
             const decodedToken = jwt.verify(token, key);
             
-            if (adminActionBool && decodedToken.name !== 'admin') {
+            if (adminActionBool && decodedToken.username !== 'admin') {
                 return res.status(401).json({ error: 'Access denied: Admins only' });
             }
 
