@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Navigate, useNavigate } from 'react-router-dom';
 import { StandAloneField, SideBySideField } from './fieldItem';
 import './Form.css';
 
@@ -12,6 +12,8 @@ function SignUpForm() {
   const [picture, setPicture] = useState('');
   const [location, setLocation] = useState('');
   const [error, setError] = useState('');
+
+  const navigate = useNavigate();
 
   const handleInput = (setter) => (e) => {
     setError('');
@@ -43,7 +45,7 @@ function SignUpForm() {
     };
 
     try {
-      // Send data to the backend (POST request)
+      // Send data to the WebServer (POST request)
       const response = await fetch('http://localhost:3001/api/users', {
         'method': 'POST',
         'headers': {
@@ -57,7 +59,7 @@ function SignUpForm() {
         setError('Error: ' + errorData.error);
       } else {
         alert('Account created successfully');
-        <Link to="/login" />;
+        navigate("/login");
       }
     } catch (err) {
       setError('Error while sending data to server');
