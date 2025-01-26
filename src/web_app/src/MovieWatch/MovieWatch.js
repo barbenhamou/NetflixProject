@@ -2,13 +2,14 @@ import './MovieWatch.css';
 import VideoPlayer from '../VideoPlayer/VideoPlayer';
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { backendPort } from "../config";
 
 function MovieWatch({ id }) {
     const [movie, setMovie] = useState(null);
 
     useEffect(() => {
         async function fetchMovie() {
-            const response = await fetch(`http://localhost:3001/api/movies/${id}`);
+            const response = await fetch(`http://localhost:${backendPort}/api/movies/${id}`);
             const data = await response.json();
             setMovie(data);
         }
@@ -33,7 +34,7 @@ function MovieWatch({ id }) {
                 <i className="bi bi-arrow-left"></i>
             </Link>
             <div className="movie-video">
-                <VideoPlayer video={film} folder={"Movies"} />
+                <VideoPlayer movieId={id} type="film" />
             </div>
         </div>
     );

@@ -3,13 +3,14 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom"
 import Recommendations from "../Recommendations/Recommendations";
 import VideoPlayer from "../VideoPlayer/VideoPlayer";
+import { backendPort } from "../config";
 
 function MovieInfo({ id }) {
   const [movie, setMovie] = useState(null);
 
   useEffect(() => {
     async function fetchMovie() {
-      const response = await fetch(`http://localhost:3001/api/movies/${id}`);
+      const response = await fetch(`http://localhost:${backendPort}/api/movies/${id}`);
       const data = await response.json();
       setMovie(data);
     }
@@ -32,7 +33,7 @@ function MovieInfo({ id }) {
   return (
     <div className="movie-info">
       <div className="movie-trailer">
-        <VideoPlayer video={trailer} folder={"MovieTrailers"} />
+        <VideoPlayer movieId={id} type="trailer" />
       </div>
       <section className="movie-details">
         <section className="info-header">
