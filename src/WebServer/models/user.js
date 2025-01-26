@@ -37,6 +37,10 @@ const User = new Schema({
     hasWatched: { // Has the user watch any movies or none at all
         type: Boolean,
         default: false
+    },
+    isAdmin: {
+        type: Boolean,
+        default: false
     }
 });
 

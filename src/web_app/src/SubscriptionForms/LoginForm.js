@@ -2,13 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import './Form.css';
 import StandAloneField from './fieldItem';
+import jwt_decode from 'jwt-decode';
 
 function LoginForm() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [userId, setUserId] = useState(null);  // To store user_id returned from server
-
+  const [isAdmin, setIsAdmin] = useState(false);
   const handleInput = (setter) => (e) => {
     setError('');
     setter(e.target.value);
@@ -32,7 +33,11 @@ function LoginForm() {
 
       if (response.ok) {
         const data = await response.json();
-        setUserId(data.userId);
+
+        const decodedToken = jwt_decode(data.token);
+
+        setUserId(decodedToken.userId);
+        setIsAdmin(decodedToken.isAdmin);
       } else {
         setError('Invalid credentials');
       }

@@ -1,7 +1,7 @@
 const userService  = require('./services/user');
 const jwt = require('jsonwebtoken');
 
-const key = "secret";
+const key = process.env.SECRET;
 
 const tokenValidation = (adminActionBool) => {
     return (req, res, next) => {
@@ -17,11 +17,11 @@ const tokenValidation = (adminActionBool) => {
         try {
             const decodedToken = jwt.verify(token, key);
             
-            if (adminActionBool && decodedToken.username !== 'admin') {
+            if (adminActionBool && !decodedToken.isAdmin) {
                 return res.status(401).json({ error: 'Access denied: Admins only' });
             }
 
-            req.token = decodedToken;
+            req.token = decodedToken.userId;
 
             next();
         } catch (error) {
