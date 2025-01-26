@@ -1,7 +1,8 @@
 import React, { useRef, useState, useEffect } from "react";
 import "./VideoPlayer.css";
+import { backendPort } from "../config";
 
-function VideoPlayer({ video, folder }) {
+function VideoPlayer({ movieId, type }) {
     const videoRef = useRef(null);
     const [isPlaying, setIsPlaying] = useState(false);
     const [isFullscreen, setIsFullscreen] = useState(false);
@@ -139,12 +140,14 @@ function VideoPlayer({ video, folder }) {
     return (
         <div className={`video-container ${isFullscreen ? "fullscreen" : ""}`}>
             <video
+                id="player"
                 className="movie-watch-video"
                 ref={videoRef}
-                src={`/Media/${folder}/${video}`}
                 onClick={togglePlay}
                 muted={false}
-            />
+            >
+                <source src={`http://localhost:${backendPort}/api/movies/${movieId}/files?type=${type}`} />
+            </video>
             <div className="video-controls">
                 <button className="skip-btn" onClick={() => skipTime(-10)}>
                     <i className="bi bi-arrow-counterclockwise"></i>
@@ -161,7 +164,7 @@ function VideoPlayer({ video, folder }) {
                             setVolume(0);
                             handleVolumeChange({ target: { value: 0 } });
                         }}></i> :
-                        <i class="bi bi-volume-mute volume-btn" onClick={() => {
+                        <i className="bi bi-volume-mute volume-btn" onClick={() => {
                             setVolume(1);
                             handleVolumeChange({ target: { value: 1 } });
                         }}></i>}
