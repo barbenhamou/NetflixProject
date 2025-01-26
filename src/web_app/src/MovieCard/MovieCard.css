@@ -41,6 +41,30 @@
     pointer-events: auto;
 }
 
+.info-btn {
+    font-size: 1.4rem;
+    color: #fff;
+    transition: transform 0.3s ease;
+    cursor: pointer;
+}
+
+.info-btn:hover {
+    transform: scale(1.1);
+}
+
+.title-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.title-container h5 {
+    font-weight: bold;
+    font-size: 16px;
+    margin: 0;
+}
+
 .description {
     font-size: 13px;
 }
