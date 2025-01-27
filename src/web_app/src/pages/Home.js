@@ -1,31 +1,67 @@
 import React, { useState, useEffect } from "react";
 
 const Home = () => {
+  const [movies, setMovies] = useState([]);
+  const [categories, setCategories] = useState({});
   const [lastScrollY, setLastScrollY] = useState(0);
   const [headerHidden, setHeaderHidden] = useState(false);
   const [hoveredMovie, setHoveredMovie] = useState(null);
+  const [featuredMovie, setFeaturedMovie] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [searchedMovie, setSearchedMovie] = useState(null);
 
-  const movies = [
-    {
-      id: "movie1",
-      title: "Avengers: Endgame",
-      img: "https://m.media-amazon.com/images/I/71Sb4AfzGTL._AC_UF894,1000_QL80_.jpg",
-      trailer: "/Media/Movies/Marvel Studios' Avengers_ Endgame - Official Trailer.mp4"
-    },
-    {
-      id: "movie2",
-      title: "Suits: The Final Season",
-      img: "https://i5.walmartimages.com/seo/Avengers-Age-of-Ultron-Marvel-DVD_bf9dddf2-389c-454e-8b32-4d83dd905bcd.b2c494e52ac5d518f088c70b488cf5f9.jpeg",
-      trailer: "https://www.w3schools.com/html/movie.mp4", 
-    },
-  ];
+  const fetchMovies = async () => {
+    try {
+      const token = "67968dcde28b283216601ce0"; // Replace this with your actual token
 
-  const featuredMovie = {
-    title: "Avengers: Endgame",
-    description:
-      "In 2018, 23 days after Thanos erased half of all life in the universe,Carol Danvers rescues Tony Stark and Nebula from deep space. Five years later, Scott Lang escapes from the Quantum Realm and helps the Avengers with a plan to undo the Snap.",
-    trailer: "/Media/Movies/Marvel Studios' Avengers_ Endgame - Official Trailer.mp4",
+      const response = await fetch("http://localhost:3001/api/movies", {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to fetch movies: ${response.status}`);
+      }
+
+      const data = await response.json();
+
+      const categorizedMovies = data.reduce((acc, category) => {
+        if (category.length > 0) {
+          const categoryName = category[0]?.categories[0] || "Uncategorized";
+          acc[categoryName] = category.map((movie) => ({
+            id: movie.id,
+            title: movie.title,
+            img: `Media/MovieImages/${movie.image}`,
+            trailer: `Media/MovieTrailers/${movie.trailer}`,
+            description: movie.description || "An amazing movie you shouldn't miss!",
+          }));
+        }
+        return acc;
+      }, {});
+
+      setMovies(data.flat());
+      setCategories(categorizedMovies);
+
+      // Pick a random featured movie
+      const flatMovies = data.flat();
+      const randomMovie =
+        flatMovies[Math.floor(Math.random() * flatMovies.length)];
+      setFeaturedMovie({
+        title: randomMovie.title,
+        trailer: `Media/MovieTrailers/${randomMovie.trailer}`,
+        description: randomMovie.description || "Enjoy our featured selection!",
+      });
+    } catch (error) {
+      console.error("Error fetching movies:", error);
+    }
   };
+
+  useEffect(() => {
+    fetchMovies();
+  }, []);
 
   // Handle header show/hide on scroll
   useEffect(() => {
@@ -42,13 +78,27 @@ const Home = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [lastScrollY]);
 
+  const handleSearch = (e) => {
+    e.preventDefault();
+
+    const movie = movies.find((movie) =>
+      movie.title.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    setSearchedMovie(movie || null); // If no match, clear the search result
+  };
+
+  const closeSearchResult = () => {
+    setSearchedMovie(null);
+    setSearchTerm("");
+  };
+
   return (
     <div style={{ fontFamily: "Arial, sans-serif", color: "white", backgroundColor: "#141414" }}>
       {/* Header Section */}
       <header
         style={{
           display: "flex",
-          alignItems: "left",
+          alignItems: "center",
           padding: "20px",
           background: "rgba(0, 0, 0, 0.7)",
           position: "fixed",
@@ -63,7 +113,7 @@ const Home = () => {
           alt="Netflix Logo"
           style={{ height: "40px" }}
         />
-        <nav style={{ marginLeft: "30px", display: "flex", gap: "15px" }}>
+        <nav style={{ marginLeft: "30px", display: "flex", gap: "15px", flexGrow: 1 }}>
           <a href="#" style={{ color: "white", textDecoration: "none", fontSize: "20px" }}>
             Home
           </a>
@@ -80,156 +130,241 @@ const Home = () => {
             My List
           </a>
         </nav>
+        <form onSubmit={handleSearch} style={{ display: "flex", alignItems: "center" }}>
+          <input
+            type="text"
+            placeholder="Search"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            style={{
+              padding: "5px",
+              fontSize: "16px",
+              borderRadius: "4px",
+              border: "1px solid gray",
+              background: "rgba(255, 255, 255, 0.1)",
+              color: "white",
+            }}
+          />
+          <button
+            type="submit"
+            style={{
+              backgroundColor: "#e50914",
+              border: "none",
+              padding: "5px 10px",
+              fontSize: "16px",
+              color: "white",
+              borderRadius: "4px",
+              marginLeft: "5px",
+              cursor: "pointer",
+            }}
+          >
+            Search
+          </button>
+        </form>
       </header>
 
-      {/* Featured Movie Section */}
-      <div style={{ position: "relative", height: "70vh", marginBottom: "20px" }}>
-        <video
-          src={featuredMovie.trailer}
-          autoPlay
-          muted
-          loop
-          style={{
-            width: "100%",
-            height: "100%",
-            objectFit: "cover",
-            position: "absolute",
-            top: "0",
-            left: "0",
-          }}
-        ></video>
+      {/* Search Result Full-Page View */}
+      {searchedMovie && (
         <div
           style={{
-            position: "absolute",
-            top: "0",
-            left: "0",
+            position: "fixed",
+            top: 0,
+            left: 0,
             width: "100%",
             height: "100%",
-            background: "linear-gradient(to bottom, rgba(0,0,0,0) 60%, rgba(0,0,0,0.9))",
+            backgroundColor: "#141414",
+            color: "white",
+            zIndex: 20,
             display: "flex",
             flexDirection: "column",
-            justifyContent: "flex-end",
-            padding: "40px",
+            alignItems: "center",
+            justifyContent: "center",
+            padding: "20px",
           }}
         >
-          <h1 style={{ fontSize: "80px", fontWeight: "bold", marginBottom: "20px",textAlign: "left" }}>
-            {featuredMovie.title}
-          </h1>
-          <p style={{ fontSize: "25px", maxWidth: "600px", marginBottom: "20px" }}>
-            {featuredMovie.description}
-          </p>
-          <div style={{ display: "flex", gap: "10px" }}>
-            <button
-              style={{
-                backgroundColor: "#e50914",
-                border: "none",
-                padding: "10px 20px",
-                fontSize: "16px",
-                color: "white",
-                borderRadius: "4px",
-                cursor: "pointer",
-              }}
-            >
-              Play
-            </button>
-            <button
-              style={{
-                backgroundColor: "rgba(255, 255, 255, 0.3)",
-                border: "1px solid white",
-                padding: "10px 20px",
-                fontSize: "16px",
-                color: "white",
-                borderRadius: "4px",
-                cursor: "pointer",
-              }}
-            >
-              My List
-            </button>
+          <video
+            src={`Media/MovieTrailers/${searchedMovie.trailer}`}
+            autoPlay
+            muted
+            loop
+            style={{
+              width: "80%",
+              height: "50%",
+              objectFit: "cover",
+              borderRadius: "10px",
+            }}
+          ></video>
+          <h1 style={{ marginTop: "20px", fontSize: "36px" }}>{searchedMovie.title}</h1>
+          <p style={{ marginTop: "10px", fontSize: "18px" }}>{searchedMovie.description}</p>
+          <button
+            onClick={closeSearchResult}
+            style={{
+              marginTop: "20px",
+              backgroundColor: "#e50914",
+              border: "none",
+              padding: "10px 20px",
+              fontSize: "16px",
+              color: "white",
+              borderRadius: "5px",
+              cursor: "pointer",
+            }}
+          >
+            Close
+          </button>
+        </div>
+      )}
+
+      {/* Featured Movie Section */}
+      {featuredMovie && (
+        <div style={{ position: "relative", height: "70vh", marginBottom: "20px" }}>
+          <video
+            src={featuredMovie.trailer}
+            autoPlay
+            muted
+            loop
+            style={{
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+              position: "absolute",
+              top: "0",
+              left: "0",
+            }}
+          ></video>
+          <div
+            style={{
+              position: "absolute",
+              top: "0",
+              left: "0",
+              width: "100%",
+              height: "100%",
+              background: "linear-gradient(to bottom, rgba(0,0,0,0) 60%, rgba(0,0,0,0.9))",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "flex-end",
+              padding: "40px",
+            }}
+          >
+            <h1 style={{ fontSize: "80px", fontWeight: "bold", marginBottom: "20px", textAlign: "left" }}>
+              {featuredMovie.title}
+            </h1>
+            <p style={{ fontSize: "25px", maxWidth: "600px", marginBottom: "20px" }}>
+              {featuredMovie.description}
+            </p>
+            <div style={{ display: "flex", gap: "10px" }}>
+              <button
+                style={{
+                  backgroundColor: "#e50914",
+                  border: "none",
+                  padding: "10px 20px",
+                  fontSize: "16px",
+                  color: "white",
+                  borderRadius: "4px",
+                  cursor: "pointer",
+                }}
+              >
+                Play
+              </button>
+              <button
+                style={{
+                  backgroundColor: "rgba(255, 255, 255, 0.3)",
+                  border: "1px solid white",
+                  padding: "10px 20px",
+                  fontSize: "16px",
+                  color: "white",
+                  borderRadius: "4px",
+                  cursor: "pointer",
+                }}
+              >
+                My List
+              </button>
+            </div>
           </div>
         </div>
-      </div>
+      )}
 
-      {/* Movie Row Section */}
-      <div className="movie-row" style={{ padding: "20px" }}>
-        <h2 style={{ marginBottom: "3px" ,textAlign: "left"}}>Top Picks For You</h2>
-        <div className="movie-thumbnails" style={{ display: "flex", gap: "20px", overflowX: "auto" }}>
-          {movies.map((movie) => (
-            <div
-              key={movie.id}
-              className="movie-container"
-              style={{
-                position: "relative",
-                cursor: "pointer",
-              }}
-              onMouseEnter={() => setHoveredMovie(movie.id)}
-              onMouseLeave={() => setHoveredMovie(null)}
-            >
-              <img
-                src={movie.img}
-                alt={movie.title}
-                style={{
-                  width: "150px",
-                  height: "225px",
-                  objectFit: "cover",
-                  borderRadius: "5px",
-                  transition: "transform 0.3s",
-                  transform: hoveredMovie === movie.id ? "scale(1.1)" : "scale(1)",
-                }}
-              />
-              {hoveredMovie === movie.id && (
-                <div
-                  className="movie-hover"
+      {/* Category Rows */}
+      {Object.entries(categories).map(([categoryName, categoryMovies]) => (
+        <div className="movie-row" style={{ padding: "20px" }} key={categoryName}>
+          <h2 style={{ marginBottom: "3px", textAlign: "left" }}>{categoryName}</h2>
+          <div
+            className="movie-thumbnails"
+            style={{ display: "flex", gap: "20px", overflowX: "auto" }}
+          >
+            {categoryMovies.map((movie) => (
+              <div
+                key={movie.id}
+                className="movie-container"
+                style={{ position: "relative", cursor: "pointer" }}
+                onMouseEnter={() => setHoveredMovie(movie.id)}
+                onMouseLeave={() => setHoveredMovie(null)}
+              >
+                <img
+                  src={movie.img}
+                  alt={movie.title}
                   style={{
-                    position: "absolute",
-                    top: "-100px",
-                    left: "0",
-                    width: "300px",
-                    height: "400px",
-                    backgroundColor: "#1c1c1c",
-                    borderRadius: "10px",
-                    overflow: "hidden",
-                    display: "block",
-                    zIndex: 20,
-                    boxShadow: "0 10px 20px rgba(0, 0, 0, 0.8)",
-                    animation: "fadeIn 0.3s ease-in-out",
+                    width: "150px",
+                    height: "225px",
+                    objectFit: "cover",
+                    borderRadius: "5px",
+                    transition: "transform 0.3s",
+                    transform: hoveredMovie === movie.id ? "scale(1.1)" : "scale(1)",
                   }}
-                >
-                  <video
-                    src={movie.trailer}
-                    autoPlay
-                    muted
-                    loop
+                />
+                {hoveredMovie === movie.id && (
+                  <div
+                    className="movie-hover"
                     style={{
-                      width: "100%",
-                      height: "60%",
-                      objectFit: "cover",
+                      position: "absolute",
+                      top: "-100px",
+                      left: "0",
+                      width: "300px",
+                      height: "400px",
+                      backgroundColor: "#1c1c1c",
+                      borderRadius: "10px",
+                      overflow: "hidden",
+                      display: "flex",
+                      flexDirection: "column",
+                      zIndex: 20,
+                      boxShadow: "0 10px 20px rgba(0, 0, 0, 0.8)",
+                      animation: "fadeIn 0.3s ease-in-out",
                     }}
-                  ></video>
-                  <div className="info" style={{ padding: "10px" }}>
-                    <h3 style={{ marginBottom: "10px" }}>{movie.title}</h3>
-                    <p style={{ marginBottom: "10px", fontSize: "14px", color: "#ddd" }}>
-                      {movie.description}
-                    </p>
-                    <button
+                  >
+                    <video
+                      src={movie.trailer}
+                      autoPlay
+                      muted
+                      preload="auto"
+                      loop
                       style={{
-                        backgroundColor: "#e50914",
-                        border: "none",
-                        padding: "10px 15px",
-                        fontSize: "14px",
-                        color: "white",
-                        cursor: "pointer",
-                        borderRadius: "5px",
+                        width: "100%",
+                        height: "60%",
+                        objectFit: "cover",
                       }}
-                    >
-                      Watch Now
-                    </button>
+                    ></video>
+                    <div className="info" style={{ padding: "10px", textAlign: "center" }}>
+                      <h3 style={{ marginBottom: "10px", color: "white" }}>{movie.title}</h3>
+                      <button
+                        style={{
+                          backgroundColor: "#e50914",
+                          color: "white",
+                          border: "none",
+                          borderRadius: "5px",
+                          padding: "10px 20px",
+                          fontSize: "16px",
+                          cursor: "pointer",
+                        }}
+                      >
+                        Watch Full Movie
+                      </button>
+                    </div>
                   </div>
-                </div>
-              )}
-            </div>
-          ))}
+                )}
+              </div>
+            ))}
+          </div>
         </div>
-      </div>
+      ))}
     </div>
   );
 };
