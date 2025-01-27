@@ -80,11 +80,18 @@ const Home = () => {
 
   const handleSearch = (e) => {
     e.preventDefault();
-
-    const movie = movies.find((movie) =>
-      movie.title.toLowerCase().includes(searchTerm.toLowerCase())
+  
+    // Perform case-insensitive exact match
+    const movie = movies.find(
+      (movie) => movie.title.toLowerCase() === searchTerm.toLowerCase()
     );
-    setSearchedMovie(movie || null); // If no match, clear the search result
+  
+    if (movie) {
+      setSearchedMovie(movie);
+    } else {
+      alert("Movie doesn't exist"); // Show a message if no match is found
+      setSearchedMovie(null);
+    }
   };
 
   const closeSearchResult = () => {
