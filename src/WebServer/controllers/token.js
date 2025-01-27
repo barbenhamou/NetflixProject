@@ -2,15 +2,16 @@ const tokenService = require('../services/token');
 
 const authenticateUser = async (req, res) => {
     try {
-        const { name, password } = req.body;
+        const { username, password } = req.body;
         // Call the service to authenticate the user
-        const user = await tokenService.authenticateUser(name, password);
-        if (!user) {
+        const tokenId = await tokenService.authenticateUser(username, password);
+        
+        if (!tokenId) {
             return res.status(401).json({ error: "Invalid username or password" });
         }
 
-        // Respond with the user ID
-        res.json({ userId: user._id });
+        // Respond with the token
+        res.json({ tokenId });
     } catch (err) {
         res.status(500).json({ error: "Error authenticating user" });
     }
