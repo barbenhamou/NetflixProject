@@ -1,8 +1,12 @@
 const User = require('../models/user');
+const userService = require('./user');
+const jwt = require('jsonwebtoken');
 
-const authenticateUser = async (name, password) => {
+const secret = process.env.SECRET;
+
+const authenticateUser = async (username, password) => {
     try {
-        const user = await User.findOne({ name });
+        const user = await userService.getUserByName(username);
         if (!user) {
             return null; // Return null if the user does not exist
         }
@@ -11,7 +15,9 @@ const authenticateUser = async (name, password) => {
             return null; // Return null if the password does not match
         }
 
-        return user; // Return the user object if authentication succeeds
+        const token = jwt.sign({ userId: user._id, isAdmin: user.isAdmin }, secret);
+
+        return { userId: user._id, token: token }; // Return the user token + id if authentication succeeds
     } catch (err) {
         throw {statusCode: 500, message: 'Failed to authenticate user'};
     }

@@ -1,8 +1,11 @@
-import './App.css';
+import React from 'react';
+import { BrowserRouter, Route, Routes, useParams } from 'react-router-dom';
+import LoginForm from './SubscriptionForms/LoginForm';
+import SignUpForm from './SubscriptionForms/SignUpForm';
 import MovieInfo from './MovieInfo/MovieInfo';
 import MovieWatch from './MovieWatch/MovieWatch';
 import Admin from './pages/Admin';
-import {BrowserRouter, Routes, Route, useParams} from 'react-router-dom';
+
 
 function MovieInfoWrapper() {
   const { id } = useParams();
@@ -22,6 +25,8 @@ function App() {
           <Route path="/api/movies/:id/info" element={<MovieInfoWrapper />} />
           <Route path="/api/movies/:id/watch" element={<MoviePlayWrapper />} />
           <Route path="/" element={<Admin/>} />
+          <Route path="/login" element={<LoginForm />} />
+          <Route path="/signup" element={<SignUpForm />} />
         </Routes>
       </BrowserRouter>
       {/* TODO: Put the iframe in <Route path="/" /> */}

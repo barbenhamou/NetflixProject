@@ -20,4 +20,7 @@ router.route('/:id/recommend')
 router.route('/search/:query')
     .get(movieController.searchInMovies)
 
+router.route('/:id/files')
+    .get(movieController.getMovieFiles)
+
 module.exports = router;

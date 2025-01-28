@@ -102,13 +102,34 @@ const watchMovie = async (req, res) => {
 const searchInMovies = async (req, res) => {
     try {
         const movies = await movieService.searchInMovies(req.params.query);
-
         res.json(await Promise.all(movies.map((movie) => presentMovie(movie))));
     } catch (err) {
         res.status(err.statusCode).json({ error: err.message });
     }
 };
 
+const getMovieFiles = async (req, res) => {
+    try {
+        const result = await movieService.getMovieFiles(req.params.id, req.query.type, req.headers.range);
+
+        if (req.query.type === 'image') {
+            const { file, contentType } = result;
+
+            res.setHeader('Content-Type', contentType);
+            res.status(200).send(file);
+            return;
+        }
+
+        // Video streaming
+        const { head, file } = result;
+
+        res.writeHead(206, head);
+        file.pipe(res);
+    } catch (err) {
+        res.status(err.statusCode).json({ error: err.message });
+    }
+}
+
 module.exports = {
-    getMovies, createMovie, getMovie, replaceMovie, deleteMovie, recommendMovies, watchMovie, searchInMovies, presentMovie
+    getMovies, createMovie, getMovie, replaceMovie, deleteMovie, recommendMovies, watchMovie, searchInMovies, presentMovie, getMovieFiles
 };

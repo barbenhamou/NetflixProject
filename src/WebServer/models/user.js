@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const User = new Schema({
-    name: {
+    username: {
         type: String,
         required: [true, 'Name is required']
     },
@@ -35,6 +35,10 @@ const User = new Schema({
         type: Number, 
     }, 
     hasWatched: { // Has the user watch any movies or none at all
+        type: Boolean,
+        default: false
+    },
+    isAdmin: {
         type: Boolean,
         default: false
     }
