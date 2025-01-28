@@ -12,7 +12,7 @@ const Home = () => {
 
   const fetchMovies = async () => {
     try {
-      const token = "67968dcde28b283216601ce0"; // Replace this with your actual token
+      const token = "67968dcde28b283216601ce0"; // Hardcoded token for demonstration purposes
 
       const response = await fetch("http://localhost:3001/api/movies", {
         method: "GET",
