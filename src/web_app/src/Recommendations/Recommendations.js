@@ -10,8 +10,7 @@ function Recommendations({ id }) {
         async function fetchMovie() {
             const response = await fetch(`http://localhost:${backendPort}/api/movies/${id}/recommend`, {
                 headers: {
-                    // TODO: add token
-                    "Authorization": "Bearer 6791285f2a7b20941e6ca000",
+                    "Authorization": `Bearer ${localStorage.getItem("token")}`,
                 }
             });
             //const data = await response.json();
