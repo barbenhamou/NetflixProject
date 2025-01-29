@@ -10,6 +10,32 @@ function VideoPlayer({ movieId, type }) {
     const [duration, setDuration] = useState(0);
     const [volume, setVolume] = useState(1);
 
+    useEffect(() => {
+        const fetchVideo = async () => {
+            try {
+                const response = await fetch(`http://localhost:${backendPort}/api/movies/${movieId}/files?type=${type}`, {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem("authToken")}`
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error("Failed to load video");
+                }
+
+                const blob = await response.blob();
+                const videoUrl = URL.createObjectURL(blob);
+                if (videoRef.current) {
+                    videoRef.current.src = videoUrl;
+                }
+            } catch (error) {
+                console.error("Error fetching video:", error);
+            }
+        };
+
+        fetchVideo();
+    }, [backendPort, movieId, type]);
+
     const handleVolumeChange = (e) => {
         const newVolume = e.target.value;
         setVolume(newVolume);
@@ -144,10 +170,7 @@ function VideoPlayer({ movieId, type }) {
                 className="movie-watch-video"
                 ref={videoRef}
                 onClick={togglePlay}
-                muted={false}
-            >
-                <source src={`http://localhost:${backendPort}/api/movies/${movieId}/files?type=${type}`} />
-            </video>
+                muted={false} />
             <div className="video-controls">
                 <button className="skip-btn" onClick={() => skipTime(-10)}>
                     <i className="bi bi-arrow-counterclockwise"></i>

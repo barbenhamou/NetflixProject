@@ -2,13 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './Form.css';
 import StandAloneField from './fieldItem';
+import { backendPort } from '../config';
 
 function LoginForm() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const [userId, setUserId] = useState(null);  // To store user_id returned from server
-  const [token, setToken] = useState(false);
 
   const handleInput = (setter) => (e) => {
     setError('');
@@ -27,7 +26,7 @@ function LoginForm() {
     }
 
     try {
-      const response = await fetch('http://localhost:3001/api/tokens', {
+      const response = await fetch(`http://localhost:${backendPort}/api/tokens`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', },
         body: JSON.stringify({ username, password })
@@ -36,9 +35,8 @@ function LoginForm() {
       if (response.ok) {
         const data = await response.json();
 
-        setUserId(data.tokenId.userId);
-        setToken(data.tokenId.token);
-        localStorage.setItem('authToken', token);
+        localStorage.setItem('authToken', data.tokenId.token);
+        localStorage.setItem('userId', data.tokenId.userId);
         
         navigate("/");
       } else {
@@ -59,12 +57,12 @@ function LoginForm() {
         <h3>Login</h3>
         <form className="row g-3" onSubmit={handleSubmit}>
           <StandAloneField label={'Username'} type={'text'} id={'username'} placeholder={'Enter your username'} value={username} onChange={handleInput(setUsername)} />
-          <StandAloneField label={'Password'} type={'password'} id={'password'} placeholder={'Create a password'} value={password} onChange={handleInput(setPassword)} />
+          <StandAloneField label={'Password'} type={'password'} id={'password'} placeholder={'Enter your password'} value={password} onChange={handleInput(setPassword)} />
           <div className="col-12">
             <button type="submit" className="btn btn-primary btn-danger">Sign in</button>
           </div>
           <div className="col-12">
-            <p>New to Netflix? <a cs href='/signup'>Sign Up</a></p>
+            <p>New to Netflix? <a href='/signup'>Sign Up</a></p>
           </div>
         </form>
         {error && <div className="alert alert-danger">{error}</div>}

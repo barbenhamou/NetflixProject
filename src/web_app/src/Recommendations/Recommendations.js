@@ -8,9 +8,10 @@ function Recommendations({ id }) {
 
     useEffect(() => {
         async function fetchMovie() {
+            console.log(localStorage.getItem("authToken"));
             const response = await fetch(`http://localhost:${backendPort}/api/movies/${id}/recommend`, {
                 headers: {
-                    "Authorization": `Bearer ${localStorage.getItem("token")}`,
+                    "Authorization": `Bearer ${localStorage.getItem("authToken")}`,
                 }
             });
             //const data = await response.json();

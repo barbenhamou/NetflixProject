@@ -12,6 +12,12 @@ function MovieWatch({ id }) {
             const response = await fetch(`http://localhost:${backendPort}/api/movies/${id}`);
             const data = await response.json();
             setMovie(data);
+            await fetch(`http://localhost:${backendPort}/api/movies/${id}/recommend`, {
+                method: 'POST',
+                headers: {
+                    "Authorization": `Bearer ${localStorage.getItem("authToken")}`,
+                }
+            });
         }
 
         fetchMovie();
