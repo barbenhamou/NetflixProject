@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { StandAloneField, SideBySideField } from './fieldItem';
 import './Form.css';
+import { backendPort } from '../config';
 
 function SignUpForm() {
   const [username, setUsername] = useState('');
@@ -46,7 +47,7 @@ function SignUpForm() {
 
     try {
       // Send data to the WebServer (POST request)
-      const response = await fetch('http://localhost:3001/api/users', {
+      const response = await fetch(`http://localhost:${backendPort}/api/users`, {
         'method': 'POST',
         'headers': {
           'Content-Type': 'application/json',

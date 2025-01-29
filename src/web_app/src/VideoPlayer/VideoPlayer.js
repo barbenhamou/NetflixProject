@@ -9,6 +9,31 @@ function VideoPlayer({ movieId, type }) {
     const [currentTime, setCurrentTime] = useState(0);
     const [duration, setDuration] = useState(0);
     const [volume, setVolume] = useState(1);
+    const [videoSource, setVideoSource] = useState(null);
+
+    useEffect(() => {
+        const fetchVideo = async () => { // TODO: try to fetch video from backend with auth token
+            /*try {
+                const response = await fetch(`http://localhost:${backendPort}/api/movies/${movieId}/files?type=${type}`, {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem("authToken")}`,
+                    }
+                });
+
+                if (response.ok) {
+                    const videoBlob = await response.blob();
+                    const videoUrl = URL.createObjectURL(videoBlob);
+                    setVideoSource(videoUrl);
+                } else {
+                    console.error("Failed to fetch video");
+                }
+            } catch (error) {
+                console.error("Error fetching video:", error);
+            }*/
+        };
+
+        fetchVideo();
+    }, [backendPort, movieId, type]);
 
     const handleVolumeChange = (e) => {
         const newVolume = e.target.value;
@@ -145,9 +170,8 @@ function VideoPlayer({ movieId, type }) {
                 ref={videoRef}
                 onClick={togglePlay}
                 muted={false}
-            >
-                <source src={`http://localhost:${backendPort}/api/movies/${movieId}/files?type=${type}`} />
-            </video>
+                //src={videoSource}
+                src={`http://localhost:${backendPort}/api/movies/${movieId}/files?type=${type}`}/>
             <div className="video-controls">
                 <button className="skip-btn" onClick={() => skipTime(-10)}>
                     <i className="bi bi-arrow-counterclockwise"></i>
@@ -160,7 +184,7 @@ function VideoPlayer({ movieId, type }) {
                 </button>
                 <div className="volume-control">
                     {volume > 0 ?
-                        <i className="bi bi-volume-up volume-btn" onClick={() => {
+                        <i className={`bi bi-volume-${volume < 0.5 ? "down low-volume" : "up"} volume-btn`} onClick={() => {
                             setVolume(0);
                             handleVolumeChange({ target: { value: 0 } });
                         }}></i> :

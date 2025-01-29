@@ -141,6 +141,10 @@
     visibility: visible;
 }
 
+.low-volume {
+    padding-left: 1.2px;
+}
+
 .progress-bar {
     flex-grow: 1;
     appearance: none;
