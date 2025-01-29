@@ -21,6 +21,6 @@ router.route('/search/:query')
     .get(movieController.searchInMovies)
 
 router.route('/:id/files')
-    .get(tokenVerifier.tokenValidation(false), movieController.getMovieFiles)
-
+    .get(movieController.getMovieFiles)
+//tokenVerifier.tokenValidation(false), 
 module.exports = router;

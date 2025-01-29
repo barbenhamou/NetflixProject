@@ -15,7 +15,7 @@ function MovieWatch({ id }) {
             await fetch(`http://localhost:${backendPort}/api/movies/${id}/recommend`, {
                 method: 'POST',
                 headers: {
-                    "Authorization": `Bearer ${localStorage.getItem("authToken")}`,
+                    "Authorization": `Bearer ${localStorage.getItem("authToken")}`
                 }
             });
         }
