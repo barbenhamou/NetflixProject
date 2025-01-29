@@ -11,7 +11,7 @@ function MovieCard({ id, title, categories, lengthMinutes, releaseYear, descript
                     src={`http://localhost:${backendPort}/api/movies/${id}/files?type=image`}
                 />
                 <i
-                    className="bi bi-play-circle play-btn"
+                        className="bi bi-play-circle play-btn"
                     onClick={() => window.location.href = `/api/movies/${id}/watch`}></i>
             </div>
             <div className="card-body">
