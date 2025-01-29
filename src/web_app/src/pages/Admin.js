@@ -83,6 +83,7 @@ const AdminPanel = () => {
     switch (action) {
       case "add-category":
         if (categories.some((cat) => cat.name === formData.name)) {
+          
           setMessage("❌ Category already exists.");
           return;
         }
