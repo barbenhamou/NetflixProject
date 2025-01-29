@@ -6,11 +6,11 @@ const tokenVerifier = require('../TokenVerifier');
 
 router.route('/')
     .get(categoryController.getCategories)
-    .post(tokenVerifier.tokenValidation, categoryController.createCategory);
+    .post(tokenVerifier.tokenValidation(true), categoryController.createCategory);
 
 router.route('/:id')
     .get(categoryController.getCategory)
-    .patch(tokenVerifier.tokenValidation, categoryController.updateCategory)
-    .delete(tokenVerifier.tokenValidation, categoryController.deleteCategory);
+    .patch(tokenVerifier.tokenValidation(true), categoryController.updateCategory)
+    .delete(tokenVerifier.tokenValidation(true), categoryController.deleteCategory);
 
 module.exports = router;
