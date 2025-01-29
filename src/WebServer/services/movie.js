@@ -335,7 +335,7 @@ const getMovieFiles = async (id, type, range) => {
         const typeToFileMap = {
             image: movie.image,
             film: movie.film,
-            trailer: movie.trailer,
+            trailer: movie.trailer
         };
 
         const fileName = typeToFileMap[type];

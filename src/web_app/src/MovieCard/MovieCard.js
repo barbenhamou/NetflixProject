@@ -1,14 +1,33 @@
 import "./MovieCard.css";
 import { backendPort } from "../config";
+import { useEffect, useState } from "react";
 
 function MovieCard({ id, title, categories, lengthMinutes, releaseYear, description, showDescription, infoButton }) {
+    const [imageSrc, setImageSrc] = useState("");
+    
+    useEffect(() => {
+        const fetchImage = async () => {
+            const response = await fetch(`http://localhost:${backendPort}/api/movies/${id}/files?type=image`, {
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem("authToken")}`
+                }
+            });
+
+            const blob = await response.blob();
+            const imageUrl = URL.createObjectURL(blob);
+            setImageSrc(imageUrl);
+        };
+
+        fetchImage();
+    }, [backendPort, id]);
+    
     return (
         <div className="card movie-card">
             <div className="image-container">
                 <img
                     alt={title}
                     className="card-img-top"
-                    src={`http://localhost:${backendPort}/api/movies/${id}/files?type=image`}
+                    src={imageSrc}
                 />
                 <i
                         className="bi bi-play-circle play-btn"
