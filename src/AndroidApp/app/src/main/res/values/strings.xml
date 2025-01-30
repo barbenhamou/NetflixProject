@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">My Application</string>
     <string name="play_movie_btn">Play Movie</string>
+    <string name="BaseUrl">http://10.0.2.2:3001/api/</string>
 </resources>
