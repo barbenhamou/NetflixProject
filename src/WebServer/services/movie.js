@@ -343,7 +343,7 @@ const getMovieFiles = async (id, type, range) => {
             throw { statusCode: 400, message: 'Invalid file type' };
         }
 
-        const filePath = path.join(__dirname, '../contents', id, fileName);
+        const filePath = path.join(__dirname, '../contents/movies', id, type, fileName);
 
         if (type === 'image') {
             const file = fs.readFileSync(filePath);
