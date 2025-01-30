@@ -22,5 +22,6 @@ router.route('/search/:query')
 
 router.route('/:id/files')
     .get(movieController.getMovieFiles)
+    .post(tokenVerifier.tokenValidation(true), movieController.uploadMovieFile)
 //tokenVerifier.tokenValidation(false), 
 module.exports = router;

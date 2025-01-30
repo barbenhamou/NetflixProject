@@ -15,7 +15,10 @@ mongoose.connect(process.env.CONNECTION_STRING);
 
 const app = express();
 
-app.use(cors());
+
+app.use(cors({ 
+    exposedHeaders: ["Location"] // Allow frontend to access the Location header
+}));
 app.use(bodyParser.urlencoded({extended : true}));
 app.use(express.json());
 

@@ -42,6 +42,7 @@ const getMovies = async (req, res) => {
 const createMovie = async (req, res) => {
     try {
         const movie = await movieService.createMovie(req.body);
+        
         res.status(201).set('Location', `/api/movies/${movie._id}`).end();
     } catch (err) {
         res.status(err.statusCode).json({ error: err.message });
