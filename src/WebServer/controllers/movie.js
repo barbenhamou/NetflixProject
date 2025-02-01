@@ -1,5 +1,6 @@
 const movieService = require('../services/movie');
-
+const fs = require("fs");
+const path = require("path");
 // Only show relevant info
 const presentMovie = async (movie) => {
     try {
@@ -131,6 +132,148 @@ const getMovieFiles = async (req, res) => {
     }
 }
 
+
+
+
+// Example controller function
+// Assumes you POST to: /api/movies/:movieId/files
+const uploadMovieFiles =async (req, res) => {
+  console.log("here:");
+  try {
+    // 1) Confirm the request is multipart/form-data
+    const contentType = req.headers["content-type"] || "";
+    if (!contentType.startsWith("multipart/form-data")) {
+      return res.status(400).send("Expected multipart/form-data");
+    }
+    console.log("here:");
+   
+
+    // 2) Extract the boundary from headers: e.g., 
+    //    Content-Type: multipart/form-data; boundary=----WebKitFormBoundaryxyz
+    const boundaryMatch = contentType.match(/boundary=(.+)$/);
+    if (!boundaryMatch) {
+      return res.status(400).send("No multipart boundary found");
+    }
+    const boundary = "--" + boundaryMatch[1];
+
+    // We read the entire request body into memory (not ideal for huge files!)
+    let chunks = [];
+    req.on("data", (chunk) => {
+      chunks.push(chunk);
+    });
+
+    req.on("end", () => {
+      const all = Buffer.concat(chunks);
+
+      // 3) Split by boundary
+      //    The body typically ends with `--<boundary>--`
+      const parts = all
+        .split(Buffer.from(boundary))
+        .slice(1, -1); 
+        // slice(1, -1) removes the empty parts before/after the final boundary
+
+      // We'll track each file in an array
+      let files = [];
+
+      // 4) Parse each part
+      parts.forEach((part) => {
+        // Separate headers from body by finding "\r\n\r\n"
+        const headerDelimiter = "\r\n\r\n";
+        const partString = part.toString("binary"); // for header parsing
+        const headerIndex = partString.indexOf(headerDelimiter);
+        if (headerIndex === -1) return; // invalid part, skip
+
+        // raw headers
+        const rawHeaders = partString.substring(0, headerIndex);
+        // file body (as binary)
+        const bodyBuffer = part.slice(headerIndex + headerDelimiter.length);
+
+        // Check the Content-Disposition header
+        // e.g. Content-Disposition: form-data; name="film"; filename="myMovie.mp4"
+        const dispositionMatch = rawHeaders.match(
+          /Content-Disposition:.*name="([^"]+)"(?:; filename="([^"]+)")?/i
+        );
+        if (!dispositionMatch) return; // skip if malformed
+        const fieldName = dispositionMatch[1];  // "film" / "image" / "trailer"
+        const filename = dispositionMatch[2];   // e.g. "myMovie.mp4"
+
+        // If there's no filename, it's likely a text field (skip)
+        if (!filename) return;
+
+        // We'll store this part's data for later
+        files.push({
+          fieldName,   // "film", "image", "trailer"
+          filename,    // actual filename from user
+          data: bodyBuffer
+        });
+      });
+
+      // 5) We get `:movieId` from req.params
+      const { id } = req.params;
+      if (!id) {
+        return res.status(400).send("Missing movieId in URL");
+      }
+      console.log("Movie ID:", id);
+      // 6) Build the path: ../../movies/<movieId>
+      //    Adjust if your structure is different
+      const baseFolder = path.join(__dirname, "../../movies", String(id));
+      if (!fs.existsSync(baseFolder)) {
+        fs.mkdirSync(baseFolder, { recursive: true });
+      }
+
+      // Create the 3 subfolders: Movie, Trailer, Image
+      const movieFolder   = path.join(baseFolder, "Movie");
+      const trailerFolder = path.join(baseFolder, "Trailer");
+      const imageFolder   = path.join(baseFolder, "Image");
+
+      [movieFolder, trailerFolder, imageFolder].forEach((folder) => {
+        if (!fs.existsSync(folder)) {
+          fs.mkdirSync(folder, { recursive: true });
+        }
+      });
+
+      // 7) Save each file into the correct subfolder based on `fieldName`
+      files.forEach((fileObj) => {
+        let destinationFolder;
+
+        // If fieldName is "film", save into "Movie" subfolder
+        if (fileObj.fieldName === "film") {
+          destinationFolder = movieFolder;
+        }
+        // If fieldName is "trailer", save into "Trailer" subfolder
+        else if (fileObj.fieldName === "trailer") {
+          destinationFolder = trailerFolder;
+        }
+        // If fieldName is "image", save into "Image" subfolder
+        else if (fileObj.fieldName === "image") {
+          destinationFolder = imageFolder;
+        }
+        else {
+          // If there's some other fieldName, skip or handle
+          return;
+        }
+
+        const finalFilePath = path.join(destinationFolder, fileObj.filename);
+        fs.writeFileSync(finalFilePath, fileObj.data);
+      });
+
+      // 8) Done
+      return res.status(201).json({
+        message: "Files saved successfully!",
+        id,
+      });
+    });
+
+    req.on("error", (err) => {
+      console.error("Request error:", err);
+      return res.status(500).send("Server error");
+    });
+  } catch (err) {
+    console.error("Error:", err);
+    return res.status(500).send("Server error");
+  }
+};
+
 module.exports = {
-    getMovies, createMovie, getMovie, replaceMovie, deleteMovie, recommendMovies, watchMovie, searchInMovies, presentMovie, getMovieFiles
+    getMovies, createMovie, getMovie, replaceMovie, deleteMovie, recommendMovies, watchMovie, searchInMovies, presentMovie, getMovieFiles,uploadMovieFiles,
 };

@@ -38,35 +38,42 @@ const AdminPanel = () => {
     fetchMovies();
   }, []);
 
-  const saveFilesLocally = async (movieId, filesArray) => {
-    if (!window.showDirectoryPicker) {
-      throw new Error(
-        "Your browser does not support the File System Access API (try Chrome/Edge)."
-      );
+  async function uploadFilesForMovie(movieId, imageFile, trailerFile, filmFile) {
+    // Create a new FormData object and append the files
+    const formData = new FormData();
+    formData.append("image", imageFile);
+    formData.append("trailer", trailerFile);
+    formData.append("film", filmFile);
+  
+    // (Optional) Append extra fields if needed
+    formData.append("imageType", "image");
+    formData.append("imageName", imageFile.name);
+    formData.append("trailerType", "trailer");
+    formData.append("trailerName", trailerFile.name);
+    formData.append("filmType", "film");
+    formData.append("filmName", filmFile.name);
+  
+    // Create a headers object WITHOUT the Content-Type header.
+    const fileUploadHeaders = { 
+      "Authorization": `Bearer ${localStorage.getItem("authToken")}`
+      // Note: DO NOT include "Content-Type" here!
+    };
+  
+    const response = await fetch(`http://localhost:3001/api/files/${movieId}/files`, {
+      method: "POST",
+      headers: fileUploadHeaders,
+      body: formData,
+    });
+    if (!response || !response.ok) {
+      throw new Error(`Failed to upload files: HTTP ${response ? response.status : 'undefined'}`);
     }
-
-    // Ask user to pick (or create) a "parent" directory
-    
-    // For each file, create a file handle and write the contents
-    for (const file of filesArray) {
-      if (!file) continue; // skip null/undefined
-
-      // Create a new file in that directory
-      const fileHandle = await movieDirHandle.getFileHandle(file.name, {
-        create: true,
-      });
-
-      // Write the file contents
-      const writable = await fileHandle.createWritable();
-      // Convert the file to ArrayBuffer for writing
-      const arrayBuffer = await file.arrayBuffer();
-      await writable.write(arrayBuffer);
-      await writable.close();
+    if (!response.ok) {
+      throw new Error(`Failed to upload files: HTTP ${response.status}`);
     }
-  };
-
-
-
+  
+    const data = await response.json();
+    console.log("Successfully uploaded files:", data);
+  }
 
 
   // Handle input change
@@ -158,9 +165,6 @@ const AdminPanel = () => {
               ...(formData.cast?.length > 0 && { cast: formData.cast }),
               ...(formData.description && { description: formData.description }),
             };
-            payload.append("imageFile", formData.image);
-            payload.append("trailerFile", formData.trailer);
-            payload.append("filmFile", formData.film);
             const response = await fetch("http://localhost:3001/api/movies", {
               method: "POST",
               headers,
@@ -174,12 +178,8 @@ const AdminPanel = () => {
           
             // Extract the movie ID from the Location URL
             const newMovieId = location.split("/").pop();
-
-            await saveFilesLocally(
-              newMovieId,
-              [formData.image, formData.trailer, formData.film]
-            );
-      
+            uploadFilesForMovie(newMovieId, formData.image, formData.trailer, formData.film);
+            console.log(newMovieId);
             setMessage(`✅ Movie created! ID: ${newMovieId} and files saved locally.`);
           } catch (err) {
             console.error(err);
@@ -215,7 +215,7 @@ const AdminPanel = () => {
 
           if (response.ok) {
             // Save files locally after successful response
-            saveFilesLocally(oldMovie.id, {
+            uploadFilesForMovie(oldMovie.id, {
               image: formData.image,
               trailer: formData.trailer,
               film: formData.film,
