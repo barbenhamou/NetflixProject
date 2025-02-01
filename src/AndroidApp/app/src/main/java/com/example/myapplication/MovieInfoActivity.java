@@ -23,26 +23,27 @@ public class MovieInfoActivity extends AppCompatActivity {
         viewModel.setRepository(this.getApplication());
 
         viewModel.getMovies().observe(this, movies -> {
-            if (movies != null && !movies.isEmpty()) {
-                if (getIntent().getExtras() != null) {
-                    String id = getIntent().getStringExtra("id");
-                    viewModel.getMovie(id).observe(this, movie -> {
-                        if (movie != null) {
-                            binding.tvMovieName.setText(movie.getTitle());
+            if (movies != null && !movies.isEmpty() && getIntent().getExtras() != null) {
+                String id = getIntent().getStringExtra("id");
+                viewModel.getMovie(id).observe(this, movie -> {
+                    if (movie != null) {
+                        binding.tvMovieName.setText(movie.getTitle());
 
-                            int len = movie.getLengthMinutes();
-                            int h = len / 60;
-                            int m = len % 60;
-                            binding.tvMovieYearLength.setText(movie.getReleaseYear() + " | " + h + "h " + m + "m");
+                        int len = movie.getLengthMinutes();
+                        int h = len / 60;
+                        int m = len % 60;
+                        String yearLen = getString(R.string.movie_year_length, movie.getReleaseYear(), h, m);
+                        binding.tvMovieYearLength.setText(yearLen);
 
-                            binding.tvMovieGenres.setText("Genres: " + String.join(", ", movie.getCategories()));
+                        String genres = getString(R.string.movie_genres, String.join(", ", movie.getCategories()));
+                        binding.tvMovieGenres.setText(genres);
 
-                            binding.tvMovieCast.setText("Cast: " + String.join(", ", movie.getCast()));
+                        String cast = getString(R.string.movie_cast, String.join(", ", movie.getCast()));
+                        binding.tvMovieCast.setText(cast);
 
-                            binding.tvMovieDescription.setText(movie.getDescription());
-                        }
-                    });
-                }
+                        binding.tvMovieDescription.setText(movie.getDescription());
+                    }
+                });
             }
         });
     }
