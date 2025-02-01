@@ -10,4 +10,7 @@ import retrofit2.http.GET;
 public interface WebServiceAPI {
     @GET("movies")
     Call<List<Movie>> getMovies();
+
+    @GET("movies/search/[.*]")
+    Call<List<Movie>> getAllMovies();
 }
