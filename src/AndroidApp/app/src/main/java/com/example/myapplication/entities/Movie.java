@@ -33,6 +33,8 @@ public class Movie {
         this.film = film;
     }
 
+    public Movie() {}
+
     @NonNull
     public String getId() {
         return id;

@@ -1,6 +1,7 @@
 package com.example.myapplication.repositories;
 
 import android.app.Application;
+import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -34,8 +35,6 @@ public class MoviesRepository {
         @Override
         protected void onActive() {
             super.onActive();
-
-            //new Thread(MoviesRepository.this::reload);
             new Thread(() -> movieListData.postValue(movieDao.index())).start();
         }
     }

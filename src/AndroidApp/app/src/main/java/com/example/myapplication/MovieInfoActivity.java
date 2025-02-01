@@ -1,37 +1,49 @@
 package com.example.myapplication;
 
 import android.os.Bundle;
-import android.util.Log;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.example.myapplication.databinding.ActivityMovieInfoBinding;
 import com.example.myapplication.viewmodels.MovieViewModel;
 
 public class MovieInfoActivity extends AppCompatActivity {
+    private ActivityMovieInfoBinding binding;
     private MovieViewModel viewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_movie_info);
+
+        binding = ActivityMovieInfoBinding.inflate(getLayoutInflater());
+        setContentView(binding.mainInfoLayout);
 
         viewModel = new ViewModelProvider(this).get(MovieViewModel.class);
         viewModel.setRepository(this.getApplication());
 
-        viewModel.reload();
+        viewModel.getMovies().observe(this, movies -> {
+            if (movies != null && !movies.isEmpty()) {
+                if (getIntent().getExtras() != null) {
+                    String id = getIntent().getStringExtra("id");
+                    viewModel.getMovie(id).observe(this, movie -> {
+                        if (movie != null) {
+                            binding.tvMovieName.setText(movie.getTitle());
 
-        if (getIntent().getExtras() != null) {
-            String id = getIntent().getStringExtra("id");
-            viewModel.getMovie(id).observe(this, movie -> {
-                if (movie != null) {
-                    Log.d("Movie", "Found Movie: " + movie.getTitle());
-                } else {
-                    Log.d("Movie", "Movie not found");
+                            int len = movie.getLengthMinutes();
+                            int h = len / 60;
+                            int m = len % 60;
+                            binding.tvMovieYearLength.setText(movie.getReleaseYear() + " | " + h + "h " + m + "m");
+
+                            binding.tvMovieGenres.setText("Genres: " + String.join(", ", movie.getCategories()));
+
+                            binding.tvMovieCast.setText("Cast: " + String.join(", ", movie.getCast()));
+
+                            binding.tvMovieDescription.setText(movie.getDescription());
+                        }
+                    });
                 }
-            });
-        }
+            }
+        });
     }
 }
