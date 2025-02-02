@@ -15,12 +15,12 @@ public class MovieViewModel extends ViewModel {
     private LiveData<List<Movie>> movies;
 
     public void setRepository(Application application) {
-        mRepository = new MoviesRepository(application);
-        movies = this.mRepository.getAll();
+        this.mRepository = new MoviesRepository(application);
+        this.movies = this.mRepository.getAll();
     }
 
     public LiveData<List<Movie>> getMovies() {
-        return movies;
+        return this.movies;
     }
 
     public LiveData<Movie> getMovie(String id) {
@@ -28,6 +28,10 @@ public class MovieViewModel extends ViewModel {
     }
 
     public void reload() {
-        mRepository.reload();
+        this.mRepository.reload();
+    }
+
+    public LiveData<List<Movie>> getRecommendations(String movieId, String token) {
+        return this.mRepository.getRecommendations(movieId, token);
     }
 }
