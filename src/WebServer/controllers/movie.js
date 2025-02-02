@@ -1,5 +1,6 @@
 const movieService = require('../services/movie');
-
+const fs = require("fs");
+const path = require("path");
 // Only show relevant info
 const presentMovie = async (movie) => {
     try {
@@ -42,6 +43,7 @@ const getMovies = async (req, res) => {
 const createMovie = async (req, res) => {
     try {
         const movie = await movieService.createMovie(req.body);
+        
         res.status(201).set('Location', `/api/movies/${movie._id}`).end();
     } catch (err) {
         res.status(err.statusCode).json({ error: err.message });
@@ -109,25 +111,25 @@ const searchInMovies = async (req, res) => {
 };
 
 const getMovieFiles = async (req, res) => {
-    try {
-        const result = await movieService.getMovieFiles(req.params.id, req.query.type, req.headers.range);
+  try {
+      const result = await movieService.getMovieFiles(req.params.id, req.query.type, req.headers.range);
 
-        if (req.query.type === 'image') {
-            const { file, contentType } = result;
+      if (req.query.type === 'image') {
+          const { file, contentType } = result;
 
-            res.setHeader('Content-Type', contentType);
-            res.status(200).send(file);
-            return;
-        }
+          res.setHeader('Content-Type', contentType);
+          res.status(200).send(file);
+          return;
+      }
 
-        // Video streaming
-        const { head, file } = result;
+      // Video streaming
+      const { head, file } = result;
 
-        res.writeHead(206, head);
-        file.pipe(res);
-    } catch (err) {
-        res.status(err.statusCode).json({ error: err.message });
-    }
+      res.writeHead(206, head);
+      file.pipe(res);
+  } catch (err) {
+      res.status(err.statusCode).json({ error: err.message });
+  }
 }
 
 module.exports = {
