@@ -3,7 +3,6 @@ package com.example.myapplication.viewmodels;
 import android.app.Application;
 
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.myapplication.entities.Movie;
@@ -17,18 +16,15 @@ public class MovieViewModel extends ViewModel {
 
     public void setRepository(Application application) {
         mRepository = new MoviesRepository(application);
-        movies = mRepository.getAll();
+        movies = this.mRepository.getAll();
     }
 
     public LiveData<List<Movie>> getMovies() {
-        if (movies == null) {
-            movies = new MutableLiveData<>();
-        }
         return movies;
     }
 
     public LiveData<Movie> getMovie(String id) {
-        return mRepository.getMovie(id);
+        return this.mRepository.getMovie(id);
     }
 
     public void reload() {

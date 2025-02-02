@@ -1,5 +1,7 @@
 package com.example.myapplication.api;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 
@@ -36,11 +38,10 @@ public class MovieAPI {
     }
 
     public void get() {
-        Call<List<Movie>> call = webServiceAPI.getMovies();
+        Call<List<Movie>> call = webServiceAPI.getAllMovies();
         call.enqueue(new Callback<>() {
             @Override
             public void onResponse(@NonNull Call<List<Movie>> call, @NonNull Response<List<Movie>> response) {
-
                 new Thread(() -> {
                     movieDao.clear();
                     movieDao.insert(response.body());
@@ -50,6 +51,7 @@ public class MovieAPI {
 
             @Override
             public void onFailure(@NonNull Call<List<Movie>> call, @NonNull Throwable t) {
+                Log.e("Movie", "API call failed: " + t.getMessage());
             }
         });
     }

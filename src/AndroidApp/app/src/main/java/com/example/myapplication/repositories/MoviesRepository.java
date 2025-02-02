@@ -34,8 +34,6 @@ public class MoviesRepository {
         @Override
         protected void onActive() {
             super.onActive();
-
-            //new Thread(MoviesRepository.this::reload);
             new Thread(() -> movieListData.postValue(movieDao.index())).start();
         }
     }
