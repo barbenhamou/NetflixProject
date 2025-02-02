@@ -1,7 +1,9 @@
 package com.example.myapplication.dao;
 
 import android.content.Context;
+import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
@@ -9,12 +11,15 @@ import androidx.room.TypeConverters;
 
 import com.example.myapplication.entities.Movie;
 import com.example.myapplication.entities.Token;
+import com.example.myapplication.entities.User;
 
-@Database(entities = {Movie.class, Token.class}, version = 1, exportSchema = false)
+@Database(entities = {Movie.class, Token.class, User.class}, version = 2, exportSchema = false)
 @TypeConverters({Converters.class})
 public abstract class AppDB extends RoomDatabase {
     public abstract MovieDao movieDao();
     public abstract TokenDao tokenDao();
+    public abstract UserDao userDao();
+
     private static volatile AppDB INSTANCE;
 
     public static AppDB getInstance(Context context) {
@@ -23,11 +28,11 @@ public abstract class AppDB extends RoomDatabase {
                 if (INSTANCE == null) {
                     INSTANCE = Room.databaseBuilder(context,
                                     AppDB.class, "AppDB")
-                                    .build();
+                            .fallbackToDestructiveMigration() // Resets database NOW, keeps future data
+                            .build();
                 }
             }
         }
-
         return INSTANCE;
     }
 }

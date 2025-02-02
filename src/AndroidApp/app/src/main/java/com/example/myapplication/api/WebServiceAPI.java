@@ -3,6 +3,7 @@ package com.example.myapplication.api;
 import com.example.myapplication.entities.LoginRequest;
 import com.example.myapplication.entities.LoginResponse;
 import com.example.myapplication.entities.Movie;
+import com.example.myapplication.entities.User;
 
 import java.util.List;
 
@@ -20,4 +21,7 @@ public interface WebServiceAPI {
 
     @POST("tokens")
     Call<LoginResponse> login(@Body LoginRequest request);
+
+    @POST("users")
+    Call<Void> signUp(@Body User user);
 }
