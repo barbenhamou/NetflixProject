@@ -1,25 +1,27 @@
 import React, { useState, useEffect } from "react";
+import MovieCard from "../MovieCard/MovieCard"; // Ensure the path is correct
+import VideoPlayer from "../VideoPlayer/VideoPlayer";
+import "./Home.css";
 
 const Home = () => {
   const [movies, setMovies] = useState([]);
   const [categories, setCategories] = useState({});
   const [lastScrollY, setLastScrollY] = useState(0);
   const [headerHidden, setHeaderHidden] = useState(false);
-  const [hoveredMovie, setHoveredMovie] = useState(null);
   const [featuredMovie, setFeaturedMovie] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [searchedMovie, setSearchedMovie] = useState(null);
 
   const fetchMovies = async () => {
     try {
-      const token = "67968dcde28b283216601ce0"; // Hardcoded token for demonstration purposes
+      const headers = {
+        "Authorization": `Bearer ${localStorage.getItem("authToken")}`,
+        "Content-Type": "application/json",
+      };
 
       const response = await fetch("http://localhost:3001/api/movies", {
         method: "GET",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
+        headers: headers,
       });
 
       if (!response.ok) {
@@ -30,29 +32,37 @@ const Home = () => {
 
       const categorizedMovies = data.reduce((acc, category) => {
         if (category.length > 0) {
+          // Use the first category name found or default to "Uncategorized"
           const categoryName = category[0]?.categories[0] || "Uncategorized";
           acc[categoryName] = category.map((movie) => ({
             id: movie.id,
             title: movie.title,
-            img: `Media/MovieImages/${movie.image}`,
-            trailer: `Media/MovieTrailers/${movie.trailer}`,
             description: movie.description || "An amazing movie you shouldn't miss!",
+            // Pass along categories (or default to an array with the categoryName)
+            categories: movie.categories || [categoryName],
+            // Provide default values if not available
+            lengthMinutes: movie.lengthMinutes || 120,
+            releaseYear: movie.releaseYear || 2020,
           }));
         }
         return acc;
       }, {});
 
-      setMovies(data.flat());
+      // Store the flat list of movies for search purposes
+      const flatMovies = data.flat();
+      setMovies(flatMovies);
       setCategories(categorizedMovies);
 
-      // Pick a random featured movie
-      const flatMovies = data.flat();
+      // Pick a random featured movie from the flat list
       const randomMovie =
         flatMovies[Math.floor(Math.random() * flatMovies.length)];
       setFeaturedMovie({
+        id: randomMovie.id,
         title: randomMovie.title,
-        trailer: `Media/MovieTrailers/${randomMovie.trailer}`,
         description: randomMovie.description || "Enjoy our featured selection!",
+        categories: randomMovie.categories || [],
+        lengthMinutes: randomMovie.lengthMinutes || 120,
+        releaseYear: randomMovie.releaseYear || 2020,
       });
     } catch (error) {
       console.error("Error fetching movies:", error);
@@ -63,7 +73,7 @@ const Home = () => {
     fetchMovies();
   }, []);
 
-  // Handle header show/hide on scroll
+  // Header show/hide on scroll effect
   useEffect(() => {
     const handleScroll = () => {
       if (window.scrollY > lastScrollY) {
@@ -80,16 +90,16 @@ const Home = () => {
 
   const handleSearch = (e) => {
     e.preventDefault();
-  
-    // Perform case-insensitive exact match
+
+    // Perform a case-insensitive exact match search on the flat movies list
     const movie = movies.find(
       (movie) => movie.title.toLowerCase() === searchTerm.toLowerCase()
     );
-  
+
     if (movie) {
       setSearchedMovie(movie);
     } else {
-      alert("Movie doesn't exist"); // Show a message if no match is found
+      alert("Movie doesn't exist");
       setSearchedMovie(null);
     }
   };
@@ -100,122 +110,54 @@ const Home = () => {
   };
 
   return (
-    <div style={{ fontFamily: "Arial, sans-serif", color: "white", backgroundColor: "#141414" }}>
+    <div className="home-container">
       {/* Header Section */}
-      <header
-        style={{
-          display: "flex",
-          alignItems: "center",
-          padding: "20px",
-          background: "rgba(0, 0, 0, 0.7)",
-          position: "fixed",
-          top: headerHidden ? "-70px" : "0",
-          width: "100%",
-          zIndex: 10,
-          transition: "top 0.3s ease",
-        }}
-      >
+      <header className={`home-header ${headerHidden ? "hidden" : ""}`}>
         <img
           src="https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg"
           alt="Netflix Logo"
-          style={{ height: "40px" }}
+          className="home-logo"
         />
-        <nav style={{ marginLeft: "30px", display: "flex", gap: "15px", flexGrow: 1 }}>
-          <a href="#" style={{ color: "white", textDecoration: "none", fontSize: "20px" }}>
+        <nav className="home-nav">
+          <a href="#" className="home-nav-link">
             Home
           </a>
-          <a href="#" style={{ color: "white", textDecoration: "none", fontSize: "20px" }}>
+          <a href="#" className="home-nav-link">
             TV Shows
           </a>
-          <a href="#" style={{ color: "white", textDecoration: "none", fontSize: "20px" }}>
+          <a href="#" className="home-nav-link">
             Movies
           </a>
-          <a href="#" style={{ color: "white", textDecoration: "none", fontSize: "20px" }}>
+          <a href="#" className="home-nav-link">
             New & Popular
           </a>
-          <a href="#" style={{ color: "white", textDecoration: "none", fontSize: "20px" }}>
+          <a href="#" className="home-nav-link">
             My List
           </a>
         </nav>
-        <form onSubmit={handleSearch} style={{ display: "flex", alignItems: "center" }}>
+        <form onSubmit={handleSearch} className="home-search-form">
           <input
             type="text"
             placeholder="Search"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            style={{
-              padding: "5px",
-              fontSize: "16px",
-              borderRadius: "4px",
-              border: "1px solid gray",
-              background: "rgba(255, 255, 255, 0.1)",
-              color: "white",
-            }}
+            className="home-search-input"
           />
-          <button
-            type="submit"
-            style={{
-              backgroundColor: "#e50914",
-              border: "none",
-              padding: "5px 10px",
-              fontSize: "16px",
-              color: "white",
-              borderRadius: "4px",
-              marginLeft: "5px",
-              cursor: "pointer",
-            }}
-          >
+          <button type="submit" className="home-search-button">
             Search
           </button>
         </form>
       </header>
 
-      {/* Search Result Full-Page View */}
+      {/* Search Result Modal */}
       {searchedMovie && (
-        <div
-          style={{
-            position: "fixed",
-            top: 0,
-            left: 0,
-            width: "100%",
-            height: "100%",
-            backgroundColor: "#141414",
-            color: "white",
-            zIndex: 20,
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-            padding: "20px",
-          }}
-        >
-          <video
-            src={`Media/MovieTrailers/${searchedMovie.trailer}`}
-            autoPlay
-            muted
-            loop
-            style={{
-              width: "80%",
-              height: "50%",
-              objectFit: "cover",
-              borderRadius: "10px",
-            }}
-          ></video>
-          <h1 style={{ marginTop: "20px", fontSize: "36px" }}>{searchedMovie.title}</h1>
-          <p style={{ marginTop: "10px", fontSize: "18px" }}>{searchedMovie.description}</p>
-          <button
-            onClick={closeSearchResult}
-            style={{
-              marginTop: "20px",
-              backgroundColor: "#e50914",
-              border: "none",
-              padding: "10px 20px",
-              fontSize: "16px",
-              color: "white",
-              borderRadius: "5px",
-              cursor: "pointer",
-            }}
-          >
+        <div className="home-search-modal">
+          <MovieCard
+            showDescription={true}
+            infoButton={false}
+            {...searchedMovie}
+          />
+          <button onClick={closeSearchResult} className="home-close-button">
             Close
           </button>
         </div>
@@ -223,151 +165,24 @@ const Home = () => {
 
       {/* Featured Movie Section */}
       {featuredMovie && (
-        <div style={{ position: "relative", height: "70vh", marginBottom: "20px" }}>
-          <video
-            src={featuredMovie.trailer}
-            autoPlay
-            muted
-            loop
-            style={{
-              width: "100%",
-              height: "100%",
-              objectFit: "cover",
-              position: "absolute",
-              top: "0",
-              left: "0",
-            }}
-          ></video>
-          <div
-            style={{
-              position: "absolute",
-              top: "0",
-              left: "0",
-              width: "100%",
-              height: "100%",
-              background: "linear-gradient(to bottom, rgba(0,0,0,0) 60%, rgba(0,0,0,0.9))",
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "flex-end",
-              padding: "40px",
-            }}
-          >
-            <h1 style={{ fontSize: "80px", fontWeight: "bold", marginBottom: "20px", textAlign: "left" }}>
-              {featuredMovie.title}
-            </h1>
-            <p style={{ fontSize: "25px", maxWidth: "600px", marginBottom: "20px" }}>
-              {featuredMovie.description}
-            </p>
-            <div style={{ display: "flex", gap: "10px" }}>
-              <button
-                style={{
-                  backgroundColor: "#e50914",
-                  border: "none",
-                  padding: "10px 20px",
-                  fontSize: "16px",
-                  color: "white",
-                  borderRadius: "4px",
-                  cursor: "pointer",
-                }}
-              >
-                Play
-              </button>
-              <button
-                style={{
-                  backgroundColor: "rgba(255, 255, 255, 0.3)",
-                  border: "1px solid white",
-                  padding: "10px 20px",
-                  fontSize: "16px",
-                  color: "white",
-                  borderRadius: "4px",
-                  cursor: "pointer",
-                }}
-              >
-                My List
-              </button>
-            </div>
-          </div>
+        <div className="home-featured-container">
+          <h1 className="home-featured-header"></h1>
+          <VideoPlayer movieId={featuredMovie.id} type="trailer" />
         </div>
       )}
 
       {/* Category Rows */}
       {Object.entries(categories).map(([categoryName, categoryMovies]) => (
-        <div className="movie-row" style={{ padding: "20px" }} key={categoryName}>
-          <h2 style={{ marginBottom: "3px", textAlign: "left" }}>{categoryName}</h2>
-          <div
-            className="movie-thumbnails"
-            style={{ display: "flex", gap: "20px", overflowX: "auto" }}
-          >
-            {categoryMovies.map((movie) => (
-              <div
-                key={movie.id}
-                className="movie-container"
-                style={{ position: "relative", cursor: "pointer" }}
-                onMouseEnter={() => setHoveredMovie(movie.id)}
-                onMouseLeave={() => setHoveredMovie(null)}
-              >
-                <img
-                  src={movie.img}
-                  alt={movie.title}
-                  style={{
-                    width: "150px",
-                    height: "225px",
-                    objectFit: "cover",
-                    borderRadius: "5px",
-                    transition: "transform 0.3s",
-                    transform: hoveredMovie === movie.id ? "scale(1.1)" : "scale(1)",
-                  }}
-                />
-                {hoveredMovie === movie.id && (
-                  <div
-                    className="movie-hover"
-                    style={{
-                      position: "absolute",
-                      top: "-100px",
-                      left: "0",
-                      width: "300px",
-                      height: "400px",
-                      backgroundColor: "#1c1c1c",
-                      borderRadius: "10px",
-                      overflow: "hidden",
-                      display: "flex",
-                      flexDirection: "column",
-                      zIndex: 20,
-                      boxShadow: "0 10px 20px rgba(0, 0, 0, 0.8)",
-                      animation: "fadeIn 0.3s ease-in-out",
-                    }}
-                  >
-                    <video
-                      src={movie.trailer}
-                      autoPlay
-                      muted
-                      preload="auto"
-                      loop
-                      style={{
-                        width: "100%",
-                        height: "60%",
-                        objectFit: "cover",
-                      }}
-                    ></video>
-                    <div className="info" style={{ padding: "10px", textAlign: "center" }}>
-                      <h3 style={{ marginBottom: "10px", color: "white" }}>{movie.title}</h3>
-                      <button
-                        style={{
-                          backgroundColor: "#e50914",
-                          color: "white",
-                          border: "none",
-                          borderRadius: "5px",
-                          padding: "10px 20px",
-                          fontSize: "16px",
-                          cursor: "pointer",
-                        }}
-                      >
-                        Watch Full Movie
-                      </button>
-                    </div>
-                  </div>
-                )}
-              </div>
+        <div className="home-category-row" key={categoryName}>
+          <h2 className="home-category-title">{categoryName}</h2>
+          <div className="movie-cards-container">
+            {categoryMovies.map((movie, index) => (
+              <MovieCard
+                key={index}
+                showDescription={false}
+                infoButton={true}
+                {...movie}
+              />
             ))}
           </div>
         </div>

@@ -64,13 +64,7 @@ const AdminPanel = () => {
       headers: fileUploadHeaders,
       body: formData,
     });
-    if (!response || !response.ok) {
-      throw new Error(`Failed to upload files: HTTP ${response ? response.status : 'undefined'}`);
-    }
-    if (!response.ok) {
-      throw new Error(`Failed to upload files: HTTP ${response.status}`);
-    }
-  
+   
     const data = await response.json();
     console.log("Successfully uploaded files:", data);
   }
@@ -153,10 +147,29 @@ const AdminPanel = () => {
         // Updated add-movie case
         case "add-movie": {
           try {
+              // Convert the category input string into an array of trimmed strings.
+              let categoriesArray = [];
+              console.log(formData.Category);
+              if (formData.Category) {
+                if (formData.Category.includes(",")) {
+                  categoriesArray = formData.Category
+                    .split(",")
+                    .map((cat) => cat.trim())
+                    .filter((cat) => cat.length > 0);
+                } else {
+                  // When only one category is entered
+                  const trimmedCategory = formData.Category.trim();
+                  if (trimmedCategory !== "") {
+                    categoriesArray = [trimmedCategory];
+                  }
+                }
+              }
+          console.log(categoriesArray);
             // Ensure optional fields are only added if they have values
             const payload = {
               title: formData.title,
               lengthMinutes: formData.lengthMinutes,
+              categories: categoriesArray,
               image: formData.image.name, // Required
               trailer: formData.trailer.name, // Required
               film: formData.film.name, // Required
@@ -225,8 +238,6 @@ const AdminPanel = () => {
         }
       }
 
-
-      if (!response.ok) throw new Error(`❌ Error: ${response.status}`);
       setMessage("✅ Action completed successfully!");
       setTimeout(() => {
         window.location.reload();
@@ -291,6 +302,16 @@ const AdminPanel = () => {
               <div className="email-form">
                 <textarea name="description" placeholder="Description" onChange={handleChange}></textarea>
               </div>
+              <div className="email-form">
+      {/* Changed the field name to "Category" so that formData.Category is set */}
+      <input
+        type="text"
+        name="Category"
+        placeholder="Category (for multiple, separate with commas)"
+        onChange={handleChange}
+        required
+      />
+    </div>
               <div className="email-form">
                 <label className="custom-file-label">
                   Choose Image

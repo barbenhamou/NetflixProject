@@ -22,23 +22,7 @@ function createMulterForMovie() {
 
         // 3) Decide the subfolder using either an extra field or the file.fieldname:
         //    The client can optionally send a field like "filmType", "trailerType", or "imageType"
-        const fileType = req.body[`${file.fieldname}Type`] || file.fieldname;
-        let subFolder;
-        switch (fileType) {
-          case "film":
-            subFolder = "Movie";
-            break;
-          case "trailer":
-            subFolder = "Trailer";
-            break;
-          case "image":
-            subFolder = "Image";
-            break;
-          default:
-            subFolder = "Others";
-            break;
-        }
-
+        const subFolder = req.body[`${file.fieldname}Type`] || file.fieldname;
         const finalFolder = path.join(baseFolder, subFolder);
         if (!fs.existsSync(finalFolder)) {
           fs.mkdirSync(finalFolder, { recursive: true });
