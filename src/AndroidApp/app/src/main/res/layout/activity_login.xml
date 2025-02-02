@@ -8,6 +8,22 @@
     android:background="#141414"
     tools:context=".LoginActivity">
 
+    <ImageButton
+        android:id="@+id/btnBack"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="?attr/selectableItemBackground"
+        android:contentDescription="Back"
+        android:padding="8dp"
+        android:src="@drawable/ic_back_arrow"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.02"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.060000002"
+        app:tint="@color/white" />
+
     <androidx.cardview.widget.CardView
         android:layout_width="342dp"
         android:layout_height="wrap_content"
