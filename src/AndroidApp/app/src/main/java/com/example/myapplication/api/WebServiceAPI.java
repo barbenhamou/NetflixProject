@@ -1,8 +1,8 @@
 package com.example.myapplication.api;
 
 import com.example.myapplication.entities.LoginRequest;
+import com.example.myapplication.entities.LoginResponse;
 import com.example.myapplication.entities.Movie;
-import com.example.myapplication.entities.Token;
 
 import java.util.List;
 
@@ -18,6 +18,6 @@ public interface WebServiceAPI {
     @GET("movies/search/[.*]")
     Call<List<Movie>> getAllMovies();
 
-    @POST
-    Call<Token> login(@Body LoginRequest request);
+    @POST("tokens")
+    Call<LoginResponse> login(@Body LoginRequest request);
 }

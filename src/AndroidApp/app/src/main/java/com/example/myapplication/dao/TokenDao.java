@@ -15,5 +15,5 @@ public interface TokenDao {
     void clear();
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insert(Token tokens);
+    void insert(Token token);
 }

@@ -9,6 +9,7 @@ import com.example.myapplication.api.WebServiceAPI;
 import com.example.myapplication.dao.AppDB;
 import com.example.myapplication.dao.TokenDao;
 import com.example.myapplication.entities.LoginRequest;
+import com.example.myapplication.entities.LoginResponse;
 import com.example.myapplication.entities.Token;
 
 import java.util.concurrent.Executors;
@@ -36,23 +37,26 @@ public class TokenRepository {
 
     public void loginUser(String username, String password, TokenCallback callback) {
         LoginRequest request = new LoginRequest(username, password);
-        webServiceAPI.login(request).enqueue(new Callback<Token>() {
+        webServiceAPI.login(request).enqueue(new Callback<>() {
             @Override
-            public void onResponse(Call<Token> call, Response<Token> response) {
+            public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    Token token = new Token(response.body().getToken());
+                    LoginResponse tokenResponse = response.body();
+
+                    Token token = new Token(tokenResponse.getTokenId().getToken());
                     saveTokenToDb(token);
+
                     callback.onSuccess(token);
                 } else {
-                    Log.e("TokenRepository", "Login failed: " + response.message());
-                    callback.onFailure("Login failed");
+                    Log.e("TokenRepository", "Login failed: " + response.code() + " - " + response.message());
+                    callback.onFailure("Error " + response.code() + ": " + response.message());
                 }
             }
 
             @Override
-            public void onFailure(Call<Token> call, Throwable t) {
+            public void onFailure(Call<LoginResponse> call, Throwable t) {
                 Log.e("TokenRepository", "API call failed", t);
-                callback.onFailure("API error");
+                callback.onFailure("API error: " + t.getMessage());
             }
         });
     }

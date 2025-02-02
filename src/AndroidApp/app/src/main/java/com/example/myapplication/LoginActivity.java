@@ -32,12 +32,16 @@ public class LoginActivity extends AppCompatActivity {
             repository.loginUser(username, password, new TokenRepository.TokenCallback() {
                 @Override
                 public void onSuccess(Token token) {
-                    Toast.makeText(LoginActivity.this, "Login Successful! Token: " + token.getToken(), Toast.LENGTH_SHORT).show();
+                    runOnUiThread(() ->
+                            Toast.makeText(LoginActivity.this, "Login Successful! Token: " + token.getToken(), Toast.LENGTH_SHORT).show()
+                    );
                 }
 
                 @Override
                 public void onFailure(String errorMessage) {
-                    Toast.makeText(LoginActivity.this, "Login Failed: " + errorMessage, Toast.LENGTH_SHORT).show();
+                    runOnUiThread(() ->
+                            Toast.makeText(LoginActivity.this, "Login Failed: " + errorMessage, Toast.LENGTH_SHORT).show()
+                    );
                 }
             });
         });
