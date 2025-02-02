@@ -6,7 +6,7 @@ import MovieInfo from './MovieInfo/MovieInfo';
 import MovieWatch from './MovieWatch/MovieWatch';
 import Admin from './pages/Admin';
 import Home from './pages/Home';
-
+import GuestPage from './pages/guest';
 function MovieInfoWrapper() {
   const { id } = useParams();
   return <MovieInfo id={id} />;
@@ -24,7 +24,7 @@ function App() {
         <Routes>
           <Route path="/api/movies/:id/info" element={<MovieInfoWrapper />} />
           <Route path="/api/movies/:id/watch" element={<MoviePlayWrapper />} />
-          <Route path="/" element={<Home/>} />
+          <Route path="/" element={<GuestPage/>} />
           <Route path="/login" element={<LoginForm />} />
           <Route path="/signup" element={<SignUpForm />} />
         </Routes>
