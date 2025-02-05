@@ -21,6 +21,11 @@ function SignUpForm() {
         setter(e.target.value);
     };
 
+    const handleFileChange = (e) => {
+        setError('');
+        setPicture(e.target.files[0]);
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -35,13 +40,12 @@ function SignUpForm() {
             return;
         }
 
-    // Create the form data
+        // Create the form data
         const userData = {
             username,
             email,
             password,
             phone,
-            picture,
             location
         };
 
@@ -50,7 +54,7 @@ function SignUpForm() {
             const response = await fetch(`http://localhost:${backendPort}/api/users`, {
                 'method': 'POST',
                 'headers': {
-                'Content-Type': 'application/json',
+                    'Content-Type': 'application/json',
                 },
                 'body': JSON.stringify(userData),
             });
@@ -60,6 +64,25 @@ function SignUpForm() {
                 setError('Error: ' + errorData.error);
             } else {
                 alert('Account created successfully');
+
+                if (picture) {
+                    const formData = new FormData();
+                    formData.append('profilePicture', picture);
+
+                    // Send the picture to the server after the user is created
+                    const pictureResponse = await fetch(`http://localhost:${backendPort}/api/contents/users/${username}`, {
+                        method: 'POST',
+                        body: formData,
+                    });
+
+                    if (!pictureResponse.ok) {
+                        const errorData = await pictureResponse.json();
+                        setError('Error uploading picture: ' + errorData.error);
+                    } else {
+                        alert('Profile picture uploaded successfully');
+                    }
+                }
+
                 navigate("/login");
             }
         } catch (err) {
@@ -85,7 +108,12 @@ function SignUpForm() {
                     <StandAloneField label={'Email Address'} type={'email'} id={'email'} placeholder={'Enter your email'} value={email} onChange={handleInput(setEmail)} />
                     <StandAloneField label={'Phone (no dashes)'} type={'text'} id={'phone'} placeholder={'Enter your phone number'} value={phone} onChange={handleInput(setPhone)} />
                     <StandAloneField label={'Location'} type={'text'} id={'location'} placeholder={'Enter your location'} value={location} onChange={handleInput(setLocation)} />
-                    <StandAloneField label={'Picture'} type={'text'} id={'pic'} placeholder={'Choose a profile picture'} value={picture} onChange={handleInput(setPicture)} />
+                    
+                    <div class="mb-3">
+                        <label for="formFile" class="form-label">Default file input example</label>
+                        <input class="form-control" type="file" id="formFile" onChange={handleFileChange}></input>
+                    </div>
+
                     <div className="col-12">
                         <button type="submit" className="btn btn-primary btn-danger">Sign up</button>
                     </div>

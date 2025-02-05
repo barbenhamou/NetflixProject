@@ -4,10 +4,10 @@
     font-family: Arial, sans-serif;
     color: white;
     background-color: #141414;
-  }
-  
-  /* Header styles */
-  .home-header {
+}
+
+/* Header styles */
+.home-header {
     display: flex;
     align-items: center;
     padding: 20px;
@@ -17,45 +17,45 @@
     width: 100%;
     z-index: 10;
     transition: top 0.3s ease;
-  }
-  
-  .home-header.hidden {
+}
+
+.home-header.hidden {
     top: -70px;
-  }
-  
-  .home-logo {
+}
+
+.home-logo {
     height: 40px;
-  }
-  
-  .home-nav {
+}
+
+.home-nav {
     margin-left: 30px;
     display: flex;
     gap: 15px;
     flex-grow: 1;
-  }
-  
-  .home-nav-link {
+}
+
+.home-nav-link {
     color: white;
     text-decoration: none;
     font-size: 20px;
-  }
-  
-  /* Search form styles */
-  .home-search-form {
+}
+
+/* Search form styles */
+.home-search-form {
     display: flex;
     align-items: center;
-  }
-  
-  .home-search-input {
+}
+
+.home-search-input {
     padding: 5px;
     font-size: 16px;
     border-radius: 4px;
     border: 1px solid gray;
     background: rgba(255, 255, 255, 0.1);
     color: white;
-  }
-  
-  .home-search-button {
+}
+
+.home-search-button {
     background-color: #e50914;
     border: none;
     padding: 5px 10px;
@@ -64,10 +64,10 @@
     border-radius: 4px;
     margin-left: 5px;
     cursor: pointer;
-  }
-  
-  /* Search modal styles */
-  .home-search-modal {
+}
+
+/* Search modal styles */
+.home-search-modal {
     position: fixed;
     top: 0;
     left: 0;
@@ -82,9 +82,9 @@
     justify-content: center;
     padding: 20px;
     overflow-y: auto;
-  }
-  
-  .home-close-button {
+}
+
+.home-close-button {
     margin-top: 20px;
     background-color: #e50914;
     border: none;
@@ -93,28 +93,26 @@
     color: white;
     border-radius: 5px;
     cursor: pointer;
-  }
-  
-  /* Featured movie styles */
-  .home-featured-container {
+}
+
+/* Featured movie styles */
+.home-featured-container {
     margin-top: 80px;
     padding: 20px;
-  }
-  
-  .home-featured-header {
+}
+
+.home-featured-header {
     font-size: 36px;
     margin-bottom: 20px;
     text-align: left;
-  }
-  
-  /* Category row styles */
-  .home-category-row {
+}
+
+/* Category row styles */
+.home-category-row {
     padding: 20px;
-  }
-  
-  .home-category-title {
+}
+
+.home-category-title {
     margin-bottom: 10px;
     text-align: left;
-  }
- 
-  
+}
