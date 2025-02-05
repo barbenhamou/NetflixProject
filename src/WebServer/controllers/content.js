@@ -36,21 +36,50 @@ function createMulterForMovie() {
 	});
 }
 
+function createMulterForUser() {
+	return multer({
+	  storage: multer.diskStorage({
+		destination: (req, file, cb) => {
+		  const { name } = req.params;
+		  if (!name) {
+			return cb(new Error("No username in URL"));
+		  }
+  
+		  const baseFolder = path.join(__dirname, "../contents/users", String(name));
+		  console.log(`Saving profile picture file to: ${baseFolder}`);
+		  cb(null, baseFolder);
+		},
+		filename: (req, file, cb) => {
+		  const customName = req.body.profilePictureName;
+		  const finalName = customName ? customName : file.originalname;
+		  cb(null, finalName);
+		},
+	  }),
+	  limits: { fileSize: 5 * 1024 * 1024 },
+	});
+  }
+
 function handleFileUpload(req, res) {
 	try {
 		console.log("Uploaded files:", req.files);
 
-		return res.status(201).json({
-			message: "Files uploaded successfully via Multer!",
-			movieId: req.params.id,
-		});
+		if (req.params.id) {
+			return res.status(201).json({
+				message: "Files uploaded successfully via Multer!",
+				movieId: req.params.id,
+			});
+		}
+		
+		if (req.params.name) {
+			return res.status(201).json({
+			  message: "User profile picture uploaded successfully via Multer!",
+			  username: req.params.name,
+			});
+		}
+
 	} catch (err) {
-		console.error("Error in handleFileUpload:", err);
-		return res.status(500).send("Server error");
+		return res.status(500).json({"error": (err || "Internal Server Error") });
 	}
 }
 
-module.exports = {
-  	createMulterForMovie,
- 	handleFileUpload
-};
+module.exports = {createMulterForMovie,	handleFileUpload};

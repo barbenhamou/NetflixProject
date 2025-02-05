@@ -14,7 +14,7 @@ require('custom-env').env(process.env.NODE_ENV, './config');
 mongoose.connect(process.env.CONNECTION_STRING);
 
 const app = express();
-app.use('/api/files', cors(), contents);
+app.use('/api/contents', cors(), contents);
 
 app.use(cors({ 
     exposedHeaders: ["Location"] // Allow frontend to access the Location header

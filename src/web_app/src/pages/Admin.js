@@ -59,7 +59,7 @@ const AdminPanel = () => {
       // Note: DO NOT include "Content-Type" here!
     };
   
-    const response = await fetch(`http://localhost:3001/api/files/${movieId}/files`, {
+    const response = await fetch(`http://localhost:3001/api/contents/movies/${movieId}/files`, {
       method: "POST",
       headers: fileUploadHeaders,
       body: formData,
