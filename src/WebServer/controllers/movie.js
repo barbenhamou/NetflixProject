@@ -1,6 +1,7 @@
 const movieService = require('../services/movie');
 const fs = require("fs");
 const path = require("path");
+
 // Only show relevant info
 const presentMovie = async (movie) => {
     try {

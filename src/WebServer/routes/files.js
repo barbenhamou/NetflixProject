@@ -10,6 +10,6 @@ const uploadMulter = fileController.createMulterForMovie().fields([
 ]);
 
 router.route('/:id/files')
-    .post(uploadMulter, fileController.handleFileUpload, tokenVerifier.tokenValidation(true));
+    .post(tokenVerifier.tokenValidation(true), uploadMulter, fileController.handleFileUpload);
 
 module.exports = router;

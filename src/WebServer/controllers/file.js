@@ -31,7 +31,7 @@ function createMulterForMovie() {
 				const finalName = customName ? customName : file.originalname;
 				cb(null, finalName);
 			},
-			}),
+		}),
 		limits: { fileSize: 2 * 1024 * 1024 * 1024 }, 
 	});
 }
