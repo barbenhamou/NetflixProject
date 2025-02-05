@@ -1,11 +1,9 @@
-// routes/movies.js
 const express = require('express');
 const router = express.Router();
-const { createMulterForMovie } = require("../controllers/file"); // <-- import the function
+const { createMulterForMovie } = require("../controllers/file");
 const movieController = require('../controllers/movie');
 const tokenVerifier = require('../TokenVerifier');
 
-// Setup Multer to handle your 3 file fields
 const uploadMulter = createMulterForMovie().fields([
   { name: "film", maxCount: 1 },
   { name: "trailer", maxCount: 1 },
@@ -31,9 +29,6 @@ router.route('/search/:query')
 // Here we add the .post with Multer
 router.route('/:id/files')
     .get(movieController.getMovieFiles)
-    .post(
-      tokenVerifier.tokenValidation(true),
-      uploadMulter, // <-- Multer middleware
-    );
+    .post(tokenVerifier.tokenValidation(true), uploadMulter);
 
 module.exports = router;

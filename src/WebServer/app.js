@@ -15,9 +15,11 @@ mongoose.connect(process.env.CONNECTION_STRING);
 
 const app = express();
 app.use('/api/files', cors(), filesRouter);
+
 app.use(cors({ 
     exposedHeaders: ["Location"] // Allow frontend to access the Location header
 }));
+
 app.use(bodyParser.urlencoded({extended : true}));
 app.use(express.json({ limit: "50mb" }));
 app.use('/api/tokens', tokens);

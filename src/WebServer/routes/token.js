@@ -3,6 +3,7 @@ const router = express.Router();
 
 const tokenController = require('../controllers/token');
 
-router.post('/', tokenController.authenticateUser);
+router.route('/')
+    .post(tokenController.authenticateUser);
 
 module.exports = router;
