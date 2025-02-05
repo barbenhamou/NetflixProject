@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const fileController = require('../controllers/files');
+const fileController = require('../controllers/content');
 const tokenVerifier = require('../TokenVerifier');
 
 const uploadMulter = fileController.createMulterForMovie().fields([
