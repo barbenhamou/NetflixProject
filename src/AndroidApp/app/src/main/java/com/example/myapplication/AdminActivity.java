@@ -4,13 +4,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.Spinner;
-import android.widget.TextView;
+import android.widget.*;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -60,41 +54,57 @@ public class AdminActivity extends AppCompatActivity {
         buttonEditChooseTrailer = findViewById(R.id.buttonEditChooseTrailer);
         buttonEditChooseFilm = findViewById(R.id.buttonEditChooseFilm);
 
-        // Populate the Spinner with the array from resources
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
-                this, R.array.admin_actions, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        // Create an ArrayAdapter using our arrays.xml and custom layouts
+        ArrayAdapter<CharSequence> adapter = new ArrayAdapter<CharSequence>(
+                this,
+                R.layout.spinner_item, // the closed view (red background, white text)
+                getResources().getStringArray(R.array.admin_actions)
+        ) {
+            @Override
+            public View getDropDownView(int position, View convertView, android.view.ViewGroup parent) {
+                // Use our custom layout for dropdown items
+                if (convertView == null) {
+                    convertView = getLayoutInflater().inflate(R.layout.spinner_dropdown_item, parent, false);
+                }
+                TextView tv = convertView.findViewById(R.id.spinnerDropdownItemTextView);
+                tv.setText(getItem(position));
+                return convertView;
+            }
+        };
+
         spinnerAction.setAdapter(adapter);
+        // spinnerAction.setSelection(0)  // "Select Action" is the first item
 
         // Listen for action selection
         spinnerAction.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(
                     AdapterView<?> parent, View view, int position, long id) {
+
                 selectedAction = parent.getItemAtPosition(position).toString();
                 updateFormVisibility(selectedAction);
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                // Optionally do nothing
+                // Do nothing
             }
         });
 
-        // File chooser listeners for "add-movie"
+        // File chooser listeners for "add movie"
         buttonChooseImage.setOnClickListener(v -> chooseFile(REQUEST_CODE_IMAGE));
         buttonChooseTrailer.setOnClickListener(v -> chooseFile(REQUEST_CODE_TRAILER));
         buttonChooseFilm.setOnClickListener(v -> chooseFile(REQUEST_CODE_FILM));
 
-        // File chooser listeners for "edit-movie"
+        // File chooser listeners for "edit movie"
         buttonEditChooseImage.setOnClickListener(v -> chooseFile(REQUEST_CODE_IMAGE));
         buttonEditChooseTrailer.setOnClickListener(v -> chooseFile(REQUEST_CODE_TRAILER));
         buttonEditChooseFilm.setOnClickListener(v -> chooseFile(REQUEST_CODE_FILM));
 
-        // Submit button logic (replace with your own API calls or logic)
+        // Submit button logic
         buttonSubmit.setOnClickListener(v -> {
-            // Gather data from visible fields if needed
-            // e.g., if (selectedAction.equals("add-movie")) { ... }
+            // For demonstration, just show the action
+            // In real code, you'd gather data and send to an API
             textViewMessage.setText("Submitted action: " + selectedAction);
         });
     }
@@ -111,23 +121,26 @@ public class AdminActivity extends AppCompatActivity {
 
         // Then show the relevant one
         switch (action) {
-            case "add-category":
+            case "add category":
                 layoutAddCategory.setVisibility(View.VISIBLE);
                 break;
-            case "delete-category":
+            case "delete category":
                 layoutDeleteCategory.setVisibility(View.VISIBLE);
                 break;
-            case "add-movie":
+            case "add movie":
                 layoutAddMovie.setVisibility(View.VISIBLE);
                 break;
-            case "delete-movie":
+            case "delete movie":
                 layoutDeleteMovie.setVisibility(View.VISIBLE);
                 break;
-            case "edit-category":
+            case "edit category":
                 layoutEditCategory.setVisibility(View.VISIBLE);
                 break;
-            case "edit-movie":
+            case "edit movie":
                 layoutEditMovie.setVisibility(View.VISIBLE);
+                break;
+            default:
+                // "Select Action" or unrecognized string
                 break;
         }
     }
@@ -138,7 +151,7 @@ public class AdminActivity extends AppCompatActivity {
         if (requestCode == REQUEST_CODE_IMAGE) {
             intent.setType("image/*");
         } else {
-            // For trailer/movie we assume it's a video
+            // For trailer/movie we assume it's video
             intent.setType("video/*");
         }
         startActivityForResult(Intent.createChooser(intent, "Select File"), requestCode);
@@ -149,7 +162,7 @@ public class AdminActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK && data != null) {
             Uri fileUri = data.getData();
-            // Show a simple message; in reality, you'd upload or store the URI
+            // Show a simple message; real code might upload/store the URI
             textViewMessage.setText("File selected: " + fileUri);
         }
     }

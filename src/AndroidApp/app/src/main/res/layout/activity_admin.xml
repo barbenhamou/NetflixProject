@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/adminRoot"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -12,14 +13,14 @@
         android:scaleType="centerCrop"
         android:src="@drawable/headerimage" />
 
-    <!-- Semi-transparent Overlay -->
+    <!-- Semi-transparent overlay -->
     <View
         android:id="@+id/overlay"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#99000000" />  <!-- black w/ ~60% opacity -->
+        android:background="#99000000" />  <!-- ~60% opacity black -->
 
-    <!-- Scrollable Content -->
+    <!-- Scrollable content -->
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -44,18 +45,16 @@
                 android:textColor="@android:color/white"
                 android:layout_marginBottom="20dp" />
 
-            <!-- Spinner (Dropdown) for selecting an action -->
+            <!-- Spinner for selecting an action -->
             <Spinner
                 android:id="@+id/spinnerAction"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="#d10000"
                 android:spinnerMode="dropdown"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
+                android:popupBackground="@android:color/transparent"
                 android:layout_marginBottom="20dp" />
 
-            <!-- *********** ADD CATEGORY *********** -->
+            <!-- ADD CATEGORY Layout -->
             <LinearLayout
                 android:id="@+id/layoutAddCategory"
                 android:layout_width="match_parent"
@@ -73,12 +72,11 @@
                     android:background="#FFFFFF"
                     android:textColor="#000000"
                     android:padding="10dp"
-                    android:layout_marginBottom="10dp"
-                    android:layout_marginTop="5dp" />
-
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="10dp" />
             </LinearLayout>
 
-            <!-- *********** DELETE CATEGORY *********** -->
+            <!-- DELETE CATEGORY Layout -->
             <LinearLayout
                 android:id="@+id/layoutDeleteCategory"
                 android:layout_width="match_parent"
@@ -96,12 +94,11 @@
                     android:background="#FFFFFF"
                     android:textColor="#000000"
                     android:padding="10dp"
-                    android:layout_marginBottom="10dp"
-                    android:layout_marginTop="5dp" />
-
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="10dp" />
             </LinearLayout>
 
-            <!-- *********** ADD MOVIE *********** -->
+            <!-- ADD MOVIE Layout -->
             <LinearLayout
                 android:id="@+id/layoutAddMovie"
                 android:layout_width="match_parent"
@@ -115,7 +112,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Movie Title"
-                    android:inputType="text"
                     android:background="#FFFFFF"
                     android:textColor="#000000"
                     android:padding="10dp"
@@ -166,7 +162,7 @@
                     android:padding="10dp"
                     android:layout_marginBottom="10dp" />
 
-                <!-- Buttons to choose files (image, trailer, film) -->
+                <!-- File selection buttons -->
                 <Button
                     android:id="@+id/buttonChooseImage"
                     android:layout_width="match_parent"
@@ -194,7 +190,7 @@
                     android:textColor="#ffffff" />
             </LinearLayout>
 
-            <!-- *********** DELETE MOVIE *********** -->
+            <!-- DELETE MOVIE Layout -->
             <LinearLayout
                 android:id="@+id/layoutDeleteMovie"
                 android:layout_width="match_parent"
@@ -216,7 +212,7 @@
                     android:layout_marginBottom="10dp" />
             </LinearLayout>
 
-            <!-- *********** EDIT CATEGORY *********** -->
+            <!-- EDIT CATEGORY Layout -->
             <LinearLayout
                 android:id="@+id/layoutEditCategory"
                 android:layout_width="match_parent"
@@ -249,7 +245,7 @@
                     android:layout_marginBottom="10dp" />
             </LinearLayout>
 
-            <!-- *********** EDIT MOVIE *********** -->
+            <!-- EDIT MOVIE Layout -->
             <LinearLayout
                 android:id="@+id/layoutEditMovie"
                 android:layout_width="match_parent"
@@ -314,7 +310,7 @@
                     android:padding="10dp"
                     android:layout_marginBottom="10dp" />
 
-                <!-- Buttons for choosing image/trailer/movie when editing -->
+                <!-- Buttons to choose files -->
                 <Button
                     android:id="@+id/buttonEditChooseImage"
                     android:layout_width="match_parent"
@@ -342,7 +338,7 @@
                     android:textColor="#ffffff" />
             </LinearLayout>
 
-            <!-- Submit Button -->
+            <!-- Submit button -->
             <Button
                 android:id="@+id/buttonSubmit"
                 android:layout_width="match_parent"
@@ -353,7 +349,7 @@
                 android:textSize="18sp"
                 android:layout_marginTop="10dp" />
 
-            <!-- Message Display -->
+            <!-- Message display -->
             <TextView
                 android:id="@+id/textViewMessage"
                 android:layout_width="wrap_content"

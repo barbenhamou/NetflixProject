@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="admin_actions">
-        <item>add-category</item>
-        <item>delete-category</item>
-        <item>add-movie</item>
-        <item>delete-movie</item>
-        <item>edit-category</item>
-        <item>edit-movie</item>
+        <item>Select Action</item>
+        <item>add category</item>
+        <item>delete category</item>
+        <item>add movie</item>
+        <item>delete movie</item>
+        <item>edit category</item>
+        <item>edit movie</item>
     </string-array>
 </resources>
