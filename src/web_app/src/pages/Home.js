@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
-import MovieCard from "../MovieCard/MovieCard"; // Ensure the path is correct
+import MovieCard from "../MovieCard/MovieCard";
 import VideoPlayer from "../VideoPlayer/VideoPlayer";
+import { backendPort } from "../config";
 import "./Home.css";
 
 const Home = () => {
@@ -19,8 +20,7 @@ const Home = () => {
                 "Content-Type": "application/json",
             };
 
-            const response = await fetch("http://localhost:3001/api/movies", {
-                method: "GET",
+            const response = await fetch(`http://localhost:${backendPort}/api/movies`, {
                 headers: headers,
             });
 

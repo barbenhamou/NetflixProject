@@ -4,12 +4,6 @@ const { createMulterForMovie } = require("../controllers/content");
 const movieController = require('../controllers/movie');
 const tokenVerifier = require('../TokenVerifier');
 
-const uploadMulter = createMulterForMovie().fields([
-  { name: "film", maxCount: 1 },
-  { name: "trailer", maxCount: 1 },
-  { name: "image", maxCount: 1 },
-]);
-
 router.route('/')
     .get(tokenVerifier.tokenValidation(false), movieController.getMovies)
     .post(tokenVerifier.tokenValidation(true), movieController.createMovie);
@@ -25,10 +19,5 @@ router.route('/:id/recommend')
 
 router.route('/search/:query')
     .get(movieController.searchInMovies)
-
-// Here we add the .post with Multer
-router.route('/:id/files')
-    .get(movieController.getMovieFiles)
-    .post(tokenVerifier.tokenValidation(true), uploadMulter);
 
 module.exports = router;

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { backendPort } from "../config";
 import "./Admin.css";
 
 
@@ -15,7 +16,7 @@ const AdminPanel = () => {
     useEffect(() => {
         const fetchCategories = async () => {
             try {
-                const res = await fetch("http://localhost:3001/api/categories", { headers });
+                const res = await fetch(`http://localhost:${backendPort}/api/categories`, { headers });
                 if (!res.ok) throw new Error("Failed to fetch categories");
                 setCategories(await res.json());
             } catch (error) {
@@ -25,7 +26,7 @@ const AdminPanel = () => {
 
         const fetchMovies = async () => {
             try {
-                const res = await fetch("http://localhost:3001/api/movies", { headers });
+                const res = await fetch(`http://localhost:${backendPort}/api/movies`, { headers });
                 if (!res.ok) throw new Error("Failed to fetch movies");
                 const data = await res.json();
                 setMovies(data);
@@ -59,14 +60,13 @@ const AdminPanel = () => {
             // Note: DO NOT include "Content-Type" here!
         };
 
-        const response = await fetch(`http://localhost:3001/api/contents/movies/${movieId}/files`, {
+        const response = await fetch(`http://localhost:${backendPort}/api/contents/movies/${movieId}`, {
             method: "POST",
             headers: fileUploadHeaders,
             body: formData,
         });
 
         const data = await response.json();
-        console.log("Successfully uploaded files:", data);
     }
 
 
@@ -89,7 +89,7 @@ const AdminPanel = () => {
                         setMessage("❌ Category already exists.");
                         return;
                     }
-                    response = await fetch("http://localhost:3001/api/categories", {
+                    response = await fetch(`http://localhost:${backendPort}/api/categories`, {
                         method: "POST",
                         headers,
                         body: JSON.stringify({ name: formData.name, promoted: true }),
@@ -102,7 +102,7 @@ const AdminPanel = () => {
                         setMessage("⚠️ Category does not exist.");
                         return;
                     }
-                    response = await fetch(`http://localhost:3001/api/categories/${categoryToDelete.id}`, {
+                    response = await fetch(`http://localhost:${backendPort}/api/categories/${categoryToDelete.id}`, {
                         method: "DELETE",
                         headers,
                     });
@@ -118,7 +118,7 @@ const AdminPanel = () => {
                         setMessage("❌ New category name already exists.");
                         return;
                     }
-                    response = await fetch(`http://localhost:3001/api/categories/${oldCategory.id}`, {
+                    response = await fetch(`http://localhost:${backendPort}/api/categories/${oldCategory.id}`, {
                         method: "PATCH",
                         headers,
                         body: JSON.stringify({ name: formData.newName }),
@@ -138,10 +138,10 @@ const AdminPanel = () => {
                         return;
                     }
 
-                    response = await fetch(
-                        `http://localhost:3001/api/movies/${movieToDelete.id}`,
-                        { method: "DELETE", headers }
-                    );
+                    response = await fetch(`http://localhost:${backendPort}/api/movies/${movieToDelete.id}`, {
+                        method: "DELETE",
+                        headers
+                    });
                     break;
 
                 // Updated add-movie case
@@ -149,7 +149,6 @@ const AdminPanel = () => {
                     try {
                         // Convert the category input string into an array of trimmed strings.
                         let categoriesArray = [];
-                        console.log(formData.Category);
                         if (formData.Category) {
                             if (formData.Category.includes(",")) {
                                 categoriesArray = formData.Category
@@ -164,7 +163,7 @@ const AdminPanel = () => {
                                 }
                             }
                         }
-                        console.log(categoriesArray);
+
                         // Ensure optional fields are only added if they have values
                         const payload = {
                             title: formData.title,
@@ -178,7 +177,7 @@ const AdminPanel = () => {
                             ...(formData.cast?.length > 0 && { cast: formData.cast }),
                             ...(formData.description && { description: formData.description }),
                         };
-                        const response = await fetch("http://localhost:3001/api/movies", {
+                        const response = await fetch(`http://localhost:${backendPort}/api/movies`, {
                             method: "POST",
                             headers,
                             body: JSON.stringify(payload),
@@ -192,7 +191,6 @@ const AdminPanel = () => {
                         // Extract the movie ID from the Location URL
                         const newMovieId = location.split("/").pop();
                         uploadFilesForMovie(newMovieId, formData.image, formData.trailer, formData.film);
-                        console.log(newMovieId);
                         setMessage(`✅ Movie created! ID: ${newMovieId} and files saved locally.`);
                     } catch (err) {
                         console.error(err);
@@ -220,7 +218,7 @@ const AdminPanel = () => {
                     });
                     editMovieFormData.append("title", formData.newTitle);
 
-                    response = await fetch(`http://localhost:3001/api/movies/${oldMovie.id}`, {
+                    response = await fetch(`http://localhost:${backendPort}/api/movies/${oldMovie.id}`, {
                         method: "PUT",
                         headers,
                         body: editMovieFormData,
@@ -435,4 +433,3 @@ const AdminPanel = () => {
 };
 
 export default AdminPanel;
-

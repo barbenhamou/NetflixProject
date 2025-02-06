@@ -1,4 +1,3 @@
-const userService  = require('./services/user');
 const jwt = require('jsonwebtoken');
 
 const key = process.env.SECRET;
