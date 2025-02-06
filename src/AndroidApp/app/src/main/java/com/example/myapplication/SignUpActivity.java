@@ -113,6 +113,8 @@ public class SignUpActivity extends AppCompatActivity {
                                 @Override
                                 public void onUploadSuccess(ProfilePictureResponse response) {
                                     runOnUiThread(() -> Toast.makeText(SignUpActivity.this, response.getMessage(), Toast.LENGTH_SHORT).show());
+                                    user.setPicture(imageUri.toString());
+                                    repository.saveUserToDb(user);
                                 }
 
                                 @Override

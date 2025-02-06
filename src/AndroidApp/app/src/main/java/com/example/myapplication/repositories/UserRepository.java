@@ -88,10 +88,9 @@ public class UserRepository {
         });
     }
 
-    private void saveUserToDb(User user) {
+    public void saveUserToDb(User user) {
         new Thread(() -> userDao.insert(user)).start();
     }
-
 
     public User getStoredUser() {
         return userDao.getUser();
