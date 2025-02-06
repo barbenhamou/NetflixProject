@@ -1,15 +1,17 @@
 const movieService = require('../services/movie');
-const fs = require("fs");
-const path = require("path");
+const contentService = require('../services/content');
 
 // Only show relevant info
 const presentMovie = async (movie) => {
     try {
         // Turn the category IDs into actual category documents
         await movie.populate('categories');
+        const movieId = movie._id;
+
+        const { file } = await contentService.getMovieFiles(movieId.toString(), 'image', 0);
 
         return {
-            id: movie._id,
+            id: movieId,
             title: movie.title,
             categories: movie.categories.map(category => category.name),
             lengthMinutes: movie.lengthMinutes,
@@ -18,10 +20,11 @@ const presentMovie = async (movie) => {
             image: movie.image,
             trailer: movie.trailer,
             film: movie.film,
-            description: movie.description
+            description: movie.description,
+            imageFile: file.toString('base64')
         };
     } catch (err) {
-        throw { statusCode: 500, message: 'Error displaying movie' };
+        throw { statusCode: 500, message: (err.message || 'Error displaying movie') };
     }
 };
 

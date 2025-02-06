@@ -92,7 +92,7 @@ const getMovieFiles = async (req, res) => {
 		const type = req.query.type;
 
 		if (!type) {
-			return res.status(400).json({ error: "Bad request: type wasn't specified" });
+			return res.status(400).json({ error: "Type wasn't specified" });
 		}
 
 		// Custom token verification for video streaming
@@ -115,8 +115,7 @@ const getMovieFiles = async (req, res) => {
 			const { file, contentType } = result;
 
 			res.setHeader('Content-Type', contentType);
-			res.status(200).send(file);
-			return;
+			return res.status(200).send(file);
 		}
 
 		// Video streaming
