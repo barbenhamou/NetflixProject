@@ -45,19 +45,19 @@ function createMulterForUser() {
 			return cb(new Error("No username in URL"));
 		  }
   
-		  const baseFolder = path.join(__dirname, "../contents/users", String(name));
+		  const baseFolder = path.join(__dirname, "../contents/users");
 		  console.log(`Saving profile picture file to: ${baseFolder}`);
 		  cb(null, baseFolder);
 		},
 		filename: (req, file, cb) => {
-		  const customName = req.body.profilePictureName;
+		  const customName = req.params.name + path.extname(file.originalname);
 		  const finalName = customName ? customName : file.originalname;
 		  cb(null, finalName);
 		},
 	  }),
 	  limits: { fileSize: 5 * 1024 * 1024 },
 	});
-  }
+}
 
 function handleFileUpload(req, res) {
 	try {
@@ -82,4 +82,4 @@ function handleFileUpload(req, res) {
 	}
 }
 
-module.exports = {createMulterForMovie,	handleFileUpload};
+module.exports = {createMulterForMovie,	handleFileUpload, createMulterForUser};

@@ -109,9 +109,9 @@ function SignUpForm() {
                     <StandAloneField label={'Phone (no dashes)'} type={'text'} id={'phone'} placeholder={'Enter your phone number'} value={phone} onChange={handleInput(setPhone)} />
                     <StandAloneField label={'Location'} type={'text'} id={'location'} placeholder={'Enter your location'} value={location} onChange={handleInput(setLocation)} />
                     
-                    <div class="mb-3">
-                        <label for="formFile" class="form-label">Default file input example</label>
-                        <input class="form-control" type="file" id="formFile" onChange={handleFileChange}></input>
+                    <div className="mb-3">
+                        <label htmlFor="formFile" className="form-label">Default file input example</label>
+                        <input className="form-control" type="file" id="formFile" onChange={handleFileChange}></input>
                     </div>
 
                     <div className="col-12">
