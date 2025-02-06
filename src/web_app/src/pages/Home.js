@@ -1,194 +1,194 @@
 import React, { useState, useEffect } from "react";
-import MovieCard from "../MovieCard/MovieCard"; // Ensure the path is correct
+import MovieCard from "../MovieCard/MovieCard";
 import VideoPlayer from "../VideoPlayer/VideoPlayer";
+import { backendPort } from "../config";
 import "./Home.css";
 
 const Home = () => {
-  const [movies, setMovies] = useState([]);
-  const [categories, setCategories] = useState({});
-  const [lastScrollY, setLastScrollY] = useState(0);
-  const [headerHidden, setHeaderHidden] = useState(false);
-  const [featuredMovie, setFeaturedMovie] = useState(null);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [searchedMovie, setSearchedMovie] = useState(null);
+    const [movies, setMovies] = useState([]);
+    const [categories, setCategories] = useState({});
+    const [lastScrollY, setLastScrollY] = useState(0);
+    const [headerHidden, setHeaderHidden] = useState(false);
+    const [featuredMovie, setFeaturedMovie] = useState(null);
+    const [searchTerm, setSearchTerm] = useState("");
+    const [searchedMovie, setSearchedMovie] = useState(null);
 
-  const fetchMovies = async () => {
-    try {
-      const headers = {
-        "Authorization": `Bearer ${localStorage.getItem("authToken")}`,
-        "Content-Type": "application/json",
-      };
+    const fetchMovies = async () => {
+        try {
+            const headers = {
+                "Authorization": `Bearer ${localStorage.getItem("authToken")}`,
+                "Content-Type": "application/json",
+            };
 
-      const response = await fetch("http://localhost:3001/api/movies", {
-        method: "GET",
-        headers: headers,
-      });
+            const response = await fetch(`http://localhost:${backendPort}/api/movies`, {
+                headers: headers,
+            });
 
-      if (!response.ok) {
-        throw new Error(`Failed to fetch movies: ${response.status}`);
-      }
+            if (!response.ok) {
+                throw new Error(`Failed to fetch movies: ${response.status}`);
+            }
 
-      const data = await response.json();
+            const data = await response.json();
 
-      const categorizedMovies = data.reduce((acc, category) => {
-        if (category.length > 0) {
-          // Use the first category name found or default to "Uncategorized"
-          const categoryName = category[0]?.categories[0] || "Uncategorized";
-          acc[categoryName] = category.map((movie) => ({
-            id: movie.id,
-            title: movie.title,
-            description: movie.description || "An amazing movie you shouldn't miss!",
-            // Pass along categories (or default to an array with the categoryName)
-            categories: movie.categories || [categoryName],
-            // Provide default values if not available
-            lengthMinutes: movie.lengthMinutes || 120,
-            releaseYear: movie.releaseYear || 2020,
-          }));
+            const categorizedMovies = data.reduce((acc, category) => {
+                if (category.length > 0) {
+                    // Use the first category name found or default to "Uncategorized"
+                    const categoryName = category[0]?.categories[0] || "Uncategorized";
+                    acc[categoryName] = category.map((movie) => ({
+                        id: movie.id,
+                        title: movie.title,
+                        description: movie.description || "An amazing movie you shouldn't miss!",
+                        // Pass along categories (or default to an array with the categoryName)
+                        categories: movie.categories || [categoryName],
+                        // Provide default values if not available
+                        lengthMinutes: movie.lengthMinutes || 120,
+                        releaseYear: movie.releaseYear || 2020,
+                    }));
+                }
+                return acc;
+            }, {});
+
+            // Store the flat list of movies for search purposes
+            const flatMovies = data.flat();
+            setMovies(flatMovies);
+            setCategories(categorizedMovies);
+
+            // Pick a random featured movie from the flat list
+            const randomMovie =
+                flatMovies[Math.floor(Math.random() * flatMovies.length)];
+            setFeaturedMovie({
+                id: randomMovie.id,
+                title: randomMovie.title,
+                description: randomMovie.description || "Enjoy our featured selection!",
+                categories: randomMovie.categories || [],
+                lengthMinutes: randomMovie.lengthMinutes || 120,
+                releaseYear: randomMovie.releaseYear || 2020,
+            });
+        } catch (error) {
+            console.error("Error fetching movies:", error);
         }
-        return acc;
-      }, {});
-
-      // Store the flat list of movies for search purposes
-      const flatMovies = data.flat();
-      setMovies(flatMovies);
-      setCategories(categorizedMovies);
-
-      // Pick a random featured movie from the flat list
-      const randomMovie =
-        flatMovies[Math.floor(Math.random() * flatMovies.length)];
-      setFeaturedMovie({
-        id: randomMovie.id,
-        title: randomMovie.title,
-        description: randomMovie.description || "Enjoy our featured selection!",
-        categories: randomMovie.categories || [],
-        lengthMinutes: randomMovie.lengthMinutes || 120,
-        releaseYear: randomMovie.releaseYear || 2020,
-      });
-    } catch (error) {
-      console.error("Error fetching movies:", error);
-    }
-  };
-
-  useEffect(() => {
-    fetchMovies();
-  }, []);
-
-  // Header show/hide on scroll effect
-  useEffect(() => {
-    const handleScroll = () => {
-      if (window.scrollY > lastScrollY) {
-        setHeaderHidden(true);
-      } else {
-        setHeaderHidden(false);
-      }
-      setLastScrollY(window.scrollY);
     };
 
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [lastScrollY]);
+    useEffect(() => {
+        fetchMovies();
+    }, []);
 
-  const handleSearch = (e) => {
-    e.preventDefault();
+    // Header show/hide on scroll effect
+    useEffect(() => {
+        const handleScroll = () => {
+            if (window.scrollY > lastScrollY) {
+                setHeaderHidden(true);
+            } else {
+                setHeaderHidden(false);
+            }
+            setLastScrollY(window.scrollY);
+        };
 
-    // Perform a case-insensitive exact match search on the flat movies list
-    const movie = movies.find(
-      (movie) => movie.title.toLowerCase() === searchTerm.toLowerCase()
-    );
+        window.addEventListener("scroll", handleScroll);
+        return () => window.removeEventListener("scroll", handleScroll);
+    }, [lastScrollY]);
 
-    if (movie) {
-      setSearchedMovie(movie);
-    } else {
-      alert("Movie doesn't exist");
-      setSearchedMovie(null);
-    }
-  };
+    const handleSearch = (e) => {
+        e.preventDefault();
 
-  const closeSearchResult = () => {
-    setSearchedMovie(null);
-    setSearchTerm("");
-  };
+        // Perform a case-insensitive exact match search on the flat movies list
+        const movie = movies.find(
+            (movie) => movie.title.toLowerCase() === searchTerm.toLowerCase()
+        );
 
-  return (
-    <div className="home-container">
-      {/* Header Section */}
-      <header className={`home-header ${headerHidden ? "hidden" : ""}`}>
-        <img
-          src="https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg"
-          alt="Netflix Logo"
-          className="home-logo"
-        />
-        <nav className="home-nav">
-          <a href="#" className="home-nav-link">
-            Home
-          </a>
-          <a href="#" className="home-nav-link">
-            TV Shows
-          </a>
-          <a href="#" className="home-nav-link">
-            Movies
-          </a>
-          <a href="#" className="home-nav-link">
-            New & Popular
-          </a>
-          <a href="#" className="home-nav-link">
-            My List
-          </a>
-        </nav>
-        <form onSubmit={handleSearch} className="home-search-form">
-          <input
-            type="text"
-            placeholder="Search"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="home-search-input"
-          />
-          <button type="submit" className="home-search-button">
-            Search
-          </button>
-        </form>
-      </header>
+        if (movie) {
+            setSearchedMovie(movie);
+        } else {
+            alert("Movie doesn't exist");
+            setSearchedMovie(null);
+        }
+    };
 
-      {/* Search Result Modal */}
-      {searchedMovie && (
-        <div className="home-search-modal">
-          <MovieCard
-            showDescription={true}
-            infoButton={false}
-            {...searchedMovie}
-          />
-          <button onClick={closeSearchResult} className="home-close-button">
-            Close
-          </button>
-        </div>
-      )}
+    const closeSearchResult = () => {
+        setSearchedMovie(null);
+        setSearchTerm("");
+    };
 
-      {/* Featured Movie Section */}
-      {featuredMovie && (
-        <div className="home-featured-container">
-          <h1 className="home-featured-header"></h1>
-          <VideoPlayer movieId={featuredMovie.id} type="trailer" />
-        </div>
-      )}
+    return (
+        <div className="home-container">
+            {/* Header Section */}
+            <header className={`home-header ${headerHidden ? "hidden" : ""}`}>
+                <img
+                    src="https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg"
+                    alt="Netflix Logo"
+                    className="home-logo"
+                />
+                <nav className="home-nav">
+                    <a href="#" className="home-nav-link">
+                        Home
+                    </a>
+                    <a href="#" className="home-nav-link">
+                        TV Shows
+                    </a>
+                    <a href="#" className="home-nav-link">
+                        Movies
+                    </a>
+                    <a href="#" className="home-nav-link">
+                        New & Popular
+                    </a>
+                    <a href="#" className="home-nav-link">
+                        My List
+                    </a>
+                </nav>
+                <form onSubmit={handleSearch} className="home-search-form">
+                    <input
+                        type="text"
+                        placeholder="Search"
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        className="home-search-input"
+                    />
+                    <button type="submit" className="home-search-button">
+                        Search
+                    </button>
+                </form>
+            </header>
 
-      {/* Category Rows */}
-      {Object.entries(categories).map(([categoryName, categoryMovies]) => (
-        <div className="home-category-row" key={categoryName}>
-          <h2 className="home-category-title">{categoryName}</h2>
-          <div className="movie-cards-container">
-            {categoryMovies.map((movie, index) => (
-              <MovieCard
-                key={index}
-                showDescription={false}
-                infoButton={true}
-                {...movie}
-              />
+            {/* Search Result Modal */}
+            {searchedMovie && (
+                <div className="home-search-modal">
+                    <MovieCard
+                        showDescription={true}
+                        infoButton={false}
+                        {...searchedMovie}
+                    />
+                    <button onClick={closeSearchResult} className="home-close-button">
+                        Close
+                    </button>
+                </div>
+            )}
+
+            {/* Featured Movie Section */}
+            {featuredMovie && (
+                <div className="home-featured-container">
+                    <h1 className="home-featured-header"></h1>
+                    <VideoPlayer movieId={featuredMovie.id} type="trailer" />
+                </div>
+            )}
+
+            {/* Category Rows */}
+            {Object.entries(categories).map(([categoryName, categoryMovies]) => (
+                <div className="home-category-row" key={categoryName}>
+                    <h2 className="home-category-title">{categoryName}</h2>
+                    <div className="movie-cards-container">
+                        {categoryMovies.map((movie, index) => (
+                            <MovieCard
+                                key={index}
+                                showDescription={false}
+                                infoButton={true}
+                                {...movie}
+                            />
+                        ))}
+                    </div>
+                </div>
             ))}
-          </div>
         </div>
-      ))}
-    </div>
-  );
+    );
 };
 
 export default Home;

@@ -1,9 +1,9 @@
 .movie-info {
-    background-color: #1e1e1e;
+    background-color: #141414;
 }
 
 .movie-trailer {
-    background-color: #1e1e1e;
+    background-color: #141414;
 }
 
 .movie-trailer video {
@@ -38,7 +38,7 @@
 
 .movie-details {
     padding: 20px;
-    background-color: #1e1e1e;
+    background-color: #141414;
     color: #ffffff;
 }
 
@@ -52,4 +52,8 @@
 
 .recommendations {
     overflow: hidden;
+}
+
+.recommendations > h2 {
+    width: 100%;
 }

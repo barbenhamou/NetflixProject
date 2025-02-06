@@ -1,8 +1,8 @@
-.recommendations,
-.loading {
+.recommendations {
     padding: 20px;
-    background-color: #1e1e1e;
+    background-color: #141414;
     text-align: left;
+    color: white;
 }
 
 .recommendations h2 {
@@ -20,4 +20,9 @@
 
 .recommendations .movie-card {
     margin: 5px;
+}
+
+.loading,
+.logged-out {
+    color: white;
 }

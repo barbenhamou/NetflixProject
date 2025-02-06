@@ -11,18 +11,18 @@
 
     <ImageButton
         android:id="@+id/btnBack"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
         android:background="?attr/selectableItemBackground"
-        android:contentDescription="Back"
+        android:contentDescription="@string/btnBack"
         android:padding="8dp"
         android:src="@drawable/ic_back_arrow"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.02"
+        app:layout_constraintHorizontal_bias="0.002"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.060000002"
+        app:layout_constraintVertical_bias="0.03"
         app:tint="@color/white" />
 
     <androidx.cardview.widget.CardView
@@ -54,7 +54,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp"
                     android:gravity="center_horizontal"
-                    android:text="Create an Account"
+                    android:text="@string/title"
                     android:textColor="#141414"
                     android:textSize="24sp"
                     android:textStyle="bold" />
@@ -65,7 +65,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
                     android:background="#CECBCB"
-                    android:hint="Enter your username"
+                    android:hint="@string/usernameHint"
+                    android:inputType="text"
                     android:padding="12dp"
                     android:textColor="#000000" />
 
@@ -75,7 +76,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
                     android:background="#D1CFCF"
-                    android:hint="Create a password"
+                    android:hint="@string/passwordHint"
                     android:padding="12dp"
                     android:inputType="textPassword"
                     android:textColor="#000000" />
@@ -86,7 +87,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
                     android:background="#D1CFCF"
-                    android:hint="Confirm your password"
+                    android:hint="@string/confirmPasswordHint"
                     android:padding="12dp"
                     android:inputType="textPassword"
                     android:textColor="#000000" />
@@ -97,7 +98,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
                     android:background="#CECBCB"
-                    android:hint="Enter your email"
+                    android:hint="@string/emailHint"
                     android:padding="12dp"
                     android:inputType="textEmailAddress"
                     android:textColor="#000000" />
@@ -108,7 +109,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
                     android:background="#CECBCB"
-                    android:hint="Enter your phone number"
+                    android:hint="@string/phoneHint"
                     android:padding="12dp"
                     android:inputType="phone"
                     android:textColor="#000000" />
@@ -119,30 +120,32 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
                     android:background="#CECBCB"
-                    android:hint="Enter your location"
+                    android:hint="@string/locationHint"
+                    android:inputType="text"
                     android:padding="12dp"
                     android:textColor="#000000" />
 
-                <EditText
-                    android:id="@+id/etPicture"
+                <!-- Button to Choose Profile Picture -->
+                <Button
+                    android:id="@+id/btnUploadPicture"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
-                    android:background="#CECBCB"
-                    android:hint="Picture"
+                    android:backgroundTint="#D1CFCF"
                     android:padding="12dp"
+                    android:text="@string/profileHint"
                     android:textColor="#000000" />
 
-<!--                <Button-->
-<!--                    android:id="@+id/btnUploadPicture"-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_marginBottom="8dp"-->
-<!--                    android:backgroundTint="#D1CFCF"-->
-<!--                    android:padding="12dp"-->
-<!--                    android:text="Choose a profile picture"-->
-<!--                    android:textColor="#000000" />-->
+                <!-- ImageView to Display Selected Picture -->
+                <ImageView
+                    android:id="@+id/ivProfilePicture"
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:src="@drawable/ic_placeholder_signup" />
 
+                <!-- SignUp Button -->
                 <Button
                     android:id="@+id/btnSignUp"
                     android:layout_width="match_parent"
@@ -150,7 +153,7 @@
                     android:layout_marginTop="16dp"
                     android:backgroundTint="#E50914"
                     android:padding="15dp"
-                    android:text="Sign Up"
+                    android:text="@string/sign_up"
                     android:textColor="#FFFFFF" />
 
             </LinearLayout>

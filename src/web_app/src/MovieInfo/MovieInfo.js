@@ -12,6 +12,7 @@ function MovieInfo({ id }) {
     async function fetchMovie() {
       const response = await fetch(`http://localhost:${backendPort}/api/movies/${id}`);
       const data = await response.json();
+
       setMovie(data);
     }
 
@@ -23,12 +24,15 @@ function MovieInfo({ id }) {
     return (
       <div className="movie-info">
         <p>Loading...</p>
-        <Recommendations id={id} />
+        <section className="recommendations">
+          <h2>Movies for you:</h2>
+          <Recommendations id={id} />
+        </section>
       </div>
     );
   }
 
-  const { title, categories, lengthMinutes, releaseYear, description, image, trailer, cast } = movie;
+  const { title, categories, lengthMinutes, releaseYear, description, cast } = movie;
 
   return (
     <div className="movie-info">
@@ -38,7 +42,7 @@ function MovieInfo({ id }) {
       <section className="movie-details">
         <section className="info-header">
           <h1>{title}</h1>
-          <Link to={`/api/movies/${id}/watch`}>
+          <Link to={`/movies/${id}/watch`}>
             <button
               className="btn btn-light play-btn-main"
               type="button"
