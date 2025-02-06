@@ -7,6 +7,8 @@ import android.util.Log;
 import com.example.myapplication.MyApplication;
 import com.example.myapplication.R;
 import com.example.myapplication.api.WebServiceAPI;
+import com.example.myapplication.dao.AppDB;
+import com.example.myapplication.dao.UserDao;
 import com.example.myapplication.entities.User;
 import com.example.myapplication.entities.ProfilePictureResponse;
 
@@ -23,7 +25,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class UserRepository {
-
+    private UserDao userDao;
     private final WebServiceAPI webServiceAPI;
 
     public UserRepository(Application application) {
@@ -34,6 +36,8 @@ public class UserRepository {
                 .build();
 
         webServiceAPI = retrofit.create(WebServiceAPI.class);
+        AppDB db = AppDB.getInstance(application.getApplicationContext());
+        userDao = db.userDao();
     }
 
     public void signUp(User user, UserCallBack callback) {
@@ -41,6 +45,7 @@ public class UserRepository {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
                 if (response.isSuccessful()) {
+                    saveUserToDb(user);
                     callback.onSuccess(user);
                 } else {
                     callback.onFailure("Sign-up failed: " + response.message());
@@ -81,6 +86,15 @@ public class UserRepository {
                 callback.onUploadFailure("API error: " + t.getMessage());
             }
         });
+    }
+
+    private void saveUserToDb(User user) {
+        new Thread(() -> userDao.insert(user)).start();
+    }
+
+
+    public User getStoredUser() {
+        return userDao.getUser();
     }
 
     public interface UserCallBack {

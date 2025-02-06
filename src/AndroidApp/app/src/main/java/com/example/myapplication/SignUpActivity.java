@@ -86,8 +86,15 @@ public class SignUpActivity extends AppCompatActivity {
                 return;
             }
 
+            if (password.length() < 8) {
+                binding.etPassword.setError("Password must be at least 8 characters long");
+                binding.etPassword.requestFocus();
+                return;
+            }
+
             if (!password.equals(confirmedPassword)) {
                 binding.etConfirmPassword.setError("Passwords do not match");
+                binding.etConfirmPassword.requestFocus();
                 return;
             }
 
@@ -96,7 +103,8 @@ public class SignUpActivity extends AppCompatActivity {
             repository.signUp(user, new UserRepository.UserCallBack() {
                 @Override
                 public void onSuccess(User user) {
-                    runOnUiThread(() -> Toast.makeText(SignUpActivity.this, "User registered successfully!", Toast.LENGTH_SHORT).show());
+                    User dbuser = repository.getStoredUser();
+                    runOnUiThread(() -> Toast.makeText(SignUpActivity.this, "User " + dbuser.getUsername() + " registered successfully!", Toast.LENGTH_SHORT).show());
 
                     if (imageUri != null) {
                         try {
@@ -120,7 +128,7 @@ public class SignUpActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailure(String errorMessage) {
-                    Toast.makeText(SignUpActivity.this, "Sign-up failed: " + errorMessage, Toast.LENGTH_SHORT).show();
+                    runOnUiThread(() -> Toast.makeText(SignUpActivity.this, "Sign-up failed: " + errorMessage, Toast.LENGTH_SHORT).show());
                 }
             });
         });
@@ -159,7 +167,7 @@ public class SignUpActivity extends AppCompatActivity {
         fileOutputStream.close();
         inputStream.close();
 
-        Log.d("SAVE_IMAGE", "Saved image path: " + file.getAbsolutePath());
+        Log.d("UPLOAD", "Saved image path: " + file.getAbsolutePath());
 
         return file;
     }
