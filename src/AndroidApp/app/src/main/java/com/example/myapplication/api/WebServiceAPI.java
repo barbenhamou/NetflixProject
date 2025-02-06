@@ -14,7 +14,7 @@ import retrofit2.http.POST;
 
 public interface WebServiceAPI {
     @GET("movies")
-    Call<List<Movie>> getMovies();
+    Call <List<List<Movie>>> getMovies();
 
     @GET("movies/search/[.*]")
     Call<List<Movie>> getAllMovies();
