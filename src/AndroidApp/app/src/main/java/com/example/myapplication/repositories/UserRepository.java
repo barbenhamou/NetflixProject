@@ -74,6 +74,7 @@ public class UserRepository {
             @Override
             public void onResponse(Call<ProfilePictureResponse> call, Response<ProfilePictureResponse> response) {
                 if (response.isSuccessful()) {
+                    new Thread(() -> userDao.updateProfilePicture(username, imageFile.getAbsolutePath())).start();
                     callback.onUploadSuccess(response.body());
                 } else {
                     callback.onUploadFailure("Image upload failed: " + response.message());
@@ -89,7 +90,12 @@ public class UserRepository {
     }
 
     public void saveUserToDb(User user) {
-        new Thread(() -> userDao.insert(user)).start();
+        new Thread(() -> {
+            if (userDao.getUser() != null) { // Only clear if users exist
+                userDao.clear();  // Delete all users before inserting
+            }
+            userDao.insert(user);  // Insert new user
+        }).start();
     }
 
     public User getStoredUser() {

@@ -103,8 +103,10 @@ public class SignUpActivity extends AppCompatActivity {
             repository.signUp(user, new UserRepository.UserCallBack() {
                 @Override
                 public void onSuccess(User user) {
-                    User dbuser = repository.getStoredUser();
-                    runOnUiThread(() -> Toast.makeText(SignUpActivity.this, "User " + dbuser.getUsername() + " registered successfully!", Toast.LENGTH_SHORT).show());
+
+                    runOnUiThread(() -> {
+                        Toast.makeText(SignUpActivity.this, "User registered successfully!", Toast.LENGTH_SHORT).show();
+                    });
 
                     if (imageUri != null) {
                         try {
@@ -113,8 +115,6 @@ public class SignUpActivity extends AppCompatActivity {
                                 @Override
                                 public void onUploadSuccess(ProfilePictureResponse response) {
                                     runOnUiThread(() -> Toast.makeText(SignUpActivity.this, response.getMessage(), Toast.LENGTH_SHORT).show());
-                                    user.setPicture(imageUri.toString());
-                                    repository.saveUserToDb(user);
                                 }
 
                                 @Override
