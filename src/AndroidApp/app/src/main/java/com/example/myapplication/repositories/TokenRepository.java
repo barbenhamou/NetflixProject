@@ -61,6 +61,10 @@ public class TokenRepository {
         });
     }
 
+    public void logout() {
+        new Thread((() -> tokenDao.clear())).start();
+    }
+
     private void saveTokenToDb(Token token) {
         new Thread(() -> tokenDao.insert(token)).start();
     }
