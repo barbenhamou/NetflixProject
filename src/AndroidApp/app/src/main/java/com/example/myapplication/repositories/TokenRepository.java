@@ -14,6 +14,7 @@ import com.example.myapplication.dao.TokenDao;
 import com.example.myapplication.entities.LoginRequest;
 import com.example.myapplication.entities.LoginResponse;
 import com.example.myapplication.entities.Token;
+import com.example.myapplication.entities.User;
 
 import java.util.concurrent.Executors;
 
@@ -38,6 +39,12 @@ public class TokenRepository {
         AppDB db = AppDB.getInstance(application.getApplicationContext());
         this.tokenDao = db.tokenDao();
         this.tokenData = new MutableLiveData<>();
+        Executors.newSingleThreadExecutor().execute(() -> {
+            Token token = tokenDao.getToken();
+            if (token != null) {
+                tokenData.postValue(token);
+            }
+        });
     }
 
     public void loginUser(String username, String password, TokenCallback callback) {

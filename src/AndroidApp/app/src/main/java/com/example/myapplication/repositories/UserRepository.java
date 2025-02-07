@@ -1,7 +1,6 @@
 package com.example.myapplication.repositories;
 
 import android.app.Application;
-import android.net.Uri;
 import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
@@ -42,6 +41,13 @@ public class UserRepository {
         AppDB db = AppDB.getInstance(application.getApplicationContext());
         userDao = db.userDao();
         userData = new MutableLiveData<>();
+
+        Executors.newSingleThreadExecutor().execute(() -> {
+            User user = userDao.getUser();
+            if (user != null) {
+                userData.postValue(user);
+            }
+        });
     }
 
     public void signUp(User user, UserCallBack callback) {
@@ -69,7 +75,7 @@ public class UserRepository {
             return;
         }
 
-        Log.d("UPLOAD", "Uploading file: " + imageFile.getAbsolutePath());
+        Log.d("UserRepository", "Uploading file: " + imageFile.getAbsolutePath()); // Remove
 
         RequestBody requestBody = RequestBody.create(MediaType.parse("image/*"), imageFile);
         MultipartBody.Part imagePart = MultipartBody.Part.createFormData("profilePicture", imageFile.getName(), requestBody);
@@ -90,7 +96,7 @@ public class UserRepository {
 
             @Override
             public void onFailure(Call<ProfilePictureResponse> call, Throwable t) {
-                Log.d("UPLOAD", "Upload failed", t);
+                Log.d("UserRepository", "Upload failed", t); // Remove
                 callback.onUploadFailure("API error: " + t.getMessage());
             }
         });
