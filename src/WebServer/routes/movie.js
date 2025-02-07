@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-
+const { createMulterForMovie } = require("../controllers/content");
 const movieController = require('../controllers/movie');
 const tokenVerifier = require('../TokenVerifier');
 
@@ -20,7 +20,4 @@ router.route('/:id/recommend')
 router.route('/search/:query')
     .get(movieController.searchInMovies)
 
-router.route('/:id/files')
-    .get(movieController.getMovieFiles)
-//tokenVerifier.tokenValidation(false), 
 module.exports = router;

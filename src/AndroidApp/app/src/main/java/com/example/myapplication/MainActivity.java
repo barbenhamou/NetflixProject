@@ -36,5 +36,17 @@ public class MainActivity extends AppCompatActivity {
             intent.putExtra("movie", movie);
             startActivity(intent);
         });
+
+        Button login = findViewById(R.id.login);
+        login.setOnClickListener(v -> {
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
+        });
+
+        Button signUp = findViewById(R.id.signup);
+        signUp.setOnClickListener(v -> {
+            Intent intent = new Intent(this, SignUpActivity.class);
+            startActivity(intent);
+        });
     }
 }

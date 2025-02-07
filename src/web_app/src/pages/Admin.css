@@ -1,0 +1,151 @@
+.hero-container {
+    position: relative;
+    width: 100%;
+    height: 90vh;
+    background: url('https://analyticsindiamag.com/wp-content/uploads/2019/05/apps.55787.9007199266246365.687a10a8-4c4a-4a47-8ec5-a95f70d8852d.jpg') center/cover no-repeat;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: white;
+    padding: 20px;
+}
+
+.logo {
+    width: 200px;
+    position: absolute;
+    /* Ensures absolute positioning */
+    top: 0;
+    /* Moves the logo to the very top edge */
+    left: 0;
+    /* Moves the logo to the very left edge */
+    z-index: 2;
+    /* Ensures it stays above other elements */
+    margin: 0;
+    /* Removes any margin if applied */
+    padding: 0;
+    /* Removes any padding if applied */
+}
+
+.hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+}
+
+.hero-content {
+    position: relative;
+    max-width: 600px;
+    z-index: 1;
+}
+
+h1 {
+    font-size: 3rem;
+    font-weight: bold;
+}
+
+h2 {
+    font-size: 1.5rem;
+    margin-top: 10px;
+}
+
+p {
+    font-size: 1.2rem;
+    margin-top: 20px;
+}
+
+.email-form {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.email-form input {
+    flex: 1;
+    padding: 10px;
+    font-size: 1rem;
+    border: none;
+    border-radius: 5px;
+}
+
+.email-form button {
+    background: red;
+    color: white;
+    padding: 10px 20px;
+    font-size: 1.2rem;
+    border: none;
+    cursor: pointer;
+    border-radius: 10px;
+}
+
+.email-form button:hover {
+    background: darkred;
+}
+
+.dropdown-button {
+    background-color: #d10000;
+    color: white;
+    padding: 15px;
+    width: 100%;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+    text-align: left;
+    border-radius: 5px;
+}
+
+.dropdown-options {
+    position: absolute;
+    width: 100%;
+    background: black;
+    border-radius: 5px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    /* Space between buttons */
+    padding: 10px 0;
+    z-index: 10;
+}
+
+.dropdown-item {
+    width: 90%;
+    padding: 12px;
+    background: #b00000;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 5px;
+    text-align: center;
+    transition: background 0.3s;
+}
+
+.dropdown-item:hover {
+    background: #ff4d4d;
+}
+
+.custom-file-label {
+    display: inline-block;
+    padding: 10px 15px;
+    background-color: #007bff;
+    /* Change to your desired color */
+    color: #fff;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.custom-file-label:hover {
+    background-color: #0056b3;
+    /* Darker shade on hover */
+}
+
+.hidden-input {
+    display: none;
+}
