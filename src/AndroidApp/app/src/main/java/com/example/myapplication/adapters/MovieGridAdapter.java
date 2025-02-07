@@ -1,6 +1,9 @@
 package com.example.myapplication.adapters;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,13 +56,11 @@ public class MovieGridAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        if(convertView.getParent() != null) {
-            ((ViewGroup)convertView.getParent()).removeView(convertView);
-        }
-
-        // Bind data to the views
         Movie movie = movieList.get(position);
-        holder.moviePoster.setImageResource(R.drawable.ic_launcher_background); // TODO: Replace with image
+        // Decode image
+        byte[] imageBytes = Base64.decode(movie.getImageFile(), Base64.DEFAULT);
+        Bitmap decodedImage = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
+        holder.moviePoster.setImageBitmap(decodedImage);
         holder.movieTitle.setText(movie.getTitle());
 
         return convertView;

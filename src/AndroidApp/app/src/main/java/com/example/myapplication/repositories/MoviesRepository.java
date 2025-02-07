@@ -55,7 +55,9 @@ public class MoviesRepository {
 
         new Thread(() -> {
             Movie movie = movieDao.getMovie(id);
-            movieData.postValue(movie);
+            if (movie != null) {
+                movieData.postValue(movie);
+            }
         }).start();
 
         return movieData;

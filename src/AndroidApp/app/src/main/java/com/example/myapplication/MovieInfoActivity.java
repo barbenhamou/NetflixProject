@@ -1,25 +1,29 @@
 package com.example.myapplication;
 
 import android.os.Bundle;
-import android.widget.GridView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.OptIn;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.media3.common.MediaItem;
+import androidx.media3.common.util.UnstableApi;
+import androidx.media3.exoplayer.ExoPlayer;
+import androidx.media3.exoplayer.source.DefaultMediaSourceFactory;
+import androidx.media3.ui.PlayerView;
 
+import com.example.myapplication.adapters.DynamicGridView;
 import com.example.myapplication.adapters.MovieGridAdapter;
 import com.example.myapplication.databinding.ActivityMovieInfoBinding;
 import com.example.myapplication.entities.Movie;
 import com.example.myapplication.viewmodels.MovieViewModel;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class MovieInfoActivity extends AppCompatActivity {
     private ActivityMovieInfoBinding binding;
     private MovieViewModel viewModel;
-    private boolean movieLoaded = false;
     private boolean recommendationsLoaded = false;
+    private ExoPlayer player;
+    private PlayerView playerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,46 +35,49 @@ public class MovieInfoActivity extends AppCompatActivity {
         viewModel = new ViewModelProvider(this).get(MovieViewModel.class);
         viewModel.setRepository(this.getApplication());
 
-        GridView gridView = binding.gvRecommendations;
+        viewModel.reload();
 
-        //viewModel.reload();
+        String token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2N2E2MjE2OGU5MTYyOGUwODE2YjM0ZGQiLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE3Mzg5NjI4MzZ9.tYhtXcOnJiszDsjSgZISZeEuimdyooD0QpfR3d_qYpo";
 
-        String id = getIntent().getStringExtra("id");
-        final Movie[] testMovie = {null};
-        if (!movieLoaded) {
-            viewModel.getMovies().observe(this, movies -> {
-                if (movies != null && !movies.isEmpty()) {
-                    viewModel.getMovie(id).observe(this, movie -> {
-                        if (movie != null) {
-                            testMovie[0] = movie;
-                            displayMovie(movie);
-                            movieLoaded = true;
-                        }
-                    });
-                }
-            });
+        Movie movie = (Movie) getIntent().getSerializableExtra("movie");
+        if (movie == null) {
+            return;
         }
 
-        String token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NzllOGIwZDc0ZTA4NzBhZGQzZWM1M2YiLCJpc0FkbWluIjpmYWxzZSwiaWF0IjoxNzM4NDQzNTYwfQ.vyCFHfHDD1U11GHgTtBiWi1DCGCTsr8cG57Gzvwy_6s";
-        if (!recommendationsLoaded) {
-            viewModel.getRecommendations(id, token).observe(this, movieList -> {
-                if (/*movieList != null && !movieList.isEmpty()*/ true) {
-                    List<Movie> testlist = new ArrayList<>();
-                    testlist.add(testMovie[0]);
-                    MovieGridAdapter adapter = new MovieGridAdapter(MovieInfoActivity.this, testlist);
-                    gridView.setAdapter(adapter);
-                    recommendationsLoaded = true;
-                }
-            });
+        displayMovie(movie);
+
+        playerView = binding.MovieInfoTrailer;
+        String link = getString(R.string.BaseUrl) + "contents/movies/" + movie.getId() + "?type=trailer&token=" + token;
+
+        displayRecommendations(movie, token);
+
+        initializePlayer(link);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (player != null) {
+            player.pause();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (player != null) {
+            player.release();
+            player = null;
         }
     }
 
     public void displayMovie(@NonNull Movie movie) {
         binding.tvMovieName.setText(movie.getTitle());
 
+        final int MINUTES_PER_HOUR = 60;
         int len = movie.getLengthMinutes();
-        int h = len / 60;
-        int m = len % 60;
+        int h = len / MINUTES_PER_HOUR;
+        int m = len % MINUTES_PER_HOUR;
         String yearLen = getString(R.string.movie_year_length, movie.getReleaseYear(), h, m);
         binding.tvMovieYearLength.setText(yearLen);
 
@@ -84,5 +91,45 @@ public class MovieInfoActivity extends AppCompatActivity {
 
         String recommendTitle = getString(R.string.movies_for_you, movie.getTitle());
         binding.tvMoviesForYou.setText(recommendTitle);
+    }
+
+    @OptIn(markerClass = UnstableApi.class)
+    private void initializePlayer(String link) {
+        if (player == null) {
+            player = new ExoPlayer.Builder(this)
+                    .setMediaSourceFactory(new DefaultMediaSourceFactory(() ->
+                            new CustomHttpDataSourceFactory().createDataSourceInternal(null)))
+                    .build();
+
+            player.setVolume(1.0f);
+
+            if (playerView != null) {
+                playerView.setPlayer(player);
+            }
+
+            MediaItem mediaItem = MediaItem.fromUri(link);
+
+            player.setMediaItem(mediaItem);
+            player.prepare();
+            player.play();
+        }
+    }
+
+    public void displayRecommendations(Movie movie, String token) {
+        if (!recommendationsLoaded) {
+            viewModel.getRecommendations(movie.getId(), token).observe(this, movieList -> {
+                if (movieList != null && !movieList.isEmpty()) {
+                    DynamicGridView gridView = binding.gvRecommendations;
+                    MovieGridAdapter adapter = new MovieGridAdapter(MovieInfoActivity.this, movieList);
+                    gridView.setAdapter(adapter);
+
+                    String moviesForYou = getString(R.string.movies_for_you, movie.getTitle());
+                    binding.tvMoviesForYou.setText(moviesForYou);
+                } else {
+                    binding.tvMoviesForYou.setText(R.string.nothing_to_recommend);
+                }
+                recommendationsLoaded = true;
+            });
+        }
     }
 }
