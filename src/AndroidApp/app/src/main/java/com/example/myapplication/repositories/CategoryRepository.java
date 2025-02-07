@@ -31,9 +31,9 @@ public class CategoryRepository {
                 .create(WebServiceAPI.class);
     }
 
-    /** Adds a new category by calling the POST /categories endpoint. */
+    /** Already updated by your teammate (no changes except passing auth header). */
     public void addCategory(Token token, Category category, CategoryCallback callback) {
-        webServiceAPI.addCategory(category,"Bearer " + token.getToken()).enqueue(new Callback<Void>() {
+        webServiceAPI.addCategory(category, "Bearer " + token.getToken()).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
                 if (response.isSuccessful()) {
@@ -52,11 +52,12 @@ public class CategoryRepository {
     }
 
     /**
-     * Deletes a category.
-     * Since the user provides a category name (not the id), we first call GET /categories,
-     * find the matching category, then call DELETE /categories/{id}.
+     * Delete a category by name, requiring a Token for authorization.
+     * 1) GET /categories
+     * 2) Find matching category
+     * 3) DELETE /categories/{id} with "Bearer <token>"
      */
-    public void deleteCategory(String categoryName, CategoryCallback callback) {
+    public void deleteCategory(Token token, String categoryName, CategoryCallback callback) {
         webServiceAPI.getCategories().enqueue(new Callback<List<Category>>() {
             @Override
             public void onResponse(Call<List<Category>> call, Response<List<Category>> response) {
@@ -70,10 +71,10 @@ public class CategoryRepository {
                         }
                     }
                     if (foundCategory != null) {
-                        // Assign to a final variable so it can be referenced inside the inner class.
+                        // Make a final reference so we can use it inside the inner class
                         final Category finalFoundCategory = foundCategory;
                         String id = finalFoundCategory.getId();
-                        webServiceAPI.deleteCategory(id).enqueue(new Callback<Void>() {
+                        webServiceAPI.deleteCategory("Bearer " + token.getToken(), id).enqueue(new Callback<Void>() {
                             @Override
                             public void onResponse(Call<Void> call, Response<Void> response) {
                                 if (response.isSuccessful()) {
@@ -102,10 +103,12 @@ public class CategoryRepository {
     }
 
     /**
-     * Updates a category.
-     * Similar to delete, first find the category (by name), then PATCH /categories/{id}.
+     * Update a category by name, requiring a Token for authorization.
+     * 1) GET /categories
+     * 2) Find matching category
+     * 3) PATCH /categories/{id} with "Bearer <token>"
      */
-    public void updateCategory(String categoryName, Category updatedCategory, CategoryCallback callback) {
+    public void updateCategory(Token token, String categoryName, Category updatedCategory, CategoryCallback callback) {
         webServiceAPI.getCategories().enqueue(new Callback<List<Category>>() {
             @Override
             public void onResponse(Call<List<Category>> call, Response<List<Category>> response) {
@@ -121,20 +124,21 @@ public class CategoryRepository {
                     if (foundCategory != null) {
                         final Category finalFoundCategory = foundCategory;
                         String id = finalFoundCategory.getId();
-                        webServiceAPI.updateCategory(id, updatedCategory).enqueue(new Callback<Void>() {
-                            @Override
-                            public void onResponse(Call<Void> call, Response<Void> response) {
-                                if (response.isSuccessful()) {
-                                    callback.onSuccess(updatedCategory);
-                                } else {
-                                    callback.onFailure("Error " + response.code() + ": " + response.message());
-                                }
-                            }
-                            @Override
-                            public void onFailure(Call<Void> call, Throwable t) {
-                                callback.onFailure("API error: " + t.getMessage());
-                            }
-                        });
+                        webServiceAPI.updateCategory("Bearer " + token.getToken(), id, updatedCategory)
+                                .enqueue(new Callback<Void>() {
+                                    @Override
+                                    public void onResponse(Call<Void> call, Response<Void> response) {
+                                        if (response.isSuccessful()) {
+                                            callback.onSuccess(updatedCategory);
+                                        } else {
+                                            callback.onFailure("Error " + response.code() + ": " + response.message());
+                                        }
+                                    }
+                                    @Override
+                                    public void onFailure(Call<Void> call, Throwable t) {
+                                        callback.onFailure("API error: " + t.getMessage());
+                                    }
+                                });
                     } else {
                         callback.onFailure("Category not found");
                     }

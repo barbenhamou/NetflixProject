@@ -14,17 +14,16 @@ import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
-import retrofit2.http.Multipart;
 import retrofit2.http.Header;
+import retrofit2.http.Multipart;
 import retrofit2.http.PATCH;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
 import retrofit2.http.Path;
-import retrofit2.http.Path;
 
 public interface WebServiceAPI {
 
-    // Existing endpoints …
+    // Existing endpoints
     @GET("movies")
     Call<List<List<Movie>>> getMovies();
 
@@ -42,26 +41,31 @@ public interface WebServiceAPI {
 
     // === CATEGORY ENDPOINTS ===
 
-    // Get all categories
+    // Get all categories (no header, if your API does not require auth for fetching categories)
     @GET("categories")
     Call<List<Category>> getCategories();
 
-    // Create a new category
+    // Create a new category (requires auth header)
     @POST("categories")
-    Call<Void> addCategory(@Body Category category,  @Header("Authorization") String authToken);
+    Call<Void> addCategory(
+            @Body Category category,
+            @Header("Authorization") String authToken
+    );
 
-    // Get a single category by its id
+    // Get a single category by ID (if needed)
     @GET("categories/{id}")
-    Call<Category> getCategory(@Path("id") String id);
+    Call<Category> getCategory(
+            @Path("id") String id
+    );
 
-    // Update (patch) a category by its id
-    @PATCH("categories/{id}")
-    Call<Void> updateCategory(@Path("id") String id, @Body Category category);
-
-    // Delete a category by its id
+    // Update (PATCH) a category by its id (requires auth header)
     @DELETE("categories/{id}")
-    Call<Void> deleteCategory(@Path("id") String id);
-    
+    Call<Void> deleteCategory(@Header("Authorization") String authToken, @Path("id") String id);
+
+    @PATCH("categories/{id}")
+    Call<Void> updateCategory(@Header("Authorization") String authToken, @Path("id") String id, @Body Category category);
+
+
     @Multipart
     @POST("contents/users/{username}")
     Call<ProfilePictureResponse> uploadProfilePicture(
