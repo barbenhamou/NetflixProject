@@ -4,14 +4,10 @@ import { useEffect, useState } from "react";
 
 function MovieCard({ id, title, categories, lengthMinutes, releaseYear, description, showDescription, infoButton }) {
     const [imageSrc, setImageSrc] = useState("");
-    
+
     useEffect(() => {
         const fetchImage = async () => {
-            const response = await fetch(`http://localhost:${backendPort}/api/movies/${id}/files?type=image`, {
-                headers: {
-                    'Authorization': `Bearer ${localStorage.getItem("authToken")}`
-                }
-            });
+            const response = await fetch(`http://localhost:${backendPort}/api/contents/movies/${id}?type=image`);
 
             const blob = await response.blob();
             const imageUrl = URL.createObjectURL(blob);
@@ -20,7 +16,7 @@ function MovieCard({ id, title, categories, lengthMinutes, releaseYear, descript
 
         fetchImage();
     }, [backendPort, id]);
-    
+
     return (
         <div className="card movie-card">
             <div className="image-container">
@@ -30,8 +26,8 @@ function MovieCard({ id, title, categories, lengthMinutes, releaseYear, descript
                     src={imageSrc}
                 />
                 <i
-                        className="bi bi-play-circle play-btn"
-                    onClick={() => window.location.href = `/api/movies/${id}/watch`}></i>
+                    className="bi bi-play-circle play-btn"
+                    onClick={() => window.location.href = `/movies/${id}/watch`}></i>
             </div>
             <div className="card-body">
                 <section className="title-container">
@@ -39,7 +35,7 @@ function MovieCard({ id, title, categories, lengthMinutes, releaseYear, descript
                     {infoButton &&
                         <i
                             className="bi bi-info-circle info-btn"
-                            onClick={() => window.location.href = `/api/movies/${id}/info`}></i>
+                            onClick={() => window.location.href = `/movies/${id}/info`}></i>
                     }
                 </section>
                 <p className="card-text">

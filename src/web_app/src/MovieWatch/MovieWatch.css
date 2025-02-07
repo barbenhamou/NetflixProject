@@ -15,7 +15,7 @@
     width: 75%;
 }
 
-.bi-arrow-left {
+.bi-house-door {
     font-size: 2rem;
     color: #fff;
     position: absolute;
@@ -25,6 +25,11 @@
     transition: transform 0.3s ease;
 }
 
-.bi-arrow-left:hover {
+.bi-house-door:hover {
     transform: scale(1.35);
+}
+
+.loading,
+.logged-out {
+    color: white;
 }

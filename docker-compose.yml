@@ -1,4 +1,4 @@
-version: "3.8"  # The "version" field is obsolete but doesn't break functionality.
+version: "3.8"
 
 services:
   nodejs-server:
@@ -16,7 +16,7 @@ services:
   mongo:
     image: mongo:latest
     container_name: mongo
-    command: ["mongod", "--quiet", "--bind_ip_all"]
+    command: ["mongod", "--quiet", "--bind_ip_all", "--logpath", "/dev/null"]
     ports:
       - "27017:27017"
     volumes:

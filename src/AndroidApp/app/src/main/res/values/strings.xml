@@ -1,4 +1,24 @@
 <resources>
     <string name="app_name">My Application</string>
     <string name="play_movie_btn">Play Movie</string>
+    <string name="BaseUrl">http://10.0.2.2:3001/api/</string>
+    <string name="movie_year_length">%1$d | %2$dh %3$dm</string>
+    <string name="movie_genres">Genres: %1$s</string>
+    <string name="movie_cast">Cast: %1$s</string>
+    <string name="LoginTitle">Login</string>
+    <string name="etLoginUsername">Username</string>
+    <string name="etLoginPassword">Password</string>
+    <string name="btnLogin">Login</string>
+    <string name="LoginLinkToSignUp">New to Neftlix?</string>
+    <string name="LoginLinkToSignUpText">SignUp</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="passwordHint">Create a password</string>
+    <string name="emailHint">Enter your email</string>
+    <string name="phoneHint">Enter your phone number</string>
+    <string name="locationHint">Enter your location</string>
+    <string name="profileHint">Choose a profile picture</string>
+    <string name="confirmPasswordHint">Confirm your password</string>
+    <string name="btnBack">Back</string>
+    <string name="title">Create an Account</string>
+    <string name="usernameHint">Enter your username</string>
 </resources>

@@ -1,0 +1,109 @@
+package com.example.myapplication.repositories;
+
+import android.app.Application;
+import android.net.Uri;
+import android.util.Log;
+
+import com.example.myapplication.MyApplication;
+import com.example.myapplication.R;
+import com.example.myapplication.api.WebServiceAPI;
+import com.example.myapplication.dao.AppDB;
+import com.example.myapplication.dao.UserDao;
+import com.example.myapplication.entities.User;
+import com.example.myapplication.entities.ProfilePictureResponse;
+
+import java.io.File;
+import java.util.concurrent.Executors;
+
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
+public class UserRepository {
+    private UserDao userDao;
+    private final WebServiceAPI webServiceAPI;
+
+    public UserRepository(Application application) {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(MyApplication.context.getString(R.string.BaseUrl))
+                .addConverterFactory(GsonConverterFactory.create())
+                .callbackExecutor(Executors.newSingleThreadExecutor())
+                .build();
+
+        webServiceAPI = retrofit.create(WebServiceAPI.class);
+        AppDB db = AppDB.getInstance(application.getApplicationContext());
+        userDao = db.userDao();
+    }
+
+    public void signUp(User user, UserCallBack callback) {
+        webServiceAPI.signUp(user).enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) {
+                    saveUserToDb(user);
+                    callback.onSuccess(user);
+                } else {
+                    callback.onFailure("Sign-up failed: " + response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                callback.onFailure("API error: " + t.getMessage());
+            }
+        });
+    }
+
+    public void uploadProfilePicture(String username, File imageFile, UploadCallBack callback) {
+        if (imageFile == null || !imageFile.exists()) {
+            callback.onUploadFailure("File does not exist: " + (imageFile != null ? imageFile.getAbsolutePath() : "null"));
+            return;
+        }
+
+        Log.d("UPLOAD", "Uploading file: " + imageFile.getAbsolutePath());
+
+        RequestBody requestBody = RequestBody.create(MediaType.parse("image/*"), imageFile);
+        MultipartBody.Part imagePart = MultipartBody.Part.createFormData("profilePicture", imageFile.getName(), requestBody);
+
+        webServiceAPI.uploadProfilePicture(username, imagePart).enqueue(new Callback<ProfilePictureResponse>() {
+            @Override
+            public void onResponse(Call<ProfilePictureResponse> call, Response<ProfilePictureResponse> response) {
+                if (response.isSuccessful()) {
+                    callback.onUploadSuccess(response.body());
+                } else {
+                    callback.onUploadFailure("Image upload failed: " + response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ProfilePictureResponse> call, Throwable t) {
+                Log.d("UPLOAD", "Upload failed", t);
+                callback.onUploadFailure("API error: " + t.getMessage());
+            }
+        });
+    }
+
+    private void saveUserToDb(User user) {
+        new Thread(() -> userDao.insert(user)).start();
+    }
+
+
+    public User getStoredUser() {
+        return userDao.getUser();
+    }
+
+    public interface UserCallBack {
+        void onSuccess(User user);
+        void onFailure(String errorMessage);
+    }
+
+    public interface UploadCallBack {
+        void onUploadSuccess(ProfilePictureResponse response);
+        void onUploadFailure(String errorMessage);
+    }
+}

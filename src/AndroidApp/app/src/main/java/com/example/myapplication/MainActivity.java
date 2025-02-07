@@ -29,5 +29,17 @@ public class MainActivity extends AppCompatActivity {
             intent.putExtra("id", "67936f2a686d1e3d89062f93");
             startActivity(intent);
         });
+
+        Button login = findViewById(R.id.login);
+        login.setOnClickListener(v -> {
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
+        });
+
+        Button signUp = findViewById(R.id.signup);
+        signUp.setOnClickListener(v -> {
+            Intent intent = new Intent(this, SignUpActivity.class);
+            startActivity(intent);
+        });
     }
 }
