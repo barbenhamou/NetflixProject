@@ -3,6 +3,9 @@ package com.example.myapplication.repositories;
 import android.app.Application;
 import android.util.Log;
 
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+
 import com.example.myapplication.MyApplication;
 import com.example.myapplication.R;
 import com.example.myapplication.api.WebServiceAPI;
@@ -23,6 +26,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class TokenRepository {
     private TokenDao tokenDao;
     WebServiceAPI webServiceAPI;
+    private MutableLiveData<Token> tokenData;
 
     public TokenRepository(Application application) {
         this.webServiceAPI = new Retrofit.Builder()
@@ -33,6 +37,7 @@ public class TokenRepository {
                 .create(WebServiceAPI.class);
         AppDB db = AppDB.getInstance(application.getApplicationContext());
         this.tokenDao = db.tokenDao();
+        this.tokenData = new MutableLiveData<>();
     }
 
     public void loginUser(String username, String password, TokenCallback callback) {
@@ -66,11 +71,15 @@ public class TokenRepository {
     }
 
     private void saveTokenToDb(Token token) {
-        new Thread(() -> tokenDao.insert(token)).start();
+        new Thread(() -> {
+            tokenDao.clear();
+            tokenDao.insert(token);
+            tokenData.postValue(tokenDao.getToken());
+        }).start();
     }
 
-    public Token getStoredToken() {
-        return tokenDao.getToken();
+    public LiveData<Token> getStoredToken() {
+        return tokenData;
     }
 
     public interface TokenCallback {
