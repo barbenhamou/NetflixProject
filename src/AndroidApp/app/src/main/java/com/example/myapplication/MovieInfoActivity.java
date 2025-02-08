@@ -35,8 +35,6 @@ public class MovieInfoActivity extends AppCompatActivity {
         viewModel = new ViewModelProvider(this).get(MovieViewModel.class);
         viewModel.setRepository(this.getApplication());
 
-        String token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2N2E2MjE2OGU5MTYyOGUwODE2YjM0ZGQiLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE3Mzg5NjI4MzZ9.tYhtXcOnJiszDsjSgZISZeEuimdyooD0QpfR3d_qYpo";
-
         Movie movie = (Movie) getIntent().getSerializableExtra("movie");
         if (movie == null) {
             return;
@@ -45,11 +43,15 @@ public class MovieInfoActivity extends AppCompatActivity {
         displayMovie(movie);
 
         playerView = binding.MovieInfoTrailer;
-        String link = getString(R.string.BaseUrl) + "contents/movies/" + movie.getId() + "?type=trailer&token=" + token;
 
-        displayRecommendations(movie, token);
+        MainActivity.tokenRepository.getStoredToken().observe(this, tokenObj -> {
+            String token = tokenObj.getToken();
+            String link = getString(R.string.BaseUrl) + "contents/movies/" + movie.getId() + "?type=trailer&token=" + token;
 
-        initializePlayer(link);
+            displayRecommendations(movie, token);
+
+            initializePlayer(link);
+        });
     }
 
     @Override

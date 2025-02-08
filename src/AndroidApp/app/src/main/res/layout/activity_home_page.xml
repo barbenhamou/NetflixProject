@@ -18,9 +18,7 @@
             android:layout_height="?attr/actionBarSize"
             android:background="#141414"
             app:titleTextAppearance="@style/ToolbarTextStyle"
-            android:title="Neftlix"
-            android:titleTextColor="@android:color/white"
-            />
+            android:title="@string/app_name" />
 
         <!-- Video View -->
         <VideoView

@@ -1,8 +1,6 @@
 package com.example.myapplication;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
@@ -10,7 +8,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -23,8 +20,6 @@ import com.example.myapplication.adapters.ParentAdapter;
 import com.example.myapplication.databinding.ActivityHomePageBinding;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,7 +37,7 @@ public class HomePageActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         setSupportActionBar(binding.toolbar);
-        getSupportActionBar().setTitle("Neftlix");
+        getSupportActionBar().setTitle(R.string.app_name);
 
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(this));
         binding.recyclerView.setAdapter(new ParentAdapter(getSampleData()));

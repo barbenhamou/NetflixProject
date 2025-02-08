@@ -3,6 +3,7 @@ package com.example.myapplication.repositories;
 import android.app.Application;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
@@ -14,7 +15,6 @@ import com.example.myapplication.dao.TokenDao;
 import com.example.myapplication.entities.LoginRequest;
 import com.example.myapplication.entities.LoginResponse;
 import com.example.myapplication.entities.Token;
-import com.example.myapplication.entities.User;
 
 import java.util.concurrent.Executors;
 
@@ -51,7 +51,7 @@ public class TokenRepository {
         LoginRequest request = new LoginRequest(username, password);
         webServiceAPI.login(request).enqueue(new Callback<>() {
             @Override
-            public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
+            public void onResponse(@NonNull Call<LoginResponse> call, @NonNull Response<LoginResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     LoginResponse tokenResponse = response.body();
 
@@ -66,7 +66,7 @@ public class TokenRepository {
             }
 
             @Override
-            public void onFailure(Call<LoginResponse> call, Throwable t) {
+            public void onFailure(@NonNull Call<LoginResponse> call, @NonNull Throwable t) {
                 Log.e("TokenRepository", "API call failed", t);
                 callback.onFailure("API error: " + t.getMessage());
             }
