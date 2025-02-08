@@ -113,27 +113,18 @@ const Home = () => {
         <div className="home-container">
             {/* Header Section */}
             <header className={`home-header ${headerHidden ? "hidden" : ""}`}>
-                <img
-                    src="https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg"
-                    alt="Netflix Logo"
-                    className="home-logo"
-                />
+                <span className="logo-text">Nexflit</span>
                 <nav className="home-nav">
                     <a href="#" className="home-nav-link">
                         Home
                     </a>
-                    <a href="#" className="home-nav-link">
-                        TV Shows
+                    <a href="/admin" className="home-nav-link">
+                        Admin
                     </a>
-                    <a href="#" className="home-nav-link">
-                        Movies
+                    <a href="/login" className="home-nav-link">
+                        Logout
                     </a>
-                    <a href="#" className="home-nav-link">
-                        New & Popular
-                    </a>
-                    <a href="#" className="home-nav-link">
-                        My List
-                    </a>
+
                 </nav>
                 <form onSubmit={handleSearch} className="home-search-form">
                     <input
