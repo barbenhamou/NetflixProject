@@ -141,6 +141,11 @@ nav button {
 .header-content h3 {
   font-weight: 400;
   margin-bottom: 20px;
+  color: white;
+}
+
+.header-content p {
+  color: white !important;
 }
 
 
@@ -391,6 +396,16 @@ input[type="radio"] {
 body.light-mode {
   background: #fff;
   color: #000;
+}
+
+body.light-mode .header-content h3 {
+  font-weight: 400;
+  margin-bottom: 20px;
+  color: black;
+}
+
+body.light-mode .header-content p {
+  color: black !important;
 }
 
 body.light-mode nav button {
