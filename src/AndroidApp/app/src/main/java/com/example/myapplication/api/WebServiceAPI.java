@@ -1,5 +1,6 @@
 package com.example.myapplication.api;
 
+import com.example.myapplication.entities.Category;
 import com.example.myapplication.entities.LoginRequest;
 import com.example.myapplication.entities.LoginResponse;
 import com.example.myapplication.entities.Movie;
@@ -19,6 +20,9 @@ import retrofit2.http.POST;
 import retrofit2.http.Part;
 
 public interface WebServiceAPI {
+    @GET("categories")
+    Call<List<Category>> getCategories();
+
     @GET("movies")
     Call<List<Movie>> getMovies();
 

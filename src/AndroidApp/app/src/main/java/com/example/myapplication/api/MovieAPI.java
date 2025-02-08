@@ -8,6 +8,7 @@ import androidx.lifecycle.MutableLiveData;
 import com.example.myapplication.MyApplication;
 import com.example.myapplication.R;
 import com.example.myapplication.dao.MovieDao;
+import com.example.myapplication.entities.Category;
 import com.example.myapplication.entities.Movie;
 
 import java.util.List;
@@ -21,13 +22,15 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MovieAPI {
     private MutableLiveData<List<Movie>> movieListData;
+    private MutableLiveData<List<Category>> categoryListData;
     private MutableLiveData<List<Movie>> recommendationData;
     private MovieDao movieDao;
     Retrofit retrofit;
     WebServiceAPI webServiceAPI;
 
-    public MovieAPI(MutableLiveData<List<Movie>> movieListData, MutableLiveData<List<Movie>> recommendationData, MovieDao dao) {
+    public MovieAPI(MutableLiveData<List<Movie>> movieListData, MutableLiveData<List<Movie>> recommendationData, MovieDao dao, MutableLiveData<List<Category>> categoryListData) {
         this.movieListData = movieListData;
+        this.categoryListData = categoryListData;
         this.recommendationData = recommendationData;
         this.movieDao = dao;
 
@@ -69,6 +72,21 @@ public class MovieAPI {
             @Override
             public void onFailure(@NonNull Call<List<Movie>> call, @NonNull Throwable t) {
                 Log.e("Movie", "API call failed: " + t.getMessage());
+            }
+        });
+    }
+
+    public void getCategories() {
+        Call<List<Category>> call = webServiceAPI.getCategories();
+        call.enqueue(new Callback<>() {
+            @Override
+            public void onResponse(@NonNull Call<List<Category>> call, @NonNull Response<List<Category>> response) {
+                categoryListData.postValue(response.body());
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<List<Category>> call, @NonNull Throwable t) {
+                Log.e("MovieAPI", "Failed to fetch categories: " + t.getMessage());
             }
         });
     }

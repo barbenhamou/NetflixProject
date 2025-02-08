@@ -15,9 +15,12 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import com.example.myapplication.adapters.ParentAdapter;
+import com.example.myapplication.adapters.VerticalCategoryAdapter;
 import com.example.myapplication.databinding.ActivityHomePageBinding;
+import com.example.myapplication.viewmodels.MovieViewModel;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -28,6 +31,8 @@ public class HomePageActivity extends AppCompatActivity {
     private ActivityHomePageBinding binding;
     private TextView logoutButton;
     private ImageView profileImageView;
+    private MovieViewModel movieViewModel;
+    private VerticalCategoryAdapter verticalCategoryAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,8 +50,23 @@ public class HomePageActivity extends AppCompatActivity {
             finish();
         }
 
+        verticalCategoryAdapter = new VerticalCategoryAdapter();
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        binding.recyclerView.setAdapter(new ParentAdapter(getSampleData()));
+        binding.recyclerView.setAdapter(verticalCategoryAdapter);
+
+        // Initialize ViewModel
+        movieViewModel = new ViewModelProvider(this).get(MovieViewModel.class);
+        movieViewModel.setRepository(getApplication());
+
+        // Observe categories and movies, and bind them to the adapter
+        movieViewModel.getCategories().observe(this, categories -> {
+            movieViewModel.getFilteredMoviesByOldestCategory().observe(this, movies -> {
+                verticalCategoryAdapter.setData(categories, movies);
+            });
+        });
+
+        // Reload data
+        movieViewModel.reload();
     }
 
     private void loadProfilePicture(String uriString) {
