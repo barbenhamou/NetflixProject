@@ -119,7 +119,7 @@ const Home = () => {
                     <div className="home-nav-link">
                         <Link to='/'>Home</Link>
                     </div>
-                    {localStorage.getItem("isAdmin") === true &&
+                    {localStorage.getItem("isAdmin") === true ||
                         <div className="home-nav-link">
                             <Link to='/admin'>Admin Panel</Link>
                         </div>}

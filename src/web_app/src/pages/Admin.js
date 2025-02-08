@@ -145,7 +145,7 @@ const AdminPanel = () => {
         // Updated add-movie case
         case "add-movie": {
           try {
-            // Convert the category input string into an array of trimmed strings.
+            // Convert the category and cast input string into an array of trimmed strings.
             let categoriesArray = [];
             if (formData.Category) {
               if (formData.Category.includes(",")) {
@@ -162,11 +162,26 @@ const AdminPanel = () => {
               }
             }
 
+            let castArray = [];
+            if (formData.cast) {
+              if (formData.cast.includes(",")) {
+                castArray = formData.cast
+                  .split(",")
+                  .map((cast) => cast.trim())
+                  .filter((cast) => cast.length > 0);
+              } else {
+                // When only one cast is entered
+                const trimmedCast = formData.cast.trim();
+                if (trimmedCast !== "") {
+                  castArray = [trimmedCast];
+                }
+              }
+            }
+
             // Ensure optional fields are only added if they have values
             const payload = {
-
               title: formData.title,
-              cast: formData.cast,
+              cast: castArray,
               lengthMinutes: formData.lengthMinutes,
               categories: categoriesArray,
               image: formData.image.name, // Required
@@ -177,7 +192,7 @@ const AdminPanel = () => {
               ...(formData.cast?.length > 0 && { cast: formData.cast }),
               ...(formData.description && { description: formData.description }),
             };
-            const response = await fetch(`http://localhost:${backendPort}/api/movies}`, {
+            const response = await fetch(`http://localhost:${backendPort}/api/movies`, {
               method: "POST",
               headers,
               body: JSON.stringify(payload),
@@ -218,11 +233,27 @@ const AdminPanel = () => {
               }
             }
 
+            let castArray = [];
+            if (formData.cast) {
+              if (formData.cast.includes(",")) {
+                castArray = formData.cast
+                  .split(",")
+                  .map((cast) => cast.trim())
+                  .filter((cast) => cast.length > 0);
+              } else {
+                // When only one cast is entered
+                const trimmedCast = formData.cast.trim();
+                if (trimmedCast !== "") {
+                  castArray = [trimmedCast];
+                }
+              }
+            }
+
             // Prepare the payload for the PUT request
             const payload = {
               id: formData.oldid,
               title: formData.newTitle, // Updated to match the input field name
-              cast: formData.cast,
+              cast: castArray,
               lengthMinutes: formData.lengthMinutes,
               categories: categoriesArray,
               image: formData.image.name, // Required

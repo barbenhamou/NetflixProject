@@ -108,7 +108,7 @@ function SignUpForm() {
                     <StandAloneField label={'Location'} type={'text'} id={'location'} placeholder={'Enter your location'} value={location} onChange={handleInput(setLocation)} />
 
                     <div className="mb-3">
-                        <label htmlFor="formFile" className="form-label">Default file input example</label>
+                        <label htmlFor="formFile" className="form-label">Profile Picture (Optional)</label>
                         <input className="form-control" type="file" id="formFile" onChange={handleFileChange}></input>
                     </div>
 
