@@ -107,4 +107,8 @@ public class MoviesRepository {
             return filteredMovies;
         });
     }
+
+    public void watchMovie(String movieId, String token) {
+        new Thread(() -> movieAPI.watchMovie(movieId, token)).start();
+    }
 }

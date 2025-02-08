@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
         userRepository = new UserRepository(getApplication());
         tokenRepository = new TokenRepository(getApplication());
 
-        Movie movie = new Movie("67a6974a19b06d36091f61e7", "testMovie", new ArrayList<>(Arrays.asList("Action", "Comedy")), 100, 2000, new ArrayList<>(List.of("Tom Cruise")), "Very good movie", "", "", "", "");
+        Movie movie = new Movie("67a776245dd46d9df941254e", "testMovie", new ArrayList<>(Arrays.asList("Action", "Comedy")), 100, 2000, new ArrayList<>(List.of("Tom Cruise")), "Very good movie", "", "", "", "");
         Button btn = findViewById(R.id.main_btn);
         btn.setOnClickListener(view -> {
             Intent intent = new Intent(this, MovieInfoActivity.class);

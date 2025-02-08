@@ -13,7 +13,7 @@
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:background="?attr/selectableItemBackground"
-        android:contentDescription="Back"
+        android:contentDescription="@string/back"
         android:padding="8dp"
         android:src="@drawable/ic_back_arrow"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -60,6 +60,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
                 android:background="#CECBCB"
+                android:inputType="text"
                 android:hint="@string/etLoginUsername"
                 android:padding="12dp"
                 android:textColor="#000000" />
@@ -71,6 +72,7 @@
                 android:layout_marginBottom="16dp"
                 android:background="#D1CFCF"
                 android:hint="@string/etLoginPassword"
+                android:inputType="textPassword"
                 android:padding="12dp"
                 android:textColor="#000000" />
 

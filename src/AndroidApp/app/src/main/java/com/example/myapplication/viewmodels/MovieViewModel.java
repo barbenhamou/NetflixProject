@@ -49,4 +49,8 @@ public class MovieViewModel extends ViewModel {
     public LiveData<List<Movie>> getRecommendations(String movieId, String token) {
         return this.mRepository.getRecommendations(movieId, token);
     }
+
+    public void watchMovie(String movieId, String token) {
+        this.mRepository.watchMovie(movieId, token);
+    }
 }

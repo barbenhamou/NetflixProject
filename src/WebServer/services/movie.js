@@ -32,7 +32,7 @@ const getMovies = async (userId) => {
 
         if (!promotedCategories || promotedCategories.length === 0) {
             // No promoted categories, return just the watched movies
-            return watchedMovies;
+            return [watchedMovies];
         }
 
         // Get up to MOVIES_PER_CATEGORY unwatched movies of each promoted category
