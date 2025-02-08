@@ -2,9 +2,9 @@
     android:id="@+id/logoutButton"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:text="Logout"
+    android:text="@string/logout"
     android:textSize="16sp"
     android:textColor="#E50914"
     android:padding="8dp"
     android:clickable="true"
-    android:focusable="true"/>
+    android:focusable="true" />
