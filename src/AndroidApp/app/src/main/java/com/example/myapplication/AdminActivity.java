@@ -123,12 +123,28 @@ public class AdminActivity extends AppCompatActivity {
 
     private void handleAddCategory() {
         EditText categoryNameEditText = findViewById(R.id.editTextCategoryName);
+        EditText categoryPromoted = findViewById(R.id.editTextCategoryPromoted);
+
+        boolean flag;
+
         String categoryName = categoryNameEditText.getText().toString().trim();
+        String categoryPromotedStr = categoryPromoted.getText().toString().trim();
+
         if (categoryName.isEmpty()) {
             textViewMessage.setText("Category name cannot be empty");
             return;
         }
-        Category newCategory = new Category(categoryName, false);
+
+        if (categoryPromotedStr.equals("true")) {
+            flag = true;
+        } else if (categoryPromotedStr.equals("false")) {
+            flag = false;
+        } else {
+            textViewMessage.setText("Category name cannot be empty");
+            return;
+        }
+
+        Category newCategory = new Category(categoryName, flag);
         MainActivity.tokenRepository.getStoredToken().observe(this, token -> {
             new CategoryRepository(getApplication()).addCategory(token, newCategory, new CategoryRepository.CategoryCallback() {
                 @Override
