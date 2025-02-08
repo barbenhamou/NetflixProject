@@ -108,6 +108,15 @@ public interface WebServiceAPI {
     Call<Void> uploadMovieFiles(
             @Path("id") String movieId,
             @Header("Authorization") String authHeader,
-            @PartMap Map<String, RequestBody> files
+            @Part MultipartBody.Part image,
+            @Part("imageType") RequestBody imageType,
+            @Part("imageName") RequestBody imageName,
+            @Part MultipartBody.Part trailer,
+            @Part("trailerType") RequestBody trailerType,
+            @Part("trailerName") RequestBody trailerName,
+            @Part MultipartBody.Part film,
+            @Part("filmType") RequestBody filmType,
+            @Part("filmName") RequestBody filmName
     );
+
 }

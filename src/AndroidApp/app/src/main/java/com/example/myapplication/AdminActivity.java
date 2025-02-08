@@ -141,7 +141,7 @@ public class AdminActivity extends AppCompatActivity {
             return;
         }
         Category newCategory = new Category(categoryName, false);
-        LoginActivity.repository.getStoredToken().observe(this, token -> {
+        MainActivity.tokenRepository.getStoredToken().observe(this, token -> {
             new CategoryRepository(getApplication()).addCategory(token, newCategory, new CategoryRepository.CategoryCallback() {
                 @Override
                 public void onSuccess(Category category) {
@@ -162,7 +162,7 @@ public class AdminActivity extends AppCompatActivity {
             textViewMessage.setText("Enter a category name to delete");
             return;
         }
-        LoginActivity.repository.getStoredToken().observe(this, token -> {
+        MainActivity.tokenRepository.getStoredToken().observe(this, token -> {
             new CategoryRepository(getApplication()).deleteCategory(token, categoryName, new CategoryRepository.CategoryCallback() {
                 @Override
                 public void onSuccess(Category category) {
@@ -186,7 +186,7 @@ public class AdminActivity extends AppCompatActivity {
             return;
         }
         Category updatedCategory = new Category(newName, false);
-        LoginActivity.repository.getStoredToken().observe(this, token -> {
+        MainActivity.tokenRepository.getStoredToken().observe(this, token -> {
             new CategoryRepository(getApplication()).updateCategory(token, oldName, updatedCategory, new CategoryRepository.CategoryCallback() {
                 @Override
                 public void onSuccess(Category category) {
@@ -263,7 +263,7 @@ public class AdminActivity extends AppCompatActivity {
         File trailerFile = getFileFromUri(addMovieTrailerUri);
         File filmFile = getFileFromUri(addMovieFilmUri);
 
-        LoginActivity.repository.getStoredToken().observe(this, token -> {
+        MainActivity.tokenRepository.getStoredToken().observe(this, token -> {
             new MoviesRepository(getApplication()).addMovieWithFiles(token, newMovie, filmFile, trailerFile, imageFile, new MoviesRepository.MovieCallback() {
                 @Override
                 public void onSuccess(Movie movie) {
@@ -284,7 +284,7 @@ public class AdminActivity extends AppCompatActivity {
             textViewMessage.setText("Enter a movie title to delete");
             return;
         }
-        LoginActivity.repository.getStoredToken().observe(this, token -> {
+        MainActivity.tokenRepository.getStoredToken().observe(this, token -> {
             new MoviesRepository(getApplication()).deleteMovieByTitle(token, movieTitle, new MoviesRepository.MovieCallback() {
                 @Override
                 public void onSuccess(Movie movie) {
@@ -355,7 +355,7 @@ public class AdminActivity extends AppCompatActivity {
         File trailerFile = (editMovieTrailerUri != null) ? getFileFromUri(editMovieTrailerUri) : null;
         File filmFile = (editMovieFilmUri != null) ? getFileFromUri(editMovieFilmUri) : null;
 
-        LoginActivity.repository.getStoredToken().observe(this, token -> {
+        MainActivity.tokenRepository.getStoredToken().observe(this, token -> {
             new MoviesRepository(getApplication()).updateMovieWithFiles(token, oldTitle, updatedMovie, filmFile, trailerFile, imageFile, new MoviesRepository.MovieCallback() {
                 @Override
                 public void onSuccess(Movie movie) {

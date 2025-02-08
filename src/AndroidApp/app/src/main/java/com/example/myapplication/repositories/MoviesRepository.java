@@ -1,6 +1,7 @@
 package com.example.myapplication.repositories;
 
 import android.app.Application;
+
 import com.example.myapplication.MyApplication;
 import com.example.myapplication.api.WebServiceAPI;
 import com.example.myapplication.api.MovieAPI;
@@ -8,14 +9,19 @@ import com.example.myapplication.dao.AppDB;
 import com.example.myapplication.dao.MovieDao;
 import com.example.myapplication.entities.Movie;
 import com.example.myapplication.entities.Token;
+
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Executors;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+
 import okhttp3.MediaType;
+import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -40,6 +46,12 @@ public class MoviesRepository {
         movieListData = new MovieListData();
         recommendations = new MutableLiveData<>();
         movieAPI = new MovieAPI(movieListData, recommendations, movieDao);
+        webServiceAPI = new Retrofit.Builder()
+                .baseUrl(MyApplication.context.getString(com.example.myapplication.R.string.BaseUrl))
+                .callbackExecutor(Executors.newSingleThreadExecutor())
+                .addConverterFactory(GsonConverterFactory.create())
+                .build()
+                .create(WebServiceAPI.class);
     }
 
     public LiveData<List<Movie>> getRecommendations(String movieId, String token) {
@@ -59,13 +71,6 @@ public class MoviesRepository {
             super.onActive();
             new Thread(() -> movieListData.postValue(movieDao.index())).start();
         }
-        movieAPI = new MovieAPI(movieListData, movieDao);
-        webServiceAPI = new Retrofit.Builder()
-                .baseUrl(MyApplication.context.getString(com.example.myapplication.R.string.BaseUrl))
-                .callbackExecutor(Executors.newSingleThreadExecutor())
-                .addConverterFactory(GsonConverterFactory.create())
-                .build()
-                .create(WebServiceAPI.class);
     }
 
     public LiveData<List<Movie>> getAll() {
@@ -92,6 +97,7 @@ public class MoviesRepository {
     // Callback interface for movie operations.
     public interface MovieCallback {
         void onSuccess(Movie movie);
+
         void onFailure(String errorMessage);
     }
 
@@ -115,43 +121,54 @@ public class MoviesRepository {
                     movie.setId(movieId);
 
                     // Build the file upload parts.
-                    Map<String, RequestBody> files = new HashMap<>();
-                    if (imageFile != null) {
-                        RequestBody imageBody = RequestBody.create(MediaType.parse("image/*"), imageFile);
-                        files.put("image\"; filename=\"" + imageFile.getName() + "\"", imageBody);
-                    }
-                    if (trailerFile != null) {
-                        RequestBody trailerBody = RequestBody.create(MediaType.parse("video/*"), trailerFile);
-                        files.put("trailer\"; filename=\"" + trailerFile.getName() + "\"", trailerBody);
-                    }
-                    if (filmFile != null) {
-                        RequestBody filmBody = RequestBody.create(MediaType.parse("video/*"), filmFile);
-                        files.put("film\"; filename=\"" + filmFile.getName() + "\"", filmBody);
-                    }
-                    // If files are provided, upload them.
-                    if (!files.isEmpty()) {
-                        webServiceAPI.uploadMovieFiles(movieId, "Bearer " + token.getToken(), files)
-                                .enqueue(new Callback<Void>() {
-                                    @Override
-                                    public void onResponse(Call<Void> call, Response<Void> responseFiles) {
-                                        if (responseFiles.isSuccessful()) {
-                                            callback.onSuccess(movie);
-                                        } else {
-                                            callback.onFailure("File upload failed: " + responseFiles.message());
-                                        }
+                    // Create file parts.
+                    RequestBody imageRequestBody = RequestBody.create(MediaType.parse("image/*"), imageFile);
+                    MultipartBody.Part imagePart = MultipartBody.Part.createFormData("image", imageFile.getName(), imageRequestBody);
+
+                    RequestBody trailerRequestBody = RequestBody.create(MediaType.parse("video/*"), trailerFile);
+                    MultipartBody.Part trailerPart = MultipartBody.Part.createFormData("trailer", trailerFile.getName(), trailerRequestBody);
+
+                    RequestBody filmRequestBody = RequestBody.create(MediaType.parse("video/*"), filmFile);
+                    MultipartBody.Part filmPart = MultipartBody.Part.createFormData("film", filmFile.getName(), filmRequestBody);
+
+                    // Create extra parts for each file as expected by the backend.
+                    RequestBody imageType = RequestBody.create(MediaType.parse("text/plain"), "image");
+                    RequestBody imageName = RequestBody.create(MediaType.parse("text/plain"), imageFile.getName());
+
+                    RequestBody trailerType = RequestBody.create(MediaType.parse("text/plain"), "trailer");
+                    RequestBody trailerName = RequestBody.create(MediaType.parse("text/plain"), trailerFile.getName());
+
+                    RequestBody filmType = RequestBody.create(MediaType.parse("text/plain"), "film");
+                    RequestBody filmName = RequestBody.create(MediaType.parse("text/plain"), filmFile.getName());
+
+
+                    webServiceAPI.uploadMovieFiles(movieId, "Bearer " + token.getToken(),
+                                    imagePart, imageType, imageName,
+                                    trailerPart, trailerType, trailerName,
+                                    filmPart, filmType, filmName)
+                            .enqueue(new Callback<Void>() {
+                                @Override
+                                public void onResponse(Call<Void> call, Response<Void> responseFiles) {
+                                    if (responseFiles.isSuccessful()) {
+                                        callback.onSuccess(movie);
+                                    } else {
+                                        callback.onFailure("File upload failed: " + responseFiles.message());
                                     }
-                                    @Override
-                                    public void onFailure(Call<Void> call, Throwable t) {
-                                        callback.onFailure("File upload error: " + t.getMessage());
-                                    }
-                                });
-                    } else {
-                        callback.onSuccess(movie);
-                    }
+                                }
+
+                                @Override
+                                public void onFailure(Call<Void> call, Throwable t) {
+                                    callback.onFailure("File upload error: " + t.getMessage());
+                                }
+                            });
+
+                    callback.onSuccess(movie);
+
                 } else {
                     callback.onFailure("Add movie failed: " + response.message());
                 }
             }
+
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
                 callback.onFailure("Add movie error: " + t.getMessage());
@@ -182,42 +199,52 @@ public class MoviesRepository {
                             public void onResponse(Call<Movie> call, Response<Movie> responseUpdate) {
                                 if (responseUpdate.isSuccessful() && responseUpdate.body() != null) {
                                     Movie updatedResponse = responseUpdate.body();
-                                    Map<String, RequestBody> files = new HashMap<>();
-                                    if (imageFile != null) {
-                                        RequestBody imageBody = RequestBody.create(MediaType.parse("image/*"), imageFile);
-                                        files.put("image\"; filename=\"" + imageFile.getName() + "\"", imageBody);
-                                    }
-                                    if (trailerFile != null) {
-                                        RequestBody trailerBody = RequestBody.create(MediaType.parse("video/*"), trailerFile);
-                                        files.put("trailer\"; filename=\"" + trailerFile.getName() + "\"", trailerBody);
-                                    }
-                                    if (filmFile != null) {
-                                        RequestBody filmBody = RequestBody.create(MediaType.parse("video/*"), filmFile);
-                                        files.put("film\"; filename=\"" + filmFile.getName() + "\"", filmBody);
-                                    }
-                                    if (!files.isEmpty()) {
-                                        webServiceAPI.uploadMovieFiles(movieId, "Bearer " + token.getToken(), files)
-                                                .enqueue(new Callback<Void>() {
-                                            @Override
-                                            public void onResponse(Call<Void> call, Response<Void> responseFiles) {
-                                                if (responseFiles.isSuccessful()) {
-                                                    callback.onSuccess(updatedResponse);
-                                                } else {
-                                                    callback.onFailure("File upload failed: " + responseFiles.message());
+                                    RequestBody imageRequestBody = RequestBody.create(MediaType.parse("image/*"), imageFile);
+                                    MultipartBody.Part imagePart = MultipartBody.Part.createFormData("image", imageFile.getName(), imageRequestBody);
+
+                                    RequestBody trailerRequestBody = RequestBody.create(MediaType.parse("video/*"), trailerFile);
+                                    MultipartBody.Part trailerPart = MultipartBody.Part.createFormData("trailer", trailerFile.getName(), trailerRequestBody);
+
+                                    RequestBody filmRequestBody = RequestBody.create(MediaType.parse("video/*"), filmFile);
+                                    MultipartBody.Part filmPart = MultipartBody.Part.createFormData("film", filmFile.getName(), filmRequestBody);
+
+                                    // Create extra parts for each file as expected by the backend.
+                                    RequestBody imageType = RequestBody.create(MediaType.parse("text/plain"), "image");
+                                    RequestBody imageName = RequestBody.create(MediaType.parse("text/plain"), imageFile.getName());
+
+                                    RequestBody trailerType = RequestBody.create(MediaType.parse("text/plain"), "trailer");
+                                    RequestBody trailerName = RequestBody.create(MediaType.parse("text/plain"), trailerFile.getName());
+
+                                    RequestBody filmType = RequestBody.create(MediaType.parse("text/plain"), "film");
+                                    RequestBody filmName = RequestBody.create(MediaType.parse("text/plain"), filmFile.getName());
+
+                                    webServiceAPI.uploadMovieFiles(movieId, "Bearer " + token.getToken(),
+                                                    imagePart, imageType, imageName,
+                                                    trailerPart, trailerType, trailerName,
+                                                    filmPart, filmType, filmName)
+                                            .enqueue(new Callback<Void>() {
+                                                @Override
+                                                public void onResponse(Call<Void> call, Response<Void> responseFiles) {
+                                                    if (responseFiles.isSuccessful()) {
+                                                        callback.onSuccess(updatedResponse);
+                                                    } else {
+                                                        callback.onFailure("File upload failed: " + responseFiles.message());
+                                                    }
                                                 }
-                                            }
-                                            @Override
-                                            public void onFailure(Call<Void> call, Throwable t) {
-                                                callback.onFailure("File upload error: " + t.getMessage());
-                                            }
-                                        });
-                                    } else {
-                                        callback.onSuccess(updatedResponse);
-                                    }
+
+                                                @Override
+                                                public void onFailure(Call<Void> call, Throwable t) {
+                                                    callback.onFailure("File upload error: " + t.getMessage());
+                                                }
+                                            });
+
+                                    callback.onSuccess(updatedResponse);
+
                                 } else {
                                     callback.onFailure("Update movie failed: " + responseUpdate.message());
                                 }
                             }
+
                             @Override
                             public void onFailure(Call<Movie> call, Throwable t) {
                                 callback.onFailure("Update movie error: " + t.getMessage());
@@ -230,6 +257,7 @@ public class MoviesRepository {
                     callback.onFailure("Failed to retrieve movies: " + response.message());
                 }
             }
+
             @Override
             public void onFailure(Call<List<Movie>> call, Throwable t) {
                 callback.onFailure("GET movies error: " + t.getMessage());
@@ -266,6 +294,7 @@ public class MoviesRepository {
                                             callback.onFailure("Delete movie failed: " + responseDelete.message());
                                         }
                                     }
+
                                     @Override
                                     public void onFailure(Call<Void> call, Throwable t) {
                                         callback.onFailure("Delete movie error: " + t.getMessage());
@@ -278,23 +307,11 @@ public class MoviesRepository {
                     callback.onFailure("Failed to retrieve movies: " + response.message());
                 }
             }
+
             @Override
             public void onFailure(Call<List<Movie>> call, Throwable t) {
                 callback.onFailure("GET movies error: " + t.getMessage());
             }
         });
-    }
-
-    // ==================== INNER CLASS: MovieListData ====================
-    class MovieListData extends MutableLiveData<List<Movie>> {
-        public MovieListData() {
-            super();
-            setValue(new java.util.ArrayList<>());
-        }
-        @Override
-        protected void onActive() {
-            super.onActive();
-            new Thread(() -> postValue(movieDao.index())).start();
-        }
     }
 }
