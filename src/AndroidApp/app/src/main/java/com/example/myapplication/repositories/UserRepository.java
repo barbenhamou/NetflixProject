@@ -1,8 +1,9 @@
 package com.example.myapplication.repositories;
 
 import android.app.Application;
-import android.net.Uri;
 import android.util.Log;
+
+import androidx.lifecycle.MutableLiveData;
 
 import com.example.myapplication.MyApplication;
 import com.example.myapplication.R;
@@ -27,6 +28,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class UserRepository {
     private UserDao userDao;
     private final WebServiceAPI webServiceAPI;
+    private MutableLiveData<User> userData;
 
     public UserRepository(Application application) {
         Retrofit retrofit = new Retrofit.Builder()
@@ -38,6 +40,14 @@ public class UserRepository {
         webServiceAPI = retrofit.create(WebServiceAPI.class);
         AppDB db = AppDB.getInstance(application.getApplicationContext());
         userDao = db.userDao();
+        userData = new MutableLiveData<>();
+
+        Executors.newSingleThreadExecutor().execute(() -> {
+            User user = userDao.getUser();
+            if (user != null) {
+                userData.postValue(user);
+            }
+        });
     }
 
     public void signUp(User user, UserCallBack callback) {
@@ -65,7 +75,7 @@ public class UserRepository {
             return;
         }
 
-        Log.d("UPLOAD", "Uploading file: " + imageFile.getAbsolutePath());
+        Log.d("UserRepository", "Uploading file: " + imageFile.getAbsolutePath()); // Remove
 
         RequestBody requestBody = RequestBody.create(MediaType.parse("image/*"), imageFile);
         MultipartBody.Part imagePart = MultipartBody.Part.createFormData("profilePicture", imageFile.getName(), requestBody);
@@ -74,7 +84,10 @@ public class UserRepository {
             @Override
             public void onResponse(Call<ProfilePictureResponse> call, Response<ProfilePictureResponse> response) {
                 if (response.isSuccessful()) {
-                    new Thread(() -> userDao.updateProfilePicture(username, imageFile.getAbsolutePath())).start();
+                    new Thread(() -> {
+                        userDao.updateProfilePicture(username, imageFile.getAbsolutePath());
+                        userData.postValue(userDao.getUser());
+                    }).start();
                     callback.onUploadSuccess(response.body());
                 } else {
                     callback.onUploadFailure("Image upload failed: " + response.message());
@@ -83,7 +96,7 @@ public class UserRepository {
 
             @Override
             public void onFailure(Call<ProfilePictureResponse> call, Throwable t) {
-                Log.d("UPLOAD", "Upload failed", t);
+                Log.d("UserRepository", "Upload failed", t); // Remove
                 callback.onUploadFailure("API error: " + t.getMessage());
             }
         });
@@ -91,15 +104,16 @@ public class UserRepository {
 
     public void saveUserToDb(User user) {
         new Thread(() -> {
-            if (userDao.getUser() != null) { // Only clear if users exist
-                userDao.clear();  // Delete all users before inserting
+            if (userDao.getUser() != null) {
+                userDao.clear();
             }
-            userDao.insert(user);  // Insert new user
+            userDao.insert(user);
+            userData.postValue(user);
         }).start();
     }
 
-    public User getStoredUser() {
-        return userDao.getUser();
+    public MutableLiveData<User> getStoredUser() {
+        return userData;
     }
 
     public interface UserCallBack {

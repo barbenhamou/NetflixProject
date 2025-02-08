@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { backendPort } from "../config";
 import "./Admin.css";
 
-
 const AdminPanel = () => {
     const [action, setAction] = useState("");
     const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -86,7 +85,7 @@ const AdminPanel = () => {
                 case "add-category":
                     if (categories.some((cat) => cat.name === formData.name)) {
 
-                        setMessage("❌ Category already exists.");
+                        setMessage("Category already exists.");
                         return;
                     }
                     response = await fetch(`http://localhost:${backendPort}/api/categories`, {
@@ -99,7 +98,7 @@ const AdminPanel = () => {
                 case "delete-category":
                     const categoryToDelete = categories.find((cat) => cat.name === formData.name);
                     if (!categoryToDelete) {
-                        setMessage("⚠️ Category does not exist.");
+                        setMessage("Category does not exist.");
                         return;
                     }
                     response = await fetch(`http://localhost:${backendPort}/api/categories/${categoryToDelete.id}`, {
@@ -111,11 +110,11 @@ const AdminPanel = () => {
                 case "edit-category":
                     const oldCategory = categories.find((cat) => cat.name === formData.oldName);
                     if (!oldCategory) {
-                        setMessage("⚠️ Old category does not exist.");
+                        setMessage("Old category does not exist.");
                         return;
                     }
                     if (categories.some((cat) => cat.name === formData.newName)) {
-                        setMessage("❌ New category name already exists.");
+                        setMessage("New category name already exists.");
                         return;
                     }
                     response = await fetch(`http://localhost:${backendPort}/api/categories/${oldCategory.id}`, {
@@ -134,7 +133,7 @@ const AdminPanel = () => {
                     }
 
                     if (!movieToDelete) {
-                        setMessage("⚠️ Movie does not exist");
+                        setMessage("Movie does not exist");
                         return;
                     }
 
@@ -185,16 +184,16 @@ const AdminPanel = () => {
                         // Extract the Location header
                         const location = response.headers.get("Location");
                         if (!location) {
-                            throw new Error("❌ Error: Missing Location header in response.");
+                            throw new Error("Error: Missing Location header in response.");
                         }
 
                         // Extract the movie ID from the Location URL
                         const newMovieId = location.split("/").pop();
                         uploadFilesForMovie(newMovieId, formData.image, formData.trailer, formData.film);
-                        setMessage(`✅ Movie created! ID: ${newMovieId} and files saved locally.`);
+                        setMessage(`Movie created! ID: ${newMovieId} and files saved locally.`);
                     } catch (err) {
                         console.error(err);
-                        setMessage(err.message || "❌ An error occurred while adding the movie.");
+                        setMessage(err.message || "An error occurred while adding the movie.");
                     }
                     break;
                 }
@@ -202,11 +201,11 @@ const AdminPanel = () => {
                 case "edit-movie": {
                     const oldMovie = movies.flat().find((movie) => movie.title === formData.oldTitle);
                     if (!oldMovie) {
-                        setMessage("⚠️ Old movie does not exist.");
+                        setMessage("Old movie does not exist.");
                         return;
                     }
                     if (movies.flat().some((movie) => movie.title === formData.newTitle)) {
-                        setMessage("❌ New movie title already exists.");
+                        setMessage("New movie title already exists.");
                         return;
                     }
 
@@ -236,15 +235,14 @@ const AdminPanel = () => {
                 }
             }
 
-            setMessage("✅ Action completed successfully!");
+            setMessage("Action completed successfully!");
             setTimeout(() => {
                 window.location.reload();
-            }, 1500); // Add a short delay for better user experience
+            }, 800); // Add a short delay for better user experience
         } catch (error) {
             setMessage(error.message);
         }
     };
-
 
     return (
         <div className="hero-container">

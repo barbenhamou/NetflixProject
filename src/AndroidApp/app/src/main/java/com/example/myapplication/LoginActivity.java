@@ -2,14 +2,9 @@ package com.example.myapplication;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import com.example.myapplication.databinding.ActivityLoginBinding;
 import com.example.myapplication.entities.Token;
@@ -25,7 +20,7 @@ public class LoginActivity extends AppCompatActivity {
         binding = ActivityLoginBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        repository = new TokenRepository(getApplication());
+        repository = MainActivity.tokenRepository;
 
         binding.btnLogin.setOnClickListener(v -> {
             String username = binding.etLoginUsername.getText().toString();

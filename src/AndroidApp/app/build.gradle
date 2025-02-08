@@ -33,7 +33,10 @@ android {
 }
 
 dependencies {
-    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
+    implementation libs.media3.exoplayer
+    implementation libs.media3.ui
+    implementation libs.okhttp
+    implementation libs.swiperefreshlayout
     implementation libs.retrofit
     implementation libs.converter.gson
     implementation libs.gson

@@ -25,19 +25,40 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MoviesRepository {
 
-    // Fields used by your teammates
+
     private MovieListData movieListData;
+    private MutableLiveData<List<Movie>> recommendations;
     private MovieDao movieDao;
     private MovieAPI movieAPI;
 
-    // NEW: Retrofit service for movie CRUD endpoints (including file uploads)
     private WebServiceAPI webServiceAPI;
 
-    // Constructor used by your teammates (e.g., in MovieViewModel)
+
     public MoviesRepository(Application application) {
         AppDB db = AppDB.getInstance(application.getApplicationContext());
         movieDao = db.movieDao();
         movieListData = new MovieListData();
+        recommendations = new MutableLiveData<>();
+        movieAPI = new MovieAPI(movieListData, recommendations, movieDao);
+    }
+
+    public LiveData<List<Movie>> getRecommendations(String movieId, String token) {
+        new Thread(() -> movieAPI.recommend(movieId, token)).start();
+
+        return recommendations;
+    }
+
+    class MovieListData extends MutableLiveData<List<Movie>> {
+        public MovieListData() {
+            super();
+            setValue(new ArrayList<>());
+        }
+
+        @Override
+        protected void onActive() {
+            super.onActive();
+            new Thread(() -> movieListData.postValue(movieDao.index())).start();
+        }
         movieAPI = new MovieAPI(movieListData, movieDao);
         webServiceAPI = new Retrofit.Builder()
                 .baseUrl(MyApplication.context.getString(com.example.myapplication.R.string.BaseUrl))
@@ -55,7 +76,9 @@ public class MoviesRepository {
         MutableLiveData<Movie> movieData = new MutableLiveData<>();
         new Thread(() -> {
             Movie movie = movieDao.getMovie(id);
-            movieData.postValue(movie);
+            if (movie != null) {
+                movieData.postValue(movie);
+            }
         }).start();
         return movieData;
     }
