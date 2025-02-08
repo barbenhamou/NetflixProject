@@ -39,6 +39,12 @@ public class HomePageActivity extends AppCompatActivity {
         setSupportActionBar(binding.toolbar);
         getSupportActionBar().setTitle(R.string.app_name);
 
+        if (MainActivity.tokenRepository.getStoredToken().getValue() == null) {
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
+            finish();
+        }
+
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(this));
         binding.recyclerView.setAdapter(new ParentAdapter(getSampleData()));
     }
@@ -87,8 +93,6 @@ public class HomePageActivity extends AppCompatActivity {
         if (actionView != null) {
             logoutButton = actionView.findViewById(R.id.logoutButton);
             logoutButton.setTextColor(Color.RED);
-            invalidateOptionsMenu();
-            logoutButton.setOnClickListener(v -> logoutUser());
         }
 
         MenuItem profileItem = menu.findItem(R.id.action_profile);
@@ -119,15 +123,17 @@ public class HomePageActivity extends AppCompatActivity {
             Toast.makeText(this, "Profile Picture Clicked!", Toast.LENGTH_SHORT).show();
             return true;
         }
+        if (item.getItemId() == R.id.action_logout) {
+            logoutUser();
+            return true;
+        }
         return super.onOptionsItemSelected(item);
     }
 
     private void logoutUser() {
         Toast.makeText(this, "Logging out...", Toast.LENGTH_SHORT).show();
-
-        // Navigate to LoginActivity
-        Intent intent = new Intent(HomePageActivity.this, LoginActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        MainActivity.tokenRepository.logout();
+        Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
         finish();
     }
