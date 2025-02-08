@@ -8,8 +8,10 @@ import com.example.myapplication.entities.ProfilePictureResponse;
 import com.example.myapplication.entities.User;
 
 import java.util.List;
+import java.util.Map;
 
 import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
@@ -18,17 +20,17 @@ import retrofit2.http.Header;
 import retrofit2.http.Multipart;
 import retrofit2.http.PATCH;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Part;
+import retrofit2.http.PartMap;
 import retrofit2.http.Path;
 
 public interface WebServiceAPI {
 
-    // Existing endpoints
+
+
     @GET("movies")
     Call<List<List<Movie>>> getMovies();
-
-    @POST("movies")
-    Call<Void> addMovie(@Body Movie movie);
 
     @GET("movies/search/[.*]")
     Call<List<Movie>> getAllMovies();
@@ -41,35 +43,63 @@ public interface WebServiceAPI {
 
     // === CATEGORY ENDPOINTS ===
 
-    // Get all categories (no header, if your API does not require auth for fetching categories)
     @GET("categories")
     Call<List<Category>> getCategories();
 
-    // Create a new category (requires auth header)
     @POST("categories")
     Call<Void> addCategory(
             @Body Category category,
             @Header("Authorization") String authToken
     );
 
-    // Get a single category by ID (if needed)
     @GET("categories/{id}")
-    Call<Category> getCategory(
+    Call<Category> getCategory(@Path("id") String id);
+
+    @DELETE("categories/{id}")
+    Call<Void> deleteCategory(
+            @Header("Authorization") String authToken,
             @Path("id") String id
     );
 
-    // Update (PATCH) a category by its id (requires auth header)
-    @DELETE("categories/{id}")
-    Call<Void> deleteCategory(@Header("Authorization") String authToken, @Path("id") String id);
-
     @PATCH("categories/{id}")
-    Call<Void> updateCategory(@Header("Authorization") String authToken, @Path("id") String id, @Body Category category);
-
+    Call<Void> updateCategory(
+            @Header("Authorization") String authToken,
+            @Path("id") String id,
+            @Body Category category
+    );
 
     @Multipart
     @POST("contents/users/{username}")
     Call<ProfilePictureResponse> uploadProfilePicture(
             @Path("username") String username,
-            @Part MultipartBody.Part profilePicture
+            @Part MultipartBody.Part profilePicture);
+
+    // ========== MOVIE ENDPOINTS ==========
+
+    @POST("movies")
+    Call<Void> addMovie(
+            @Body Movie movie,
+            @Header("Authorization") String authToken
+    );
+
+    @PUT("movies/{id}")
+    Call<Movie> updateMovie(
+            @Header("Authorization") String authToken,
+            @Path("id") String id,
+            @Body Movie movie
+    );
+
+    @DELETE("movies/{id}")
+    Call<Void> deleteMovie(
+            @Header("Authorization") String authToken,
+            @Path("id") String id
+    );
+
+    @Multipart
+    @POST("contents/movies/{id}")
+    Call<Void> uploadMovieFiles(
+            @Path("id") String movieId,
+            @Header("Authorization") String authHeader,
+            @PartMap Map<String, RequestBody> files
     );
 }
