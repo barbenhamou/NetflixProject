@@ -4,8 +4,8 @@ const userService = require('../services/user');
 const presentUser = async (user) => {
     try {
         return {
-            id: user._id,
             username: user.username,
+            password: user.password,
             email: user.email,
             phone: user.phone,
             picture: user.picture,
