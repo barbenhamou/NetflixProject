@@ -25,7 +25,7 @@ public class LoginActivity extends AppCompatActivity {
         binding = ActivityLoginBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        repository = new TokenRepository(getApplication());
+        repository = MainActivity.tokenRepository;
 
         binding.btnLogin.setOnClickListener(v -> {
             String username = binding.etLoginUsername.getText().toString();

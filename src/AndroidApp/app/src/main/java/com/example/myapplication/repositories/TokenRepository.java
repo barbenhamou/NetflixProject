@@ -3,6 +3,9 @@ package com.example.myapplication.repositories;
 import android.app.Application;
 import android.util.Log;
 
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+
 import com.example.myapplication.MyApplication;
 import com.example.myapplication.R;
 import com.example.myapplication.api.WebServiceAPI;
@@ -11,6 +14,7 @@ import com.example.myapplication.dao.TokenDao;
 import com.example.myapplication.entities.LoginRequest;
 import com.example.myapplication.entities.LoginResponse;
 import com.example.myapplication.entities.Token;
+import com.example.myapplication.entities.User;
 
 import java.util.concurrent.Executors;
 
@@ -23,6 +27,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class TokenRepository {
     private TokenDao tokenDao;
     WebServiceAPI webServiceAPI;
+    private MutableLiveData<Token> tokenData;
 
     public TokenRepository(Application application) {
         this.webServiceAPI = new Retrofit.Builder()
@@ -33,6 +38,13 @@ public class TokenRepository {
                 .create(WebServiceAPI.class);
         AppDB db = AppDB.getInstance(application.getApplicationContext());
         this.tokenDao = db.tokenDao();
+        this.tokenData = new MutableLiveData<>();
+        Executors.newSingleThreadExecutor().execute(() -> {
+            Token token = tokenDao.getToken();
+            if (token != null) {
+                tokenData.postValue(token);
+            }
+        });
     }
 
     public void loginUser(String username, String password, TokenCallback callback) {
@@ -61,12 +73,20 @@ public class TokenRepository {
         });
     }
 
-    private void saveTokenToDb(Token token) {
-        new Thread(() -> tokenDao.insert(token)).start();
+    public void logout() {
+        new Thread((() -> tokenDao.clear())).start();
     }
 
-    public Token getStoredToken() {
-        return tokenDao.getToken();
+    private void saveTokenToDb(Token token) {
+        new Thread(() -> {
+            tokenDao.clear();
+            tokenDao.insert(token);
+            tokenData.postValue(tokenDao.getToken());
+        }).start();
+    }
+
+    public LiveData<Token> getStoredToken() {
+        return tokenData;
     }
 
     public interface TokenCallback {

@@ -8,4 +8,7 @@
         <item name="android:layout_margin">10dp</item>
         <item name="android:textSize">16sp</item>
     </style>
+    <style name="ToolbarTextStyle" parent="TextAppearance.AppCompat.Widget.ActionBar.Title">
+        <item name="android:textColor">#E50914</item> <!-- Red -->
+    </style>
 </resources>

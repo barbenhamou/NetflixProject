@@ -16,7 +16,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import com.example.myapplication.repositories.TokenRepository;
+import com.example.myapplication.repositories.UserRepository;
+
 public class MainActivity extends AppCompatActivity {
+
+    public static UserRepository userRepository;
+    public static TokenRepository tokenRepository;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +35,9 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        userRepository = new UserRepository(getApplication());
+        tokenRepository = new TokenRepository(getApplication());
 
         Movie movie = new Movie("67a6974a19b06d36091f61e7", "testMovie", new ArrayList<>(Arrays.asList("Action", "Comedy")), 100, 2000, new ArrayList<>(List.of("Tom Cruise")), "Very good movie", "", "", "", "");
         Button btn = findViewById(R.id.main_btn);
@@ -46,6 +56,12 @@ public class MainActivity extends AppCompatActivity {
         Button signUp = findViewById(R.id.signup);
         signUp.setOnClickListener(v -> {
             Intent intent = new Intent(this, SignUpActivity.class);
+            startActivity(intent);
+        });
+
+        Button home = findViewById(R.id.home);
+        home.setOnClickListener(v -> {
+            Intent intent = new Intent(this, HomePageActivity.class);
             startActivity(intent);
         });
     }
