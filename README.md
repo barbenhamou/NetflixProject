@@ -4,7 +4,6 @@ This is a project for the course "Advanced System programming" of Bar-Ilan Unive
 This project is a movie streaming platform similar to Netflix, through a Web-App and an Android App.
 Check out the [Wiki](Wiki) to learn how to run it, and everything it can do!
 
-web server that presents a RESTful API.
 <br>
 
 
