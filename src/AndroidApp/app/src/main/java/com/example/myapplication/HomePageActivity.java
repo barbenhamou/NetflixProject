@@ -87,12 +87,13 @@ public class HomePageActivity extends AppCompatActivity {
         if (actionView != null) {
             logoutButton = actionView.findViewById(R.id.logoutButton);
             logoutButton.setTextColor(Color.RED);
+            invalidateOptionsMenu();
             logoutButton.setOnClickListener(v -> logoutUser());
         }
 
         MenuItem profileItem = menu.findItem(R.id.action_profile);
         if (profileItem != null) {
-            profileItem.setActionView(R.layout.profile_picture); // This ensures getActionView() is not null
+            profileItem.setActionView(R.layout.profile_picture);
             View profileView = profileItem.getActionView();
 
             if (profileView != null) {

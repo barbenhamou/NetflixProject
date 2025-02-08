@@ -75,8 +75,6 @@ public class UserRepository {
             return;
         }
 
-        Log.d("UserRepository", "Uploading file: " + imageFile.getAbsolutePath()); // Remove
-
         RequestBody requestBody = RequestBody.create(MediaType.parse("image/*"), imageFile);
         MultipartBody.Part imagePart = MultipartBody.Part.createFormData("profilePicture", imageFile.getName(), requestBody);
 
@@ -96,7 +94,6 @@ public class UserRepository {
 
             @Override
             public void onFailure(Call<ProfilePictureResponse> call, Throwable t) {
-                Log.d("UserRepository", "Upload failed", t); // Remove
                 callback.onUploadFailure("API error: " + t.getMessage());
             }
         });
