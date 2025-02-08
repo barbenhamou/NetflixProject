@@ -17,4 +17,7 @@ public interface UserDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(User user);
+
+    @Query("UPDATE user SET picture = :pictureUri WHERE username = :username")
+    void updateProfilePicture(String username, String pictureUri);
 }

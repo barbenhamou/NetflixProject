@@ -1,7 +1,5 @@
 package com.example.myapplication;
 
-import static com.example.myapplication.MyApplication.context;
-
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -13,24 +11,17 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Log;
-import android.widget.ImageView;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import com.example.myapplication.databinding.ActivitySignupBinding;
 import com.example.myapplication.entities.ProfilePictureResponse;
-import com.example.myapplication.entities.Token;
 import com.example.myapplication.entities.User;
-import com.example.myapplication.repositories.TokenRepository;
 import com.example.myapplication.repositories.UserRepository;
 
 import java.io.File;
@@ -38,12 +29,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import okhttp3.MultipartBody;
-
 public class SignUpActivity extends AppCompatActivity {
 
     private ActivitySignupBinding binding;
-    private UserRepository repository;
+    public static UserRepository repository;
     private Uri imageUri;
     private File imageFile;
 
@@ -53,7 +42,7 @@ public class SignUpActivity extends AppCompatActivity {
         binding = ActivitySignupBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        repository = new UserRepository(getApplication());
+        repository = MainActivity.userRepository;
 
         checkPermissions();
 
@@ -103,8 +92,10 @@ public class SignUpActivity extends AppCompatActivity {
             repository.signUp(user, new UserRepository.UserCallBack() {
                 @Override
                 public void onSuccess(User user) {
-                    User dbuser = repository.getStoredUser();
-                    runOnUiThread(() -> Toast.makeText(SignUpActivity.this, "User " + dbuser.getUsername() + " registered successfully!", Toast.LENGTH_SHORT).show());
+
+                    runOnUiThread(() -> {
+                        Toast.makeText(SignUpActivity.this, "User registered successfully!", Toast.LENGTH_SHORT).show();
+                    });
 
                     if (imageUri != null) {
                         try {
@@ -151,24 +142,39 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     private File saveImageToInternalStorage(Uri uri) throws IOException {
-        ContentResolver resolver = getContentResolver();
-        InputStream inputStream = resolver.openInputStream(uri);
-        Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-
-        File directory = new File(getCacheDir(), "uploads");
-        if (!directory.exists()) {
-            directory.mkdirs();
+        if (uri == null) {
+            throw new IllegalArgumentException("URI cannot be null");
         }
 
-        File file = new File(directory, "profile_" + System.currentTimeMillis() + ".jpg");
-        FileOutputStream fileOutputStream = new FileOutputStream(file);
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 90, fileOutputStream);
-        fileOutputStream.flush();
-        fileOutputStream.close();
-        inputStream.close();
+        ContentResolver resolver = getContentResolver();
 
-        Log.d("UPLOAD", "Saved image path: " + file.getAbsolutePath());
+        try (InputStream inputStream = resolver.openInputStream(uri)) {
+            if (inputStream == null) {
+                throw new IOException("Failed to open InputStream for URI: " + uri.toString());
+            }
 
-        return file;
+            Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+            if (bitmap == null) {
+                throw new IOException("Failed to decode image from URI: " + uri.toString());
+            }
+
+            // ✅ Save in INTERNAL STORAGE (NOT Cache)
+            File directory = new File(getFilesDir(), "uploads");
+            if (!directory.exists() && !directory.mkdirs()) {
+                throw new IOException("Failed to create directory: " + directory.getAbsolutePath());
+            }
+
+            // Unique filename
+            File file = new File(directory, "profile_" + System.currentTimeMillis() + ".jpg");
+
+            // Save the bitmap to storage
+            try (FileOutputStream fileOutputStream = new FileOutputStream(file)) {
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 90, fileOutputStream);
+                fileOutputStream.flush();
+            }
+
+            Log.d("UPLOAD", "Saved image path: " + file.getAbsolutePath());
+            return file;
+        }
     }
 }

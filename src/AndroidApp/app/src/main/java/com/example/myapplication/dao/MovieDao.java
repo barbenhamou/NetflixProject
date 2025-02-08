@@ -22,5 +22,4 @@ public interface MovieDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(List<Movie> movies);
-
 }

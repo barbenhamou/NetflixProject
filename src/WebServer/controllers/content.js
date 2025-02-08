@@ -27,7 +27,6 @@ function createMulterForMovie() {
 					fs.mkdirSync(finalFolder, { recursive: true });
 				}
 
-				console.log(`Saving ${file.fieldname} file to: ${finalFolder}`);
 				cb(null, finalFolder);
 			},
 
@@ -51,7 +50,6 @@ function createMulterForUser() {
 				}
 
 				const baseFolder = path.join(__dirname, "../contents/users");
-				console.log(`Saving profile picture file to: ${baseFolder}`);
 				cb(null, baseFolder);
 			},
 			filename: (req, file, cb) => {
@@ -66,8 +64,6 @@ function createMulterForUser() {
 
 function handleFileUpload(req, res) {
 	try {
-		console.log("Uploaded files:", req.files);
-
 		if (req.params.id) {
 			return res.status(201).json({
 				message: "Files uploaded successfully via Multer!",

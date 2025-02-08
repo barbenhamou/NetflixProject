@@ -36,7 +36,7 @@ const getMovieFiles = async (id, type, range) => {
         // Extract the range requested by the browser
         const parts = range.substring(6).split('-');
         const start = parseInt(parts[0]);
-        const chunk_size = 10 ** 6; // 1MB
+        const chunk_size = 10 * (1024 ** 2); // 10MB
         const end = Math.min(start + chunk_size, fileSize - 1);
         const file = fs.createReadStream(filePath, { start, end });
     
