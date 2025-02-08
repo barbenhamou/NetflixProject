@@ -31,6 +31,11 @@ public interface WebServiceAPI {
             @Header("Authorization") String authToken
     );
 
+    @POST("movies/{id}/recommend")
+    Call<Void> watchMovie(@Path("id") String movieId,
+                          @Header("Authorization") String authToken
+    );
+
     @POST("tokens")
     Call<LoginResponse> login(@Body LoginRequest request);
 

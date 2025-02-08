@@ -66,4 +66,8 @@ public class MoviesRepository {
     public void reload() {
         movieAPI.get();
     }
+
+    public void watchMovie(String movieId, String token) {
+        new Thread(() -> movieAPI.watchMovie(movieId, token)).start();
+    }
 }
