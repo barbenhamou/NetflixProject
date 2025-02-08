@@ -183,13 +183,28 @@ public class AdminActivity extends AppCompatActivity {
     private void handleEditCategory() {
         EditText oldCategoryNameEditText = findViewById(R.id.editTextOldCategoryName);
         EditText newCategoryNameEditText = findViewById(R.id.editTextNewCategoryName);
+        EditText categoryPromoted = findViewById(R.id.editTextNewCategoryPromoted);
+
         String oldName = oldCategoryNameEditText.getText().toString().trim();
         String newName = newCategoryNameEditText.getText().toString().trim();
+        String categoryPromotedStr = categoryPromoted.getText().toString().trim();
+
+        boolean flag;
+
+        if (categoryPromotedStr.equals("true")) {
+            flag = true;
+        } else if (categoryPromotedStr.equals("false")) {
+            flag = false;
+        } else {
+            textViewMessage.setText("Category name cannot be empty");
+            return;
+        }
+
         if (oldName.isEmpty() || newName.isEmpty()) {
             textViewMessage.setText("Both old and new category names are required");
             return;
         }
-        Category updatedCategory = new Category(newName, false);
+        Category updatedCategory = new Category(newName, flag);
         MainActivity.tokenRepository.getStoredToken().observe(this, token -> {
             new CategoryRepository(getApplication()).updateCategory(token, oldName, updatedCategory, new CategoryRepository.CategoryCallback() {
                 @Override
