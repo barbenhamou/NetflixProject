@@ -30,12 +30,11 @@ public class LoginActivity extends AppCompatActivity {
                 @Override
                 public void onSuccess(Token token) {
                     runOnUiThread(() ->
-                            Toast.makeText(LoginActivity.this, "Login Successful! Token: " + token.getToken(), Toast.LENGTH_SHORT).show()
+                            Toast.makeText(LoginActivity.this, token.isAdmin() + "Login Successful! Token: " + token.getToken(), Toast.LENGTH_SHORT).show()
                     );
 
                     Intent intent = new Intent(LoginActivity.this, HomePageActivity.class);
                     startActivity(intent);
-                    finish();
                 }
 
                 @Override

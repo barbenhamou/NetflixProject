@@ -39,35 +39,38 @@ public class MainActivity extends AppCompatActivity {
         userRepository = new UserRepository(getApplication());
         tokenRepository = new TokenRepository(getApplication());
 
-        Movie movie = new Movie("67a776245dd46d9df941254e", "testMovie", new ArrayList<>(Arrays.asList("Action", "Comedy")), 100, 2000, new ArrayList<>(List.of("Tom Cruise")), "Very good movie", "", "", "", "");
-        Button btn = findViewById(R.id.main_btn);
-        btn.setOnClickListener(view -> {
-            Intent intent = new Intent(this, MovieInfoActivity.class);
-            intent.putExtra("movie", movie);
-            startActivity(intent);
-        });
+        Intent intent = new Intent(this, GuestActivity.class);
+        startActivity(intent);
 
-        Button login = findViewById(R.id.login);
-        login.setOnClickListener(v -> {
-            Intent intent = new Intent(this, LoginActivity.class);
-            startActivity(intent);
-        });
-
-        Button signUp = findViewById(R.id.signup);
-        signUp.setOnClickListener(v -> {
-            Intent intent = new Intent(this, SignUpActivity.class);
-            startActivity(intent);
-        });
-
-        Button home = findViewById(R.id.home);
-        home.setOnClickListener(v -> {
-            Intent intent = new Intent(this, HomePageActivity.class);
-            startActivity(intent);
-        });
-        Button admin = findViewById(R.id.admin);
-        admin.setOnClickListener(v -> {
-            Intent intent = new Intent(this, AdminActivity.class);
-            startActivity(intent);
-        });
+//        Movie movie = new Movie("67a776245dd46d9df941254e", "testMovie", new ArrayList<>(Arrays.asList("Action", "Comedy")), 100, 2000, new ArrayList<>(List.of("Tom Cruise")), "Very good movie", "", "", "", "");
+//        Button btn = findViewById(R.id.main_btn);
+//        btn.setOnClickListener(view -> {
+//            Intent intent = new Intent(this, MovieInfoActivity.class);
+//            intent.putExtra("movie", movie);
+//            startActivity(intent);
+//        });
+//
+//        Button login = findViewById(R.id.login);
+//        login.setOnClickListener(v -> {
+//            Intent intent = new Intent(this, LoginActivity.class);
+//            startActivity(intent);
+//        });
+//
+//        Button signUp = findViewById(R.id.signup);
+//        signUp.setOnClickListener(v -> {
+//            Intent intent = new Intent(this, SignUpActivity.class);
+//            startActivity(intent);
+//        });
+//
+//        Button home = findViewById(R.id.home);
+//        home.setOnClickListener(v -> {
+//            Intent intent = new Intent(this, HomePageActivity.class);
+//            startActivity(intent);
+//        });
+//        Button admin = findViewById(R.id.admin);
+//        admin.setOnClickListener(v -> {
+//            Intent intent = new Intent(this, AdminActivity.class);
+//            startActivity(intent);
+//        });
     }
 }

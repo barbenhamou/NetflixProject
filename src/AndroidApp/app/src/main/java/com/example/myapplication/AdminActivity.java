@@ -202,7 +202,7 @@ public class AdminActivity extends AppCompatActivity {
         String releaseYearStr = releaseYearEditText.getText().toString().trim();
         String description = descriptionEditText.getText().toString().trim();
         String categoriesStr = categoriesEditText.getText().toString().trim();
-        String castStr = castEditText.toString();
+        String castStr = castEditText.getText().toString();
 
         if (title.isEmpty() || lengthStr.isEmpty() || categoriesStr.isEmpty() || addMovieImageUri == null || addMovieTrailerUri == null || addMovieFilmUri == null || castStr.isEmpty()) {
             textViewMessage.setText("Title, length, categories and all files (image, trailer, film) are required");

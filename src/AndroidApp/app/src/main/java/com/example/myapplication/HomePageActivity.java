@@ -157,6 +157,13 @@ public class HomePageActivity extends AppCompatActivity {
             }
         }
 
+        MenuItem adminItem = menu.findItem(R.id.action_admin);
+        MainActivity.tokenRepository.getStoredToken().observe(this, tokenObj -> {
+            if (tokenObj != null && tokenObj.isAdmin()) {
+                adminItem.setVisible(true);
+            }
+        });
+
         return true;
     }
 
@@ -170,13 +177,19 @@ public class HomePageActivity extends AppCompatActivity {
             logoutUser();
             return true;
         }
+        if (item.getItemId() == R.id.action_admin) {
+            // Navigate to AdminActivity
+            Intent intent = new Intent(this, AdminActivity.class);
+            startActivity(intent);
+            return true;
+        }
         return super.onOptionsItemSelected(item);
     }
 
     private void logoutUser() {
         Toast.makeText(this, "Logging out...", Toast.LENGTH_SHORT).show();
         MainActivity.tokenRepository.logout();
-        Intent intent = new Intent(this, LoginActivity.class);
+        Intent intent = new Intent(this, GuestActivity.class);
         startActivity(intent);
         finish();
     }
