@@ -36,8 +36,6 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MoviesRepository {
-
-
     private MovieListData movieListData;
     private MutableLiveData<List<Movie>> recommendations;
     private MutableLiveData<List<Category>> categoryListData;
@@ -64,7 +62,6 @@ public class MoviesRepository {
 
     public LiveData<List<Movie>> getRecommendations(String movieId, String token) {
         new Thread(() -> movieAPI.recommend(movieId, token)).start();
-
         return recommendations;
     }
 
@@ -141,18 +138,13 @@ public class MoviesRepository {
         new Thread(() -> movieAPI.watchMovie(movieId, token)).start();
     }
 
-    // ==================== NEW MOVIE CRUD METHODS ====================
 
-    // Callback interface for movie operations.
     public interface MovieCallback {
         void onSuccess(Movie movie);
 
         void onFailure(String errorMessage);
     }
 
-    /**
-     * Adds a new movie and uploads its files.
-     */
     public void addMovieWithFiles(Token token, Movie movie, File filmFile, File trailerFile, File imageFile, MovieCallback callback) {
         webServiceAPI.addMovie(movie, "Bearer " + token.getToken()).enqueue(new Callback<Void>() {
             @Override
@@ -164,13 +156,9 @@ public class MoviesRepository {
                         callback.onFailure("Missing Location header in response.");
                         return;
                     }
-                    // Parse the movie ID (assuming the ID is at the end of the URL)
                     String movieId = location.substring(location.lastIndexOf("/") + 1);
-                    // Set the movie ID in your movie object (if applicable)
                     movie.setId(movieId);
 
-                    // Build the file upload parts.
-                    // Create file parts.
                     RequestBody imageRequestBody = RequestBody.create(MediaType.parse("image/*"), imageFile);
                     MultipartBody.Part imagePart = MultipartBody.Part.createFormData("image", imageFile.getName(), imageRequestBody);
 
@@ -180,7 +168,6 @@ public class MoviesRepository {
                     RequestBody filmRequestBody = RequestBody.create(MediaType.parse("video/*"), filmFile);
                     MultipartBody.Part filmPart = MultipartBody.Part.createFormData("film", filmFile.getName(), filmRequestBody);
 
-                    // Create extra parts for each file as expected by the backend.
                     RequestBody imageType = RequestBody.create(MediaType.parse("text/plain"), "image");
                     RequestBody imageName = RequestBody.create(MediaType.parse("text/plain"), imageFile.getName());
 
@@ -225,9 +212,6 @@ public class MoviesRepository {
         });
     }
 
-    /**
-     * Updates an existing movie (found by old title) and uploads its files.
-     */
     public void updateMovieWithFiles(Token token, String oldTitle, Movie updatedMovie, File filmFile, File trailerFile, File imageFile, MovieCallback callback) {
         webServiceAPI.getAllMovies().enqueue(new Callback<List<Movie>>() {
             @Override
@@ -314,9 +298,6 @@ public class MoviesRepository {
         });
     }
 
-    /**
-     * Deletes a movie by its title.
-     */
     public void deleteMovieById(final Token token, final String movieId, final MovieCallback callback) {
         if (movieId == null || movieId.isEmpty()) {
             callback.onFailure("Movie ID must not be empty.");
@@ -342,8 +323,6 @@ public class MoviesRepository {
                     }
                 });
     }
-
-
 }
 
 
