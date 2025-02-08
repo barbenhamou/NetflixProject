@@ -17,7 +17,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import com.example.myapplication.adapters.ParentAdapter;
+
 import com.example.myapplication.adapters.VerticalCategoryAdapter;
 import com.example.myapplication.databinding.ActivityHomePageBinding;
 import com.example.myapplication.viewmodels.MovieViewModel;
