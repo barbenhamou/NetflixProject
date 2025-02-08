@@ -78,8 +78,6 @@ function SignUpForm() {
                     if (!pictureResponse.ok) {
                         const errorData = await pictureResponse.json();
                         setError('Error uploading picture: ' + errorData.error);
-                    } else {
-                        alert('Profile picture uploaded successfully');
                     }
                 }
 
@@ -108,7 +106,7 @@ function SignUpForm() {
                     <StandAloneField label={'Email Address'} type={'email'} id={'email'} placeholder={'Enter your email'} value={email} onChange={handleInput(setEmail)} />
                     <StandAloneField label={'Phone (no dashes)'} type={'text'} id={'phone'} placeholder={'Enter your phone number'} value={phone} onChange={handleInput(setPhone)} />
                     <StandAloneField label={'Location'} type={'text'} id={'location'} placeholder={'Enter your location'} value={location} onChange={handleInput(setLocation)} />
-                    
+
                     <div className="mb-3">
                         <label htmlFor="formFile" className="form-label">Default file input example</label>
                         <input className="form-control" type="file" id="formFile" onChange={handleFileChange}></input>

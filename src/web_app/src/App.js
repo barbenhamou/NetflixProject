@@ -5,8 +5,8 @@ import LoginForm from './SubscriptionForms/LoginForm';
 import SignUpForm from './SubscriptionForms/SignUpForm';
 import MovieInfo from './MovieInfo/MovieInfo';
 import MovieWatch from './MovieWatch/MovieWatch';
-import Admin from './pages/Admin';
 import Home from './pages/Home';
+import Admin from './pages/Admin';
 import GuestPage from './pages/guest';
 function MovieInfoWrapper() {
   const { id } = useParams();
@@ -16,6 +16,13 @@ function MovieInfoWrapper() {
 function MoviePlayWrapper() {
   const { id } = useParams();
   return <MovieWatch id={id} />;
+}
+
+function HomePageWrapper() {
+  if (localStorage.getItem("authToken")) {
+    return <Home />;
+  }
+  return <GuestPage />;
 }
 
 function NotFound() {
@@ -33,14 +40,13 @@ function App() {
         <Routes>
           <Route path="/movies/:id/info" element={<MovieInfoWrapper />} />
           <Route path="/movies/:id/watch" element={<MoviePlayWrapper />} />
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={<HomePageWrapper />} />
           <Route path="/login" element={<LoginForm />} />
           <Route path="/signup" element={<SignUpForm />} />
+          <Route path="/admin" element={<Admin />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
-      {/* TODO: Put the iframe in <Route path="/" /> */}
-      {/* <iframe title="hidden" src="http://localhost:3000/movies/67936f2a686d1e3d89062f93/info"></iframe> */}
     </div>
   );
 }

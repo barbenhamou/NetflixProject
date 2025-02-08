@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 import "./guest.css"; // Import the CSS file
 
@@ -9,7 +9,7 @@ const translations = {
     headerTitle: "Unlimited movies, TV shows and more.",
     headerSubtitle: "Watch anywhere. Cancel anytime.",
     headerPrompt:
-      "Ready to watch? Enter your email to create or restart your membership.",
+      "Ready to watch?  Click here to create your membership.",
     feature1Title: "Enjoy on your TV.",
     feature1Text:
       "Watch on smart TVs, PlayStation, Xbox, Chromecast, Apple TV, Blu-ray players and more.",
@@ -22,15 +22,6 @@ const translations = {
     feature4Title: "Create profiles for children.",
     feature4Text:
       "Send children on adventures with their favourite characters in a space made just for them—free with your membership.",
-    faqTitle: "Frequently Asked Questions",
-    faq1: "What is Netflix?",
-    faq2: "How much does Netflix cost?",
-    faq3: "Where can I watch?",
-    faq4: "How do I cancel?",
-    faq5: "What can I watch on Netflix?",
-    faq6: "Is Netflix good for kids?",
-    footerQuestions: "Questions? call 000-000-000-000",
-    footerNetflix: "Netflix India",
   },
   Spanish: {
     headerTitle: "Películas, series y más, ilimitado.",
@@ -50,14 +41,6 @@ const translations = {
     feature4Text:
       "Envía a los niños a aventuras con sus personajes favoritos en un espacio creado solo para ellos, incluido gratis en tu membresía.",
     faqTitle: "Preguntas Frecuentes",
-    faq1: "¿Qué es Netflix?",
-    faq2: "¿Cuánto cuesta Netflix?",
-    faq3: "¿Dónde puedo mirar?",
-    faq4: "¿Cómo cancelo?",
-    faq5: "¿Qué puedo ver en Netflix?",
-    faq6: "¿Netflix es bueno para niños?",
-    footerQuestions: "¿Preguntas? llama al 000-000-000-000",
-    footerNetflix: "Netflix España",
   },
   French: {
     headerTitle: "Films, séries TV et bien plus, en illimité.",
@@ -76,15 +59,6 @@ const translations = {
     feature4Title: "Créez des profils pour enfants.",
     feature4Text:
       "Envoyez les enfants à l'aventure avec leurs personnages préférés dans un espace créé juste pour eux, gratuit avec votre abonnement.",
-    faqTitle: "Questions Fréquemment Posées",
-    faq1: "Qu'est-ce que Netflix ?",
-    faq2: "Combien coûte Netflix ?",
-    faq3: "Où puis-je regarder ?",
-    faq4: "Comment annuler ?",
-    faq5: "Que puis-je regarder sur Netflix ?",
-    faq6: "Netflix est-il adapté aux enfants ?",
-    footerQuestions: "Des questions ? Appelez le 000-000-000-000",
-    footerNetflix: "Netflix France",
   },
 };
 
@@ -183,17 +157,18 @@ const GuestPage = () => {
             <button className="theme-toggle-btn" onClick={toggleTheme}>
               {isLightMode ? "Dark Mode" : "Light Mode"}
             </button>
-            <button className="sign-in-btn">Sign In</button>
+            <Link to="/login">
+              <button className="sign-in-btn">Login</button>
+            </Link>
           </div>
         </nav>
         <div className="header-content">
           <h1>{t.headerTitle}</h1>
           <h3>{t.headerSubtitle}</h3>
           <p>{t.headerPrompt}</p>
-
-
-          <button type="submit" className="email-signup">Get Started</button>
-
+          <Link to="/signup">
+            <button type="submit" className="email-signup">Get Started</button>
+          </Link>
         </div>
       </div>
 

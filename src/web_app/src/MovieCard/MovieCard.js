@@ -38,11 +38,11 @@ function MovieCard({ id, title, categories, lengthMinutes, releaseYear, descript
                             onClick={() => window.location.href = `/movies/${id}/info`}></i>
                     }
                 </section>
-                <p className="card-text">
+                {showDescription && <p className="card-text">
                     {releaseYear} | {Math.floor(lengthMinutes / 60)}h {lengthMinutes % 60}m
-                </p>
-                <p className="card-text">{categories.join(' • ')}</p>
-                <p className="card-text description">{showDescription ? description : ''}</p>
+                </p>}
+                {showDescription && <p className="card-text">{categories.join(' • ')}</p>}
+                {showDescription && <p className="card-text description">{description}</p>}
             </div>
         </div>
     );
