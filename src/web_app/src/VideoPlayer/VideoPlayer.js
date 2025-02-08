@@ -5,7 +5,7 @@ import { backendPort } from "../config";
 
 function VideoPlayer({ movieId, type }) {
     const videoRef = useRef(null);
-    const [isPlaying, setIsPlaying] = useState(false);
+    const [isPlaying, setIsPlaying] = useState(true);
     const [isFullscreen, setIsFullscreen] = useState(false);
     const [currentTime, setCurrentTime] = useState(0);
     const [duration, setDuration] = useState(0);
@@ -156,7 +156,7 @@ function VideoPlayer({ movieId, type }) {
                 className="movie-watch-video"
                 ref={videoRef}
                 onClick={togglePlay}
-                muted={false}
+                autoPlay
                 src={`http://localhost:${backendPort}/api/contents/movies/${movieId}?type=${type}&token=${localStorage.getItem("authToken")}`} />
             <div className="video-controls">
                 <button className="skip-btn" onClick={() => skipTime(-10)}>

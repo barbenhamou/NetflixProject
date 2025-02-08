@@ -398,16 +398,6 @@ body.light-mode nav button {
   color: #fff;
 }
 
-body.light-mode .email-signup {
-  background: white;
-  border: 1px solid black;
-}
-
-body.light-mode .email-signup button {
-  background: blue;
-  color: #fff;
-}
-
 body.light-mode .features h2,
 body.light-mode .features p {
   color: #000;
@@ -444,7 +434,6 @@ body.light-mode .footer .language-btn {
   font-size: 5rem;
   font-weight: 700;
   color: #e50914;
-  /* Netflix’s brand red */
   margin-right: 10px;
   /* Spacing if you need it */
 }

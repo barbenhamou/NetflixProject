@@ -28,6 +28,7 @@ h3 {
     display: flex;
     font-weight: 400;
     margin-bottom: 5px;
+    color: black !important;
 }
 
 .form-control {
@@ -71,6 +72,10 @@ p a {
 
 p a:hover {
     text-decoration: underline;
+}
+
+p {
+    color: black !important;
 }
 
 .bi-arrow-left {
