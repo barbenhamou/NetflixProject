@@ -34,7 +34,7 @@ We can now go back to the home page and see our movie:
 
 Here we'll see all of the promoted categories and their movies. The last category will be movies that you watched. Our movie is currently the only movie, so it was also chosen as the featured movie and we see its trailer at the top of the page. Unfortunately, we were unable to make the trailer play automatically without muting it due to internet browser limitations.
 
-# Note
+## Note
 Our website has some small cool animations to the buttons, cards and more! We urge you to go and see for yourself :)
 
 # Movie Information Page
