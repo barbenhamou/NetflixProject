@@ -1,6 +1,8 @@
 package com.example.myapplication;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.OptIn;
@@ -43,6 +45,7 @@ public class MovieInfoActivity extends AppCompatActivity {
         displayMovie(movie);
 
         playerView = binding.MovieInfoTrailer;
+        Button play = binding.playMovie;
 
         MainActivity.tokenRepository.getStoredToken().observe(this, tokenObj -> {
             String token = tokenObj.getToken();
@@ -51,6 +54,15 @@ public class MovieInfoActivity extends AppCompatActivity {
             displayRecommendations(movie, token);
 
             initializePlayer(link);
+
+            play.setOnClickListener(view -> {
+                Intent intent = new Intent(this, MovieWatchActivity.class);
+                intent.putExtra("movieId", movie.getId());
+                startActivity(intent);
+
+                viewModel.watchMovie(movie.getId(), token);
+                finish();
+            });
         });
     }
 
@@ -125,6 +137,19 @@ public class MovieInfoActivity extends AppCompatActivity {
 
                     String moviesForYou = getString(R.string.movies_for_you, movie.getTitle());
                     binding.tvMoviesForYou.setText(moviesForYou);
+
+                    gridView.setOnItemClickListener((parent, view, position, id) -> {
+                        // Get the clicked movie
+                        Movie selectedMovie = movieList.get(position);
+
+                        // Start the new activity
+                        Intent intent = new Intent(MovieInfoActivity.this, MovieWatchActivity.class);
+                        intent.putExtra("movieId", selectedMovie.getId());
+                        startActivity(intent);
+
+                        viewModel.watchMovie(movie.getId(), token);
+                        finish();
+                    });
                 } else {
                     binding.tvMoviesForYou.setText(R.string.nothing_to_recommend);
                 }

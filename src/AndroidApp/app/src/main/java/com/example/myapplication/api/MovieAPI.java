@@ -72,4 +72,17 @@ public class MovieAPI {
             }
         });
     }
+
+    public void watchMovie(String movieId, String token) {
+        Call<Void> call = webServiceAPI.watchMovie(movieId, "Bearer " + token);
+        call.enqueue(new Callback<>() {
+            @Override
+            public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {}
+
+            @Override
+            public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {
+                Log.e("Movie", "API call failed: " + t.getMessage());
+            }
+        });
+    }
 }
