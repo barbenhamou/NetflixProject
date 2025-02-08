@@ -35,8 +35,6 @@ public class MovieInfoActivity extends AppCompatActivity {
         viewModel = new ViewModelProvider(this).get(MovieViewModel.class);
         viewModel.setRepository(this.getApplication());
 
-        viewModel.reload();
-
         String token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2N2E2MjE2OGU5MTYyOGUwODE2YjM0ZGQiLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE3Mzg5NjI4MzZ9.tYhtXcOnJiszDsjSgZISZeEuimdyooD0QpfR3d_qYpo";
 
         Movie movie = (Movie) getIntent().getSerializableExtra("movie");
@@ -128,6 +126,7 @@ public class MovieInfoActivity extends AppCompatActivity {
                 } else {
                     binding.tvMoviesForYou.setText(R.string.nothing_to_recommend);
                 }
+
                 recommendationsLoaded = true;
             });
         }
