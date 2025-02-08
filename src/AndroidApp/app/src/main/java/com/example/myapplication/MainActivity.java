@@ -64,5 +64,10 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(this, HomePageActivity.class);
             startActivity(intent);
         });
+        Button admin = findViewById(R.id.admin);
+        admin.setOnClickListener(v -> {
+            Intent intent = new Intent(this, AdminActivity.class);
+            startActivity(intent);
+        });
     }
 }

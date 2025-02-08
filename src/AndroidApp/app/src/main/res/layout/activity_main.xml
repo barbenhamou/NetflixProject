@@ -24,9 +24,10 @@
         android:text="login"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.461"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.36" />
+        app:layout_constraintVertical_bias="0.335" />
 
     <Button
         android:id="@+id/signup"
@@ -40,15 +41,29 @@
         app:layout_constraintVertical_bias="0.73" />
 
     <Button
+        android:id="@+id/admin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="208dp"
+        android:layout_marginEnd="12dp"
+        android:text="admin"
+        app:layout_constraintBottom_toBottomOf="@+id/signup"
+        app:layout_constraintEnd_toEndOf="@+id/main_btn"
+        app:layout_constraintHorizontal_bias="0.3"
+        app:layout_constraintStart_toStartOf="@+id/login"
+        app:layout_constraintTop_toTopOf="@+id/login"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <Button
         android:id="@+id/home"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="home"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintHorizontal_bias="0.461"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.576" />
+        app:layout_constraintVertical_bias="0.191" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

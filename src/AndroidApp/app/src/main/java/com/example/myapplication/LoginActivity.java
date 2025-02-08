@@ -11,7 +11,7 @@ import com.example.myapplication.entities.Token;
 import com.example.myapplication.repositories.TokenRepository;
 
 public class LoginActivity extends AppCompatActivity {
-    private TokenRepository repository;
+    public static TokenRepository repository;
     private ActivityLoginBinding binding;
 
     @Override

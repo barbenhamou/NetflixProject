@@ -1,0 +1,375 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/adminRoot"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#141414"
+    tools:context=".AdminActivity">
+
+    <!-- Back arrow at top-left (optional) -->
+    <ImageButton
+        android:id="@+id/btnBack"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:contentDescription="Back"
+        android:padding="8dp"
+        android:background="?attr/selectableItemBackground"
+        android:src="@drawable/ic_back_arrow"
+        app:tint="@android:color/white"
+
+
+    app:layout_constraintTop_toTopOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintHorizontal_bias="0"
+    app:layout_constraintVertical_bias="0"
+    android:layout_margin="16dp"/>
+
+    <!-- White card container for the Admin Panel -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardContainer"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+
+
+    app:layout_constraintTop_toBottomOf="@+id/btnBack"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+
+
+    android:layout_margin="16dp"
+
+    android:background="#FFFFFF"
+    android:elevation="4dp"
+    app:cardCornerRadius="16dp">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:overScrollMode="never">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <!-- Title -->
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:gravity="center_horizontal"
+                android:text="Admin Panel"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:textColor="#141414" />
+
+            <!-- Spinner (Dropdown) -->
+            <Spinner
+                android:id="@+id/spinnerAction"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"/>
+
+            <!-- =============== ADD CATEGORY LAYOUT =============== -->
+            <LinearLayout
+                android:id="@+id/layoutAddCategory"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone"
+                android:layout_marginBottom="20dp">
+
+                <EditText
+                    android:id="@+id/editTextCategoryName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:hint="Category Name"
+                    android:background="#F4F4F4"
+                    android:textColor="#000000"
+                    android:padding="12dp"/>
+            </LinearLayout>
+
+            <!-- =============== DELETE CATEGORY LAYOUT =============== -->
+            <LinearLayout
+                android:id="@+id/layoutDeleteCategory"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone"
+                android:layout_marginBottom="20dp">
+
+                <EditText
+                    android:id="@+id/editTextDeleteCategory"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:hint="Category Name"
+                    android:background="#F4F4F4"
+                    android:textColor="#000000"
+                    android:padding="12dp"/>
+            </LinearLayout>
+
+            <!-- =============== ADD MOVIE LAYOUT =============== -->
+            <LinearLayout
+                android:id="@+id/layoutAddMovie"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone"
+                android:layout_marginBottom="20dp">
+
+                <EditText
+                    android:id="@+id/editTextMovieTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Movie Title"
+                    android:background="#F4F4F4"
+                    android:textColor="#000000"
+                    android:padding="12dp"
+                    android:layout_marginBottom="10dp"/>
+
+                <EditText
+                    android:id="@+id/editTextLength"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Length (Minutes)"
+                    android:inputType="number"
+                    android:background="#F4F4F4"
+                    android:textColor="#000000"
+                    android:padding="12dp"
+                    android:layout_marginBottom="10dp"/>
+
+                <EditText
+                    android:id="@+id/editTextReleaseYear"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Release Year"
+                    android:inputType="number"
+                    android:background="#F4F4F4"
+                    android:textColor="#000000"
+                    android:padding="12dp"
+                    android:layout_marginBottom="10dp"/>
+
+                <EditText
+                    android:id="@+id/editTextDescription"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Description"
+                    android:background="#F4F4F4"
+                    android:textColor="#000000"
+                    android:padding="12dp"
+                    android:layout_marginBottom="10dp"/>
+
+                <EditText
+                    android:id="@+id/editTextMovieCategory"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Category (for multiple, separate with commas)"
+                    android:background="#F4F4F4"
+                    android:textColor="#000000"
+                    android:padding="12dp"
+                    android:layout_marginBottom="10dp"/>
+
+                <!-- Rounded Buttons -->
+                <Button
+                    android:id="@+id/buttonChooseImage"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Choose Image"
+                    android:layout_marginBottom="10dp"
+                    android:background="@drawable/rounded_button"
+                    android:textColor="#FFFFFF"
+                    app:backgroundTint="@null"/>
+
+                <Button
+                    android:id="@+id/buttonChooseTrailer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Choose Trailer"
+                    android:layout_marginBottom="10dp"
+                    android:background="@drawable/rounded_button"
+                    android:textColor="#FFFFFF"
+                    app:backgroundTint="@null"/>
+
+                <Button
+                    android:id="@+id/buttonChooseFilm"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Choose Movie"
+                    android:background="@drawable/rounded_button"
+                    android:textColor="#FFFFFF"
+                    app:backgroundTint="@null"/>
+            </LinearLayout>
+
+            <!-- =============== DELETE MOVIE LAYOUT =============== -->
+            <LinearLayout
+                android:id="@+id/layoutDeleteMovie"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone"
+                android:layout_marginBottom="20dp">
+
+                <EditText
+                    android:id="@+id/editTextDeleteMovieTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Movie ID"
+                    android:background="#F4F4F4"
+                    android:textColor="#000000"
+                    android:padding="12dp"
+                    android:layout_marginBottom="10dp"/>
+            </LinearLayout>
+
+            <!-- =============== EDIT CATEGORY LAYOUT =============== -->
+            <LinearLayout
+                android:id="@+id/layoutEditCategory"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone"
+                android:layout_marginBottom="20dp">
+
+                <EditText
+                    android:id="@+id/editTextOldCategoryName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Old Category Name"
+                    android:background="#F4F4F4"
+                    android:textColor="#000000"
+                    android:padding="12dp"
+                    android:layout_marginBottom="10dp"/>
+
+                <EditText
+                    android:id="@+id/editTextNewCategoryName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="New Category Name"
+                    android:background="#F4F4F4"
+                    android:textColor="#000000"
+                    android:padding="12dp"
+                    android:layout_marginBottom="10dp"/>
+            </LinearLayout>
+
+            <!-- =============== EDIT MOVIE LAYOUT =============== -->
+            <LinearLayout
+                android:id="@+id/layoutEditMovie"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone"
+                android:layout_marginBottom="20dp">
+
+                <EditText
+                    android:id="@+id/editTextOldMovieTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Old Movie Title"
+                    android:background="#F4F4F4"
+                    android:textColor="#000000"
+                    android:padding="12dp"
+                    android:layout_marginBottom="10dp"/>
+
+                <EditText
+                    android:id="@+id/editTextNewMovieTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="New Movie Title"
+                    android:background="#F4F4F4"
+                    android:textColor="#000000"
+                    android:padding="12dp"
+                    android:layout_marginBottom="10dp"/>
+
+                <EditText
+                    android:id="@+id/editTextEditLength"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Length (Minutes)"
+                    android:inputType="number"
+                    android:background="#F4F4F4"
+                    android:textColor="#000000"
+                    android:padding="12dp"
+                    android:layout_marginBottom="10dp"/>
+
+                <EditText
+                    android:id="@+id/editTextEditReleaseYear"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Release Year"
+                    android:inputType="number"
+                    android:background="#F4F4F4"
+                    android:textColor="#000000"
+                    android:padding="12dp"
+                    android:layout_marginBottom="10dp"/>
+
+                <EditText
+                    android:id="@+id/editTextEditDescription"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Description"
+                    android:background="#F4F4F4"
+                    android:textColor="#000000"
+                    android:padding="12dp"
+                    android:layout_marginBottom="10dp"/>
+
+                <Button
+                    android:id="@+id/buttonEditChooseImage"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Choose Image"
+                    android:layout_marginBottom="10dp"
+                    android:background="@drawable/rounded_button"
+                    android:textColor="#FFFFFF"
+                    app:backgroundTint="@null"/>
+
+                <Button
+                    android:id="@+id/buttonEditChooseTrailer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Choose Trailer"
+                    android:layout_marginBottom="10dp"
+                    android:background="@drawable/rounded_button"
+                    android:textColor="#FFFFFF"
+                    app:backgroundTint="@null"/>
+
+                <Button
+                    android:id="@+id/buttonEditChooseFilm"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Choose Movie"
+                    android:background="@drawable/rounded_button"
+                    android:textColor="#FFFFFF"
+                    />
+            </LinearLayout>
+
+            <!-- SUBMIT BUTTON -->
+            <Button
+                android:id="@+id/buttonSubmit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Submit"
+                android:textColor="#FFFFFF"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/rounded_button"
+                app:backgroundTint="@null"/>
+
+            <!-- MESSAGE DISPLAY -->
+            <TextView
+                android:id="@+id/textViewMessage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:textSize="16sp"
+                android:textColor="#141414"/>
+
+        </LinearLayout>
+    </ScrollView>
+</androidx.cardview.widget.CardView>
+    </androidx.constraintlayout.widget.ConstraintLayout>

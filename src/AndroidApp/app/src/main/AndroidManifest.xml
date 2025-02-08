@@ -38,11 +38,13 @@
             android:name=".SignUpActivity"
             android:exported="false" />
         <activity
-            android:name=".LoginActivity"
+            android:name=".AdminActivity"
             android:exported="false" />
         <activity
             android:name=".MovieInfoActivity"
             android:exported="false" />
+        <activity
+            android:name=".LoginActivity"/>
         <activity
             android:name=".MainActivity"
             android:exported="true">
