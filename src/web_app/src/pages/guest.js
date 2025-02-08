@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from 'react-router-dom';
+
 import "./guest.css"; // Import the CSS file
 
 // Object containing translations for supported languages
@@ -121,8 +123,8 @@ const GuestPage = () => {
   // Using process.env.PUBLIC_URL ensures the image is loaded from the public folder.
   const headerStyle = {
     backgroundImage: isLightMode
-      ? `linear-gradient(rgba(255,255,255,0.7), rgba(255,255,255,0.7)), url(${process.env.PUBLIC_URL}/images/header-image.png)`
-      : `linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url(${process.env.PUBLIC_URL}/images/header-image.png)`,
+      ? `linear-gradient(rgba(255,255,255,0.7), rgba(255,255,255,0.7)))`
+      : `linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)))`,
   };
 
   return (
@@ -130,11 +132,7 @@ const GuestPage = () => {
       {/* Header Section */}
       <div className="header" style={headerStyle}>
         <nav>
-          <img
-            src={`${process.env.PUBLIC_URL}/images/logo.png`}
-            className="logo"
-            alt="Logo"
-          />
+          <span className="logo-text">Nexflit</span>
           <div className="nav-right">
             <div className="dropdown">
               <button
@@ -192,195 +190,15 @@ const GuestPage = () => {
           <h1>{t.headerTitle}</h1>
           <h3>{t.headerSubtitle}</h3>
           <p>{t.headerPrompt}</p>
-          <form
-            className="email-signup"
-            onSubmit={(e) => {
-              e.preventDefault();
-              // Handle email signup submission here…
-            }}
-          >
-            <input type="email" placeholder="Email address" required />
-            <button type="submit">Get Started</button>
-          </form>
+
+
+          <button type="submit" className="email-signup">Get Started</button>
+
         </div>
       </div>
 
-      {/* Features Section */}
-      <div className="features">
-        <div className="row">
-          <div className="text-col">
-            <h2>{t.feature1Title}</h2>
-            <p>{t.feature1Text}</p>
-          </div>
-          <div className="img-col">
-            <img
-              src={`${process.env.PUBLIC_URL}/images/feature-1.png`}
-              alt="Feature 1"
-            />
-          </div>
-        </div>
-        <div className="row">
-          <div className="img-col">
-            <img
-              src={`${process.env.PUBLIC_URL}/images/feature-2.png`}
-              alt="Feature 2"
-            />
-          </div>
-          <div className="text-col">
-            <h2>{t.feature2Title}</h2>
-            <p>{t.feature2Text}</p>
-          </div>
-        </div>
-        <div className="row">
-          <div className="text-col">
-            <h2>{t.feature3Title}</h2>
-            <p>{t.feature3Text}</p>
-          </div>
-          <div className="img-col">
-            <img
-              src={`${process.env.PUBLIC_URL}/images/feature-3.png`}
-              alt="Feature 3"
-            />
-          </div>
-        </div>
-        <div className="row">
-          <div className="img-col">
-            <img
-              src={`${process.env.PUBLIC_URL}/images/feature-4.png`}
-              alt="Feature 4"
-            />
-          </div>
-          <div className="text-col">
-            <h2>{t.feature4Title}</h2>
-            <p>{t.feature4Text}</p>
-          </div>
-        </div>
-      </div>
 
-      {/* FAQ Section */}
-      <div className="faq">
-        <h2>{t.faqTitle}</h2>
-        <ul className="accordion">
-          <li>
-            <input type="radio" name="accordion" id="first" />
-            <label htmlFor="first">{t.faq1}</label>
-            <div className="content">
-              <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut
-                maximus faucibus ligula in cursus. Aenean elementum mauris
-                tellus, ullamcorper fringilla justo suscipit ut.
-              </p>
-            </div>
-          </li>
-          <li>
-            <input type="radio" name="accordion" id="second" />
-            <label htmlFor="second">{t.faq2}</label>
-            <div className="content">
-              <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut
-                maximus faucibus ligula in cursus. Aenean elementum mauris
-                tellus, ullamcorper fringilla justo suscipit ut.
-              </p>
-            </div>
-          </li>
-          <li>
-            <input type="radio" name="accordion" id="third" />
-            <label htmlFor="third">{t.faq3}</label>
-            <div className="content">
-              <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut
-                maximus faucibus ligula in cursus. Aenean elementum mauris
-                tellus, ullamcorper fringilla justo suscipit ut.
-              </p>
-            </div>
-          </li>
-          <li>
-            <input type="radio" name="accordion" id="fourth" />
-            <label htmlFor="fourth">{t.faq4}</label>
-            <div className="content">
-              <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut
-                maximus faucibus ligula in cursus. Aenean elementum mauris
-                tellus, ullamcorper fringilla justo suscipit ut.
-              </p>
-            </div>
-          </li>
-          <li>
-            <input type="radio" name="accordion" id="fifth" />
-            <label htmlFor="fifth">{t.faq5}</label>
-            <div className="content">
-              <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut
-                maximus faucibus ligula in cursus. Aenean elementum mauris
-                tellus, ullamcorper fringilla justo suscipit ut.
-              </p>
-            </div>
-          </li>
-          <li>
-            <input type="radio" name="accordion" id="sixth" />
-            <label htmlFor="sixth">{t.faq6}</label>
-            <div className="content">
-              <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut
-                maximus faucibus ligula in cursus. Aenean elementum mauris
-                tellus, ullamcorper fringilla justo suscipit ut.
-              </p>
-            </div>
-          </li>
-        </ul>
-        <small>{t.headerPrompt}</small>
-        <form
-          className="email-signup"
-          onSubmit={(e) => {
-            e.preventDefault();
-            // Handle email signup submission here…
-          }}
-        >
-          <input type="email" placeholder="Email address" required />
-          <button type="submit">Get Started</button>
-        </form>
-      </div>
 
-      {/* Footer Section */}
-      <div className="footer">
-        <h2>{t.footerQuestions}</h2>
-        <div className="row">
-          <div className="col">
-            <a href="#">FAQ</a>
-            <a href="#">Investor Relations</a>
-            <a href="#">Privacy</a>
-            <a href="#">Speed Test</a>
-          </div>
-          <div className="col">
-            <a href="#">Help Center</a>
-            <a href="#">Jobs</a>
-            <a href="#">Cookies Preferences</a>
-            <a href="#">Legal Notices</a>
-          </div>
-          <div className="col">
-            <a href="#">Account</a>
-            <a href="#">Ways to watch</a>
-            <a href="#">Corporate Information</a>
-            <a href="#">Only on Netflix</a>
-          </div>
-          <div className="col">
-            <a href="#">Media Centre</a>
-            <a href="#">Terms of Use</a>
-            <a href="#">Contact Us</a>
-          </div>
-        </div>
-        <button
-          className="language-btn"
-          onClick={() => setDropdownOpen(!dropdownOpen)}
-        >
-          {language}{" "}
-          <img
-            src={`${process.env.PUBLIC_URL}/images/down-icon.png`}
-            alt="Dropdown"
-          />
-        </button>
-        <p className="copyright-txt">{t.footerNetflix}</p>
-      </div>
     </div>
   );
 };

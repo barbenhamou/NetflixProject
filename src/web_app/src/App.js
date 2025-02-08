@@ -33,7 +33,7 @@ function App() {
         <Routes>
           <Route path="/movies/:id/info" element={<MovieInfoWrapper />} />
           <Route path="/movies/:id/watch" element={<MoviePlayWrapper />} />
-          <Route path="/" element={<Admin />} />
+          <Route path="/" element={<Home />} />
           <Route path="/login" element={<LoginForm />} />
           <Route path="/signup" element={<SignUpForm />} />
           <Route path="*" element={<NotFound />} />
