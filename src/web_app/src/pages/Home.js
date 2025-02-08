@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import MovieCard from "../MovieCard/MovieCard";
 import VideoPlayer from "../VideoPlayer/VideoPlayer";
 import { backendPort } from "../config";
+import { Link } from "react-router-dom";
 import "./Home.css";
 
 const Home = () => {
@@ -115,16 +116,19 @@ const Home = () => {
             <header className={`home-header ${headerHidden ? "hidden" : ""}`}>
                 <span className="logo-text">Nexflit</span>
                 <nav className="home-nav">
-                    <a href="#" className="home-nav-link">
-                        Home
-                    </a>
-                    <a href="/admin" className="home-nav-link">
-                        Admin
-                    </a>
-                    <a href="/login" className="home-nav-link">
-                        Logout
-                    </a>
-
+                    <div className="home-nav-link">
+                        <Link to='/'>Home</Link>
+                    </div>
+                    {localStorage.getItem("isAdmin") === true &&
+                        <div className="home-nav-link">
+                            <Link to='/admin'>Admin Panel</Link>
+                        </div>}
+                    <div className="home-nav-link" onClick={() => {
+                        localStorage.setItem("authToken", "");
+                        localStorage.setItem("isAdmin", false);
+                    }}>
+                        <Link to='/login'>Logout</Link>
+                    </div>
                 </nav>
                 <form onSubmit={handleSearch} className="home-search-form">
                     <input
