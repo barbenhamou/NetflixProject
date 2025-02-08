@@ -92,6 +92,10 @@ public class MoviesRepository {
         movieAPI.get();
     }
 
+    public void watchMovie(String movieId, String token) {
+        new Thread(() -> movieAPI.watchMovie(movieId, token)).start();
+    }
+
     // ==================== NEW MOVIE CRUD METHODS ====================
 
     // Callback interface for movie operations.

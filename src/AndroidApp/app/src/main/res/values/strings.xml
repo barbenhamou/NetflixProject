@@ -26,4 +26,8 @@
     <string name="nothing_to_recommend">Nothing to recommend yet.</string>
     <string name="logout_text">Logout\n</string>
     <string name="logout">Logout</string>
+    <string name="title_activity_movie_watch">MovieWatchActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="back">Back</string>
 </resources>
