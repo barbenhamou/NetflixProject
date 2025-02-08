@@ -221,7 +221,7 @@
                     android:id="@+id/editTextDeleteMovieTitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Movie Name"
+                    android:hint="Movie ID"
                     android:background="#F4F4F4"
                     android:textColor="#000000"
                     android:padding="12dp"

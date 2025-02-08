@@ -32,7 +32,9 @@ public interface WebServiceAPI {
 
 
     @GET("movies")
-    Call<List<List<Movie>>> getMovies();
+    Call<List<List<Movie>>> getMovies(
+            @Header("Authorization") String authHeader
+    );
 
     @GET("movies/search/.*")
     Call<List<Movie>> getAllMovies();
@@ -99,7 +101,7 @@ public interface WebServiceAPI {
 
     @DELETE("movies/{id}")
     Call<Void> deleteMovie(
-            @Header("Authorization") String authToken,
+            @Header("Authorization") String authHeader,
             @Path("id") String id
     );
 

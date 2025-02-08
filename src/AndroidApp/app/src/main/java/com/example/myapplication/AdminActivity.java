@@ -285,7 +285,7 @@ public class AdminActivity extends AppCompatActivity {
             return;
         }
         MainActivity.tokenRepository.getStoredToken().observe(this, token -> {
-            new MoviesRepository(getApplication()).deleteMovieByTitle(token, movieTitle, new MoviesRepository.MovieCallback() {
+            new MoviesRepository(getApplication()).deleteMovieById(token, movieTitle, new MoviesRepository.MovieCallback() {
                 @Override
                 public void onSuccess(Movie movie) {
                     runOnUiThread(() -> textViewMessage.setText("Movie deleted: " + movieTitle));

@@ -268,50 +268,33 @@ public class MoviesRepository {
     /**
      * Deletes a movie by its title.
      */
-    public void deleteMovieByTitle(Token token, String movieTitle, MovieCallback callback) {
-        webServiceAPI.getAllMovies().enqueue(new Callback<List<Movie>>() {
-            @Override
-            public void onResponse(Call<List<Movie>> call, Response<List<Movie>> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    List<Movie> movies = response.body();
-                    Movie movieToDelete = null;
-                    for (Movie m : movies) {
-                        if (m.getTitle().equalsIgnoreCase(movieTitle)) {
-                            movieToDelete = m;
-                            break;
+    public void deleteMovieById(final Token token, final String movieId, final MovieCallback callback) {
+        if (movieId == null || movieId.isEmpty()) {
+            callback.onFailure("Movie ID must not be empty.");
+            return;
+        }
+
+        webServiceAPI.deleteMovie("Bearer " + token.getToken(), movieId)
+                .enqueue(new Callback<Void>() {
+                    @Override
+                    public void onResponse(Call<Void> call, Response<Void> response) {
+                        if (response.isSuccessful()) {
+                            // Create a dummy Movie object with the deleted ID to pass to the callback.
+                            Movie deletedMovie = new Movie();
+                            deletedMovie.setId(movieId);
+                            callback.onSuccess(deletedMovie);
+                        } else {
+                            callback.onFailure("Delete movie failed: " + response.message());
                         }
                     }
-                    if (movieToDelete != null) {
-                        final Movie movieToDeleteFinal = movieToDelete;
-                        String movieId = movieToDeleteFinal.getId();
-                        webServiceAPI.deleteMovie("Bearer " + token.getToken(), movieId)
-                                .enqueue(new Callback<Void>() {
-                                    @Override
-                                    public void onResponse(Call<Void> call, Response<Void> responseDelete) {
-                                        if (responseDelete.isSuccessful()) {
-                                            callback.onSuccess(movieToDeleteFinal);
-                                        } else {
-                                            callback.onFailure("Delete movie failed: " + responseDelete.message());
-                                        }
-                                    }
-
-                                    @Override
-                                    public void onFailure(Call<Void> call, Throwable t) {
-                                        callback.onFailure("Delete movie error: " + t.getMessage());
-                                    }
-                                });
-                    } else {
-                        callback.onFailure("Movie with title " + movieTitle + " not found.");
+                    @Override
+                    public void onFailure(Call<Void> call, Throwable t) {
+                        callback.onFailure("Delete movie error: " + t.getMessage());
                     }
-                } else {
-                    callback.onFailure("Failed to retrieve movies: " + response.message());
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<Movie>> call, Throwable t) {
-                callback.onFailure("GET movies error: " + t.getMessage());
-            }
-        });
+                });
     }
+
+
 }
+
+
