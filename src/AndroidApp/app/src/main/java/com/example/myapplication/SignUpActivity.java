@@ -158,16 +158,13 @@ public class SignUpActivity extends AppCompatActivity {
                 throw new IOException("Failed to decode image from URI: " + uri.toString());
             }
 
-            // ✅ Save in INTERNAL STORAGE (NOT Cache)
             File directory = new File(getFilesDir(), "uploads");
             if (!directory.exists() && !directory.mkdirs()) {
                 throw new IOException("Failed to create directory: " + directory.getAbsolutePath());
             }
 
-            // Unique filename
             File file = new File(directory, "profile_" + System.currentTimeMillis() + ".jpg");
 
-            // Save the bitmap to storage
             try (FileOutputStream fileOutputStream = new FileOutputStream(file)) {
                 bitmap.compress(Bitmap.CompressFormat.JPEG, 90, fileOutputStream);
                 fileOutputStream.flush();
