@@ -425,4 +425,6 @@
     background: #000;
     color: #fff;
   }
-  
+  .black-text {
+    color: black !important;
+  }
