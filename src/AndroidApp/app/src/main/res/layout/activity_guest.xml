@@ -6,26 +6,15 @@
     android:layout_height="match_parent"
     android:background="#000000">
 
-    <!-- Container for entire page content -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:padding="16dp">
-
-        <!-- ========== HEADER SECTION ========== -->
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="400dp">
 
-            <!-- Background Image -->
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:scaleType="centerCrop"
-                android:src="@drawable/headerimage" />
-
-            <!-- Overlay content: navigation and header text -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -38,16 +27,9 @@
                     android:layout_height="wrap_content"
                     android:gravity="end">
 
-                    <Button
-                        android:id="@+id/sign_in_button"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Sign In"
-                        android:background="#db0001"
-                        android:textColor="#FFFFFF" />
+
                 </LinearLayout>
 
-                <!-- Header Content (centered title, subtitle, prompt, email sign-up) -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -80,442 +62,23 @@
                         android:layout_height="wrap_content"
                         android:text="Ready to watch? Enter your email to create or restart your membership."
                         android:textSize="20sp"
-                        android:textColor="#03A9F4"
+                        android:textColor="#FFFFFF"
                         android:textStyle="bold"
                         android:gravity="center"
                         android:paddingTop="16dp" />
 
-                    <!-- Email sign-up row -->
-                    <LinearLayout
+                    <Button
+                        android:id="@+id/get_started_button"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:paddingTop="16dp">
+                        android:text="Get Started"
+                        android:background="#db0001"
+                        android:textColor="#FFFFFF"
+                        android:padding="8dp"
+                        android:layout_marginStart="8dp" />
 
-                        <EditText
-                            android:id="@+id/email_edittext"
-                            android:layout_width="200dp"
-                            android:layout_height="wrap_content"
-                            android:hint="Email address"
-                            android:inputType="textEmailAddress"
-                            android:background="@android:color/white"
-                            android:textColor="#000000"
-                            android:padding="8dp" />
-
-                        <Button
-                            android:id="@+id/get_started_button"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Get Started"
-                            android:background="#db0001"
-                            android:textColor="#FFFFFF"
-                            android:padding="8dp"
-                            android:layout_marginStart="8dp" />
-                    </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
         </FrameLayout>
-
-        <!-- ========== FEATURES SECTION ========== -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingTop="16dp">
-
-            <!-- Feature 1: Text left, Image right -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:padding="8dp">
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:paddingEnd="8dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Enjoy on your TV."
-                        android:textSize="20sp"
-                        android:textColor="#FFFFFF"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Watch on smart TVs, PlayStation, Xbox, Chromecast, Apple TV, Blu-ray players and more."
-                        android:textSize="16sp"
-                        android:textColor="#FFFFFF"
-                        android:paddingTop="4dp" />
-                </LinearLayout>
-
-                <ImageView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:adjustViewBounds="true"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/feature1" />
-            </LinearLayout>
-
-            <!-- Feature 2: Image left, Text right -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:padding="8dp">
-
-                <ImageView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:adjustViewBounds="true"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/feature2" />
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:paddingStart="8dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Download your shows to watch offline."
-                        android:textSize="20sp"
-                        android:textColor="#FFFFFF"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Save your favourites easily and always have something to watch."
-                        android:textSize="16sp"
-                        android:textColor="#FFFFFF"
-                        android:paddingTop="4dp" />
-                </LinearLayout>
-            </LinearLayout>
-
-            <!-- Feature 3: Text left, Image right -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:padding="8dp">
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:paddingEnd="8dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Watch everywhere."
-                        android:textSize="20sp"
-                        android:textColor="#FFFFFF"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Stream unlimited movies and TV shows on your phone, tablet, laptop, and TV."
-                        android:textSize="16sp"
-                        android:textColor="#FFFFFF"
-                        android:paddingTop="4dp" />
-                </LinearLayout>
-
-                <ImageView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:adjustViewBounds="true"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/feature3" />
-            </LinearLayout>
-
-            <!-- Feature 4: Image left, Text right -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:padding="8dp">
-
-                <ImageView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:adjustViewBounds="true"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/feature4" />
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:paddingStart="8dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Create profiles for children."
-                        android:textSize="20sp"
-                        android:textColor="#FFFFFF"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Send children on adventures with their favourite characters in a space made just for them—free with your membership."
-                        android:textSize="16sp"
-                        android:textColor="#FFFFFF"
-                        android:paddingTop="4dp" />
-                </LinearLayout>
-            </LinearLayout>
-        </LinearLayout>
-
-        <!-- ========== FAQ SECTION ========== -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingTop="16dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Frequently Asked Questions"
-                android:textSize="22sp"
-                android:textColor="#FFFFFF"
-                android:textStyle="bold"
-                android:paddingBottom="8dp" />
-
-            <!-- FAQ Items in “rectangles” -->
-            <!-- 1) What is Netflix? -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:background="#303030"
-                android:padding="16dp"
-                android:layout_marginBottom="4dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="What is Netflix?"
-                    android:textSize="18sp"
-                    android:textColor="#FFFFFF"
-                    android:textStyle="bold" />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Netflix is a streaming service that offers a wide variety of award-winning content – ​​TV shows, movies, anime, documentaries and more – on thousands of internet-connected devices.
-"
-                    android:textSize="16sp"
-                    android:textColor="#FFFFFF"
-                    android:paddingTop="4dp" />
-            </LinearLayout>
-
-            <!-- 2) How much does Netflix cost? -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:background="#303030"
-                android:padding="16dp"
-                android:layout_marginBottom="4dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="How much does Netflix cost?"
-                    android:textSize="18sp"
-                    android:textColor="#FFFFFF"
-                    android:textStyle="bold" />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="You can watch Netflix on your smartphone, tablet, smart TV, laptop, or streamer – all for a fixed monthly price. Package prices range from 32.90 NIS to 69.90 NIS per month. No additional payments, no contract agreements.
-
-"
-                    android:textSize="16sp"
-                    android:textColor="#FFFFFF"
-                    android:paddingTop="4dp" />
-            </LinearLayout>
-
-            <!-- 3) Where can I watch? -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:background="#303030"
-                android:padding="16dp"
-                android:layout_marginBottom="4dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Where can I watch?"
-                    android:textSize="18sp"
-                    android:textColor="#FFFFFF"
-                    android:textStyle="bold" />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Watch anywhere, anytime. Signing in to your Netflix account will allow you to watch our content instantly – on your PC via the website netflix.com, or on any internet-connected device that supports the Netflix app, including smart TVs, smartphones, tablets, streamers and game consoles.
-"
-                    android:textSize="16sp"
-                    android:textColor="#FFFFFF"
-                    android:paddingTop="4dp" />
-            </LinearLayout>
-
-            <!-- 4) How do I cancel? -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:background="#303030"
-                android:padding="16dp"
-                android:layout_marginBottom="4dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="How do I cancel?"
-                    android:textSize="18sp"
-                    android:textColor="#FFFFFF"
-                    android:textStyle="bold" />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Netflix is a flexible service. There are no long contracts, no fine print – and no commitment. You can cancel your account online with two clicks. There are no cancellation fees – you can start your subscription and cancel it at any time.
-
-"
-                    android:textSize="16sp"
-                    android:textColor="#FFFFFF"
-                    android:paddingTop="4dp" />
-            </LinearLayout>
-
-            <!-- 5) What can I watch on Netflix? -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:background="#303030"
-                android:padding="16dp"
-                android:layout_marginBottom="4dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="What can I watch on Netflix?"
-                    android:textSize="18sp"
-                    android:textColor="#FFFFFF"
-                    android:textStyle="bold" />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Netflix has a vast library of movies, documentaries, TV shows, anime, award-winning Netflix originals, and more. You can watch unlimited, whenever you want.
-
-"
-                    android:textSize="16sp"
-                    android:textColor="#FFFFFF"
-                    android:paddingTop="4dp" />
-            </LinearLayout>
-
-            <!-- 6) Is Netflix good for kids? -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:background="#303030"
-                android:padding="16dp"
-                android:layout_marginBottom="8dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Is Netflix good for kids?"
-                    android:textSize="18sp"
-                    android:textColor="#FFFFFF"
-                    android:textStyle="bold" />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="The Netflix Kids Experience is included with your subscription and gives parents control while their kids enjoy family-friendly TV shows and movies in a dedicated area just for them.
-"
-                    android:textSize="16sp"
-                    android:textColor="#FFFFFF"
-                    android:paddingTop="4dp" />
-            </LinearLayout>
-
-            <!-- Additional email sign-up (optional) -->
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingTop="8dp">
-
-                <EditText
-                    android:id="@+id/faq_email_edittext"
-                    android:layout_width="200dp"
-                    android:layout_height="wrap_content"
-                    android:hint="Email address"
-                    android:inputType="textEmailAddress"
-                    android:background="@android:color/white"
-                    android:textColor="#000000"
-                    android:padding="8dp" />
-
-                <Button
-                    android:id="@+id/faq_get_started_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Get Started"
-                    android:background="#db0001"
-                    android:textColor="#FFFFFF"
-                    android:padding="8dp"
-                    android:layout_marginStart="8dp" />
-            </LinearLayout>
-        </LinearLayout>
-
-        <!-- ========== FOOTER SECTION ========== -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingTop="16dp"
-            android:paddingBottom="16dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Questions? Call 000-000-000-000"
-                android:textSize="14sp"
-                android:textColor="#777777"
-                android:paddingBottom="8dp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Netflix USA"
-                android:textSize="14sp"
-                android:textColor="#777777" />
-        </LinearLayout>
-
     </LinearLayout>
 </ScrollView>
