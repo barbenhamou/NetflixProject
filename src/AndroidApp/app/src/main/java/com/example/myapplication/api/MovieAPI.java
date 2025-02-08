@@ -21,12 +21,14 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MovieAPI {
     private MutableLiveData<List<Movie>> movieListData;
+    private MutableLiveData<List<Movie>> recommendationData;
     private MovieDao movieDao;
     Retrofit retrofit;
     WebServiceAPI webServiceAPI;
 
-    public MovieAPI(MutableLiveData<List<Movie>> movieListData, MovieDao dao) {
+    public MovieAPI(MutableLiveData<List<Movie>> movieListData, MutableLiveData<List<Movie>> recommendationData, MovieDao dao) {
         this.movieListData = movieListData;
+        this.recommendationData = recommendationData;
         this.movieDao = dao;
 
         retrofit = new Retrofit.Builder()
@@ -47,6 +49,21 @@ public class MovieAPI {
                     movieDao.insert(response.body());
                     movieListData.postValue(movieDao.index());
                 }).start();
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<List<Movie>> call, @NonNull Throwable t) {
+                Log.e("Movie", "API call failed: " + t.getMessage());
+            }
+        });
+    }
+
+    public void recommend(String movieId, String token) {
+        Call<List<Movie>> call = webServiceAPI.getRecommendations(movieId, "Bearer " + token);
+        call.enqueue(new Callback<>() {
+            @Override
+            public void onResponse(@NonNull Call<List<Movie>> call, @NonNull Response<List<Movie>> response) {
+                new Thread(() -> recommendationData.postValue(response.body())).start();
             }
 
             @Override

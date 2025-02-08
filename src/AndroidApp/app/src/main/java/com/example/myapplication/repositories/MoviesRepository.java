@@ -15,6 +15,7 @@ import java.util.List;
 
 public class MoviesRepository {
     private MovieListData movieListData;
+    private MutableLiveData<List<Movie>> recommendations;
     private MovieDao movieDao;
     MovieAPI movieAPI;
 
@@ -22,7 +23,14 @@ public class MoviesRepository {
         AppDB db = AppDB.getInstance(application.getApplicationContext());
         movieDao = db.movieDao();
         movieListData = new MovieListData();
-        movieAPI = new MovieAPI(movieListData, movieDao);
+        recommendations = new MutableLiveData<>();
+        movieAPI = new MovieAPI(movieListData, recommendations, movieDao);
+    }
+
+    public LiveData<List<Movie>> getRecommendations(String movieId, String token) {
+        new Thread(() -> movieAPI.recommend(movieId, token)).start();
+
+        return recommendations;
     }
 
     class MovieListData extends MutableLiveData<List<Movie>> {
@@ -47,7 +55,9 @@ public class MoviesRepository {
 
         new Thread(() -> {
             Movie movie = movieDao.getMovie(id);
-            movieData.postValue(movie);
+            if (movie != null) {
+                movieData.postValue(movie);
+            }
         }).start();
 
         return movieData;
