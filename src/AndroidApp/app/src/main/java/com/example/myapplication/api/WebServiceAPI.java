@@ -120,4 +120,7 @@ public interface WebServiceAPI {
             @Part("filmName") RequestBody filmName
     );
 
+    @GET("users/{id}")
+    Call<User> getUser(@Path("id") String userId);
+
 }

@@ -69,6 +69,26 @@ public class UserRepository {
         });
     }
 
+    public void getUser(String userId, UserCallBack callback) {
+        webServiceAPI.getUser(userId).enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                if (response.isSuccessful()) {
+                    User user = response.body();
+                    saveUserToDb(user);
+                    callback.onSuccess(user);
+                } else {
+                    callback.onFailure("Get user failed" + response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+                callback.onFailure("API error: " + t.getMessage());
+            }
+        });
+    }
+
     public void uploadProfilePicture(String username, File imageFile, UploadCallBack callback) {
         if (imageFile == null || !imageFile.exists()) {
             callback.onUploadFailure("File does not exist: " + (imageFile != null ? imageFile.getAbsolutePath() : "null"));
