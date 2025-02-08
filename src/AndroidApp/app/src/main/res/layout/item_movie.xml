@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    android:background="@color/dark_background">
 
     <data>
         <variable
@@ -10,50 +10,49 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_width="200dp"
+        android:layout_height="210dp" >
 
-        <androidx.cardview.widget.CardView
-            android:layout_width="409dp"
-            android:layout_height="285dp"
+        <ImageView
+            android:id="@+id/movie_poster"
+            android:layout_width="200dp"
+            android:layout_height="110dp"
+            android:adjustViewBounds="true"
+            android:scaleType="fitCenter"
+            android:contentDescription="@string/movie_poster"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.247">
+            app:layout_constraintTop_toTopOf="parent"/>
 
-            <ImageView
-                android:id="@+id/imageView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:srcCompat="@{movie.image}"
-                tools:srcCompat="@tools:sample/backgrounds/scenic" />
+        <ImageButton
+            android:id="@+id/movie_info_home"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/play_movie_btn"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/movie_poster"
+            app:srcCompat="@android:drawable/ic_menu_info_details" />
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+        <TextView
+            android:id="@+id/movie_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/movie_info_home"
+            app:layout_constraintEnd_toStartOf="@+id/movie_info_home"
+            app:layout_constraintStart_toEndOf="@+id/play_btn"
+            app:layout_constraintTop_toBottomOf="@+id/movie_poster" />
 
-                <ImageButton
-                    android:id="@+id/imageButton"
-                    android:layout_width="62dp"
-                    android:layout_height="70dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@android:drawable/ic_menu_info_details" />
-
-                <ImageButton
-                    android:id="@+id/imageButton2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="@+id/imageButton"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@android:drawable/ic_media_play" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-        </androidx.cardview.widget.CardView>
+        <ImageButton
+            android:id="@+id/play_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/movie_info"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/movie_poster"
+            app:srcCompat="@android:drawable/ic_media_play" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

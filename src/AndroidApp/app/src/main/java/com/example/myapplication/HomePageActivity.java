@@ -13,9 +13,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
+import androidx.annotation.OptIn;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.media3.common.MediaItem;
+import androidx.media3.common.util.UnstableApi;
+import androidx.media3.exoplayer.ExoPlayer;
+import androidx.media3.exoplayer.source.DefaultMediaSourceFactory;
+import androidx.media3.ui.PlayerView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.myapplication.adapters.VerticalCategoryAdapter;
@@ -23,8 +29,7 @@ import com.example.myapplication.databinding.ActivityHomePageBinding;
 import com.example.myapplication.viewmodels.MovieViewModel;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Random;
 
 public class HomePageActivity extends AppCompatActivity {
 
@@ -33,6 +38,8 @@ public class HomePageActivity extends AppCompatActivity {
     private ImageView profileImageView;
     private MovieViewModel movieViewModel;
     private VerticalCategoryAdapter verticalCategoryAdapter;
+    private ExoPlayer player;
+    private PlayerView playerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,15 +65,31 @@ public class HomePageActivity extends AppCompatActivity {
         movieViewModel = new ViewModelProvider(this).get(MovieViewModel.class);
         movieViewModel.setRepository(getApplication());
 
+        playerView = binding.featuredMovie;
+
         // Observe categories and movies, and bind them to the adapter
         movieViewModel.getCategories().observe(this, categories -> {
             movieViewModel.getFilteredMoviesByOldestCategory().observe(this, movies -> {
                 verticalCategoryAdapter.setData(categories, movies);
+                binding.swipeRefresh.setRefreshing(false);
+
+                // Set featured movie player
+                Random rand = new Random();
+                if (movies != null && !movies.isEmpty()) {
+                    String featuredId = movies.get(rand.nextInt(movies.size())).getId();
+                    MainActivity.tokenRepository.getStoredToken().observe(this, tokenObj -> {
+                        String token = tokenObj.getToken();
+                        String link = getString(R.string.BaseUrl) + "contents/movies/" + featuredId + "?type=trailer&token=" + token;
+
+                        initializePlayer(link);
+                    });
+                }
             });
         });
 
-        // Reload data
         movieViewModel.reload();
+
+        binding.swipeRefresh.setOnRefreshListener(() -> movieViewModel.reload());
     }
 
     private void loadProfilePicture(String uriString) {
@@ -158,15 +181,25 @@ public class HomePageActivity extends AppCompatActivity {
         finish();
     }
 
-    private List<List<String>> getSampleData() {
-        List<List<String>> data = new ArrayList<>();
-        for (int i = 0; i < 5; i++) {
-            List<String> childItems = new ArrayList<>();
-            for (int j = 0; j < 10; j++) {
-                childItems.add("Item " + j);
+    @OptIn(markerClass = UnstableApi.class)
+    private void initializePlayer(String link) {
+        if (player == null) {
+            player = new ExoPlayer.Builder(this)
+                    .setMediaSourceFactory(new DefaultMediaSourceFactory(() ->
+                            new CustomHttpDataSourceFactory().createDataSourceInternal(null)))
+                    .build();
+
+            player.setVolume(1.0f);
+
+            if (playerView != null) {
+                playerView.setPlayer(player);
             }
-            data.add(childItems);
+
+            MediaItem mediaItem = MediaItem.fromUri(link);
+
+            player.setMediaItem(mediaItem);
+            player.prepare();
+            player.play();
         }
-        return data;
     }
 }
