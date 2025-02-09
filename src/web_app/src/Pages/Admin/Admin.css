@@ -1,0 +1,168 @@
+/* Center the container and make the entire background black */
+.center.form-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #141414;
+  text-align: center;
+  padding: 20px;
+}
+
+/* White card (rectangle) */
+.form {
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 40px;
+  width: 100%;
+  max-width: 700px;
+  position: relative;
+}
+
+/* Admin Panel title inside the card */
+.form h3 {
+  color: #333;
+  margin-bottom: 20px;
+  font-weight: 600;
+  text-align: center;
+}
+
+/* Each field in the form */
+.form-group {
+  margin-bottom: 15px;
+}
+
+/* Input elements */
+.form-control {
+  width: 100%;
+  border-radius: 8px;
+  height: 40px;
+  padding: 10px;
+  font-size: 16px;
+  margin-bottom: 5px;
+  border: 1px solid #ccc;
+}
+
+/* For file inputs side by side if you want them row-based */
+.file-inputs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+/* Custom file label styling */
+.custom-file-label {
+  display: inline-block;
+  padding: 10px 15px;
+  background-color: #007bff;
+  color: #fff;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+/* Hides the default file input */
+.hidden-input {
+  display: none;
+}
+
+/* Hover effect on file label */
+.custom-file-label:hover {
+  background-color: #0056b3;
+}
+
+/* Button styling for Submit */
+.btn-danger {
+  background-color: #e50914;
+  border: none;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  transition: background-color 0.1s;
+  margin-top: 10px;
+  cursor: pointer;
+  text-transform: uppercase;
+}
+
+.btn-danger:hover {
+  background-color: #5f1717;
+}
+
+/* Alert message styling */
+.alert {
+  border-radius: 8px;
+  margin: 15px 0 0 0;
+  padding: 12px;
+  font-weight: 500;
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+/* Dropdown styling */
+.custom-dropdown {
+  position: relative;
+  margin-bottom: 15px;
+}
+
+.dropdown-button {
+  background-color: #d10000;
+  color: white;
+  padding: 15px;
+  width: 100%;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  text-align: left;
+  border-radius: 5px;
+}
+
+.dropdown-options {
+  position: absolute;
+  width: 100%;
+  background: black;
+  border-radius: 5px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  padding: 10px 0;
+  z-index: 10;
+}
+
+.dropdown-item {
+  width: 90%;
+  padding: 12px;
+  background: #b00000;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  border-radius: 5px;
+  text-align: center;
+  transition: background 0.3s;
+}
+
+.dropdown-item:hover {
+  background: #ff4d4d;
+}
+
+.checkbox-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.checkbox-group input[type="checkbox"] {
+  transform: scale(1.2);
+  cursor: pointer;
+}
+
+.checkbox-group label {
+  font-size: 1rem;
+  cursor: pointer;
+}

@@ -45,7 +45,7 @@ const Movie = new Schema({
         type: String,
         required: [true, 'The film field is required (path to the movie file)']
     },
-    shortId: { // For the cpp system (_id is too large)
+    shortId: { // For the recommendation system (_id is too large)
         type: Number,
     }
 });

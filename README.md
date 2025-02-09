@@ -1,14 +1,16 @@
-# Netflix Project
-This is a Netflix project for the course "Advanced System programming" of Bar-Ilan University.
+# Nexflit Project
+This is a project for the course "Advanced System programming" of Bar-Ilan University.
 <br>
-This project is a web server that presents a RESTful API.
+This project is a movie streaming platform similar to Netflix, through a Web-App and an Android App.
+Check out the [Wiki](Wiki) to learn how to run it, and everything it can do!
+
 <br>
-We use Docker for easy building.
+
 
 ## Running the Project
 
 ### Movie Recommendation System
-Out project has a movie recommendation system that run on a separate server. You must run it before running the web server.
+Our project has a movie recommendation system that run on a separate server. You must run it before running the web server.
 
 To compile this server, run this command (it might take a while):
 ```bash

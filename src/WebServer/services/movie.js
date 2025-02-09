@@ -277,7 +277,8 @@ const searchInMovies = async (query) => {
         const movies = await Movie.find({
             $or: [
                 { title: stringRegex },
-                { description: stringRegex }, // TODO: Search in cast
+                { description: stringRegex },
+                { cast: stringRegex },
                 // Convert numbers to strings:
                 { $expr: {
                     $regexMatch: {
