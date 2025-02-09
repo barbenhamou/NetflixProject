@@ -38,7 +38,7 @@ function LoginForm() {
                 localStorage.setItem('authToken', data.tokenId.token);
                 localStorage.setItem('userId', data.tokenId.userId);
                 loacalStorage.setItem('isAdmin', data.tokenId.isAdmin);
-                
+
                 navigate("/");
             } else {
                 setError('Invalid credentials');
@@ -63,7 +63,7 @@ function LoginForm() {
                         <button type="submit" className="btn btn-primary btn-danger">Sign in</button>
                     </div>
                     <div className="col-12">
-                        <p>New to Netflix? <a href='/signup'>Sign Up</a></p>
+                        <p>New to Nexflit? <Link to='/signup'>Sign Up</Link></p>
                     </div>
                 </form>
                 {error && <div className="alert alert-danger">{error}</div>}

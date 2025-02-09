@@ -55,7 +55,7 @@ function MovieWatch({ id }) {
 
     return (
         <div className="movie-watch">
-            <Link to='/'> {/* TODO: Change to home page */}
+            <Link to='/'>
                 <i className="bi bi-house-door"></i>
             </Link>
             <div className="movie-video">
