@@ -46,4 +46,4 @@ In order to build and run the servers execute the following command:
 docker-compose up --build
 ```
 
-![](PreviewImages/Web/DockerCompose.png)
+![](../../PreviewImages/Web/DockerCompose.png)
