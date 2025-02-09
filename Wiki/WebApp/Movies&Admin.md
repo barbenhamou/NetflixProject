@@ -1,13 +1,13 @@
 # Admins
 In order to add, edit, or delete movies or categories, you must be an admin. To become an admin you need to manually change your user to an admin. to do that, open MongoDBCompass and connect to the database with your IP. Then, change the `isAdmin` field to `true`:
 
-![](../../PreviewImages/Web/IsAdmin.png)
+![](../../PreviewImages/IsAdmin.png)
 
 and click on 'Update'. Once you did that, you will need to re-log to the website. Press the 'logout' button to log out and be smoothly redirected back to the login page. After you log in again you will see the 'Admin Panel' button in the top navigation bar:
 
 ![](../../PreviewImages/Web/HomeAdmin.png)
 
-And when you click it you will be redirected to the admin panel:
+And when you click on it you will be redirected to the admin panel:
 
 ![](../../PreviewImages/Web/Admin.png)
 
@@ -20,7 +20,7 @@ In order to add a movie, you first need to add at least one category:
 
 ![](../../PreviewImages/Web/AddCategory.png)
 
-Be sure to make it promoted it you want it to appear in the home page :)
+Be sure to make it promoted if you want it to appear in the home page :)
 
 Now we can add movies!
 Choose the 'add movie' option, and fill in the details:
@@ -38,11 +38,11 @@ Here we'll see all of the promoted categories and their movies. The last categor
 Our website has some small cool animations to the buttons, cards and more! We urge you to go and see for yourself :)
 
 # Movie Information Page
-Now we can press the `i` on below the movie and see its trailer and info:
+Now you can press the `i` below the movie and see its trailer and info:
 
 ![](../../PreviewImages/Web/MovieInfo.png)
 
-In this page we also get recommendations, based on the movie and what other users watched. Currently there are no other users, so we do not get any recommendations.
+In this window we also get recommendations, based on the movie and what other users watched. Currently there are no other users, so we do not get any recommendations.
 
 ## The Recommendation Algorithm
 The recommendation algorithm calculates a relevance value to each movie, excluding movies that the user already watched and the movie that we are now looking at (in the info page). The 10 most relevant movies are showed in descending order of relevance.
@@ -55,9 +55,52 @@ If we click the 'Play Movie' button we will be redirected to the movie page:
 
 You can pause, play, seek 10 seconds forwards or backwards, mute or change the volume and go to fullscreen mode. You can also press the video itself to pause and play, or press the progress bar to go to a specific time in the video.
 
-You can ofcourse also go back to the home page.
+You can ofcourse also go back to the home page by pressing the house icon in the corner.
 
 In fullscreen mode, the video controls will disappear when you don't hover over them.
 
-# Deleting or Editing Movies and Categories
+# Other Admin Actions
+
+## Deleting a Movie
 In the Admin panel you can also delete a movie:
+
+![](../../PreviewImages/Web/DeleteMovie.png)
+
+You need to copy the movie's ID from MongoDBCompass, since there could be two movies with the same name.
+And now there are no movies again:
+
+![](../../PreviewImages/Web/Deleted.png)
+
+## Editing a Movie
+I've added another movie:
+
+![](../../PreviewImages/Web/NewMovie.png)
+
+Let's edit it:
+
+![](../../PreviewImages/Web/EditMovie.png)
+
+You need to fill in all of the new details, and now the movie will change:
+
+![](../../PreviewImages/Web/AfterEdit.png)
+
+## Editing a Category
+You can also edit a category:
+
+![](../../PreviewImages/Web/EditCategory.png)
+
+![](../../PreviewImages/Web/AfterCatEdit.png)
+
+## Deleting a Category
+When deleting a category:
+
+![](../../PreviewImages/Web/DeleteCategory.png)
+
+All of the movies that have that category will no longer have it. Now our movie has no categories. But you can edit it to add other categories.
+
+# Searching
+You can also search for movies, and even find movies that don't have promoted categories. This searches through all of the movies and all of their fields:
+
+![](../../PreviewImages/Web/Search.png)
+
+![](../../PreviewImages/Web/SearchResult.png)
