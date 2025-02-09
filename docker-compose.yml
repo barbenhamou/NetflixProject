@@ -35,7 +35,17 @@ services:
       - app-network
     command: ["3002"]
 
-  
+  react-client:
+    build:
+      context: ./src/web_app
+      dockerfile: Dockerfile
+    container_name: react-client
+    ports:
+      - "3000:3000"
+    stdin_open: true
+    tty: true
+    networks:
+      - app-network
 
 networks:
   app-network:
