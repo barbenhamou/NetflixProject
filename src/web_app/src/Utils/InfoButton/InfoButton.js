@@ -8,27 +8,18 @@ function InfoButton({ id }) {
     const openModal = () => setIsModalOpen(true);
     const closeModal = () => setIsModalOpen(false);
 
-    // Assuming your movie info page is `/movies/:id/info`
-    const movieInfoUrl = `/movies/${id}/info`;
-
     return (
         <>
-            <button className="info-button" onClick={openModal}>
-                <i className="bi bi-info-circle"></i> Info
-            </button>
+            <i className="bi bi-info-circle info-btn" onClick={openModal} />
             {isModalOpen &&
                 ReactDOM.createPortal(
                     <div className="modal-overlay" onClick={closeModal}>
                         <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-                            <button className="close-button" onClick={closeModal}>
-                                &times;
-                            </button>
-                            {/* Use an iframe to display the existing page */}
+                            <i className="bi bi-x-lg close-btn" onClick={closeModal}></i>
                             <iframe
-                                src={movieInfoUrl}
+                                src={`/movies/${id}/info`}
                                 title="Movie Info"
                                 className="modal-iframe"
-                                frameBorder="0"
                             ></iframe>
                         </div>
                     </div>,

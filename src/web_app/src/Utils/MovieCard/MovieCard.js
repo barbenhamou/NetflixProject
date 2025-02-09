@@ -1,7 +1,8 @@
 import "./MovieCard.css";
 import { backendPort } from "../../config";
 import { useEffect, useState } from "react";
-import InfoButton from "./InfoButton";
+import { Link } from "react-router-dom";
+import InfoButton from "../InfoButton/InfoButton";
 
 function MovieCard({ id, title, categories, lengthMinutes, releaseYear, description, showInfo, infoButton }) {
     const [imageSrc, setImageSrc] = useState("");
@@ -26,9 +27,9 @@ function MovieCard({ id, title, categories, lengthMinutes, releaseYear, descript
                     className="card-img-top"
                     src={imageSrc}
                 />
-                <i
-                    className="bi bi-play-circle play-btn"
-                    onClick={() => window.location.href = `/movies/${id}/watch`}></i>
+                <Link target="_parent" to={`/movies/${id}/watch`} >
+                    <i className="bi bi-play-circle play-btn" />
+                </Link>
             </div>
             <div className="card-body">
                 <section className="title-container">

@@ -11,6 +11,7 @@ function SignUpForm() {
     const [confirmPassword, setConfirmPassword] = useState('');
     const [phone, setPhone] = useState('');
     const [picture, setPicture] = useState('');
+    const [pictureName, setPictureName] = useState('');
     const [location, setLocation] = useState('');
     const [error, setError] = useState('');
 
@@ -23,6 +24,7 @@ function SignUpForm() {
 
     const handleFileChange = (e) => {
         setError('');
+        setPictureName(e.target.files[0].name);
         setPicture(e.target.files[0]);
     };
 
@@ -40,23 +42,29 @@ function SignUpForm() {
             return;
         }
 
+        if (password.length < 8) {
+            setError('Password must be at least 8 characters long');
+            return;
+        }
+
         // Create the form data
         const userData = {
             username,
             email,
             password,
             phone,
-            location
+            location,
+            picture: pictureName
         };
 
         try {
             // Send data to the WebServer (POST request)
             const response = await fetch(`http://localhost:${backendPort}/api/users`, {
-                'method': 'POST',
-                'headers': {
+                method: 'POST',
+                headers: {
                     'Content-Type': 'application/json',
                 },
-                'body': JSON.stringify(userData),
+                body: JSON.stringify(userData)
             });
 
             if (!response.ok) {
@@ -88,9 +96,18 @@ function SignUpForm() {
             console.error(err);
         }
     };
+    
+    const pageStyle = {
+        backgroundImage: `url(${process.env.PUBLIC_URL}/images/background.jpg)`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+        minHeight: "100vh",
+        overflow: "scroll"
+    };
 
     return (
-        <div className="form-container center">
+        <div className="form-container center" style={pageStyle}>
             <Link to="/">
                 <i className="bi bi-arrow-left"></i>
             </Link>

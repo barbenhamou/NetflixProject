@@ -29,7 +29,7 @@ public class LoginActivity extends AppCompatActivity {
             String username = binding.etLoginUsername.getText().toString();
             String password = binding.etLoginPassword.getText().toString();
 
-            repository.loginUser(username, password, new TokenRepository.TokenCallback() {
+            MainActivity.tokenRepository.loginUser(username, password, new TokenRepository.TokenCallback() {
                 @Override
                 public void onSuccess(Token token) {
                     runOnUiThread(() ->

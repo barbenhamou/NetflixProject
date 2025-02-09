@@ -24,18 +24,22 @@ services:
     networks:
       - app-network
 
-  third-server:
+  recommend-server:
     build:
       context: .
       dockerfile: Dockerfile.server
-    container_name: third-server
+    container_name: recommend-server
     ports:
       - "3002:3002"
-    networks:
-      - app-network
     command: ["3002"]
 
-  
+  react-client:
+    build:
+      context: ./src/web_app
+      dockerfile: Dockerfile
+    container_name: react-client
+    ports:
+      - "3000:3000"
 
 networks:
   app-network:

@@ -28,7 +28,7 @@ function Recommendations({ id }) {
         }
 
         fetchMovie();
-    }, []);
+    }, [id]);
 
     if (!isLoggedIn) {
         return (

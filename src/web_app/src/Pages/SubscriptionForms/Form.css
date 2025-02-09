@@ -74,7 +74,7 @@ p a:hover {
     text-decoration: underline;
 }
 
-p {
+.new-to-nexflit {
     color: black !important;
 }
 
@@ -90,4 +90,19 @@ p {
 
 .bi-arrow-left:hover {
     transform: scale(1.35);
+}
+
+.row {
+    padding-left: 0px !important;
+    padding-right: 0px !important;
+    padding-top: 5px !important;
+    padding-bottom: 5px !important;
+}
+
+.form-container::-webkit-scrollbar {
+    display: none !important;
+}
+
+.form-container {
+    scrollbar-width: none !important;
 }

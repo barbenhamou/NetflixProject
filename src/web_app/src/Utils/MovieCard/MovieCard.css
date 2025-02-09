@@ -41,17 +41,6 @@
     pointer-events: auto;
 }
 
-.info-btn {
-    font-size: 1.4rem;
-    color: #fff;
-    transition: transform 0.3s ease;
-    cursor: pointer;
-}
-
-.info-btn:hover {
-    transform: scale(1.1);
-}
-
 .title-container {
     display: flex;
     align-items: center;
@@ -72,4 +61,5 @@
 p {
     margin: 0;
     padding-top: 5px;
+    color: white !important;
 }

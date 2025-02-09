@@ -128,7 +128,6 @@ const AdminPanel = () => {
           });
           break;
         case "delete-movie":
-        case "delete-movie":
           const movieId = formData.id;
 
           if (!movieId) {
@@ -389,9 +388,6 @@ const AdminPanel = () => {
               </div>
             </>
           )}
-
-
-
           {action === "add-movie" && (
             <>
               <div className="form-group">

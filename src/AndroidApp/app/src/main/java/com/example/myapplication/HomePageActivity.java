@@ -127,12 +127,12 @@ public class HomePageActivity extends AppCompatActivity {
             }
         });
 
-        MenuItem logoutItem = menu.findItem(R.id.action_logout);
-        View actionView = logoutItem.getActionView();
-        if (actionView != null) {
-            logoutButton = actionView.findViewById(R.id.logoutButton);
-            logoutButton.setTextColor(Color.RED);
-        }
+//        MenuItem logoutItem = menu.findItem(R.id.action_logout);
+//        View actionView = logoutItem.getActionView();
+//        if (actionView != null) {
+//            logoutButton = actionView.findViewById(R.id.logoutButton);
+//            logoutButton.setTextColor(Color.RED);
+//        }
 
         MenuItem profileItem = menu.findItem(R.id.action_profile);
         if (profileItem != null) {
@@ -169,10 +169,10 @@ public class HomePageActivity extends AppCompatActivity {
             Toast.makeText(this, "Profile Picture Clicked!", Toast.LENGTH_SHORT).show();
             return true;
         }
-        if (item.getItemId() == R.id.action_logout) {
-            logoutUser();
-            return true;
-        }
+//        if (item.getItemId() == R.id.action_logout) {
+//            logoutUser();
+//            return true;
+//        }
         if (item.getItemId() == R.id.action_admin) {
             // Navigate to AdminActivity
             Intent intent = new Intent(this, AdminActivity.class);
@@ -182,13 +182,13 @@ public class HomePageActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void logoutUser() {
-        Toast.makeText(this, "Logging out...", Toast.LENGTH_SHORT).show();
-        MainActivity.tokenRepository.logout();
-        Intent intent = new Intent(this, GuestActivity.class);
-        startActivity(intent);
-        finish();
-    }
+//    private void logoutUser() {
+//        Toast.makeText(this, "Logging out...", Toast.LENGTH_SHORT).show();
+//        MainActivity.tokenRepository.logout();
+//        Intent intent = new Intent(this, GuestActivity.class);
+//        startActivity(intent);
+//        finish();
+//    }
 
     @OptIn(markerClass = UnstableApi.class)
     private void initializePlayer(String link) {

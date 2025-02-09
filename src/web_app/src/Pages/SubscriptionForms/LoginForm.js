@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './Form.css';
 import StandAloneField from './FieldItem';
@@ -38,6 +38,7 @@ function LoginForm() {
                 localStorage.setItem('authToken', data.tokenId.token);
                 localStorage.setItem('userId', data.tokenId.userId);
                 localStorage.setItem('isAdmin', data.tokenId.isAdmin);
+                localStorage.setItem('username', username);
 
                 navigate("/");
             } else {
@@ -49,8 +50,17 @@ function LoginForm() {
         }
     };
 
+    
+    const pageStyle = {
+        backgroundImage: `url(${process.env.PUBLIC_URL}/images/background.jpg)`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+        minHeight: "100vh",
+    };
+
     return (
-        <div className='form-container center'>
+        <div className='form-container center' style={pageStyle}>
             <Link to="/">
                 <i className="bi bi-arrow-left"></i>
             </Link>
@@ -63,7 +73,7 @@ function LoginForm() {
                         <button type="submit" className="btn btn-primary btn-danger">Sign in</button>
                     </div>
                     <div className="col-12">
-                        <p>New to Nexflit? <Link to='/signup'>Sign Up</Link></p>
+                        <p className='new-to-nexflit'>New to Nexflit? <Link to='/signup'>Sign Up</Link></p>
                     </div>
                 </form>
                 {error && <div className="alert alert-danger">{error}</div>}

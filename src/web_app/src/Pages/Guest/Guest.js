@@ -57,7 +57,6 @@ const GuestPage = () => {
   const t = translations[language];
 
   // Define inline style for the header background image.
-  // Using process.env.PUBLIC_URL ensures the image is loaded from the public folder.
   const headerStyle = {
     backgroundImage: isLightMode
       ? `linear-gradient(rgba(255,255,255,0.7), rgba(255,255,255,0.7)))`
