@@ -42,6 +42,7 @@ const getUser = async (req, res) => {
 
         res.json(await presentUser(user));
     } catch (err) {
+        console.log("here1");
         res.status(err.statusCode).json({ error: err.message });
     }
 }
