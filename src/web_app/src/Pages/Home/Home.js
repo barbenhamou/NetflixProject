@@ -13,6 +13,27 @@ const Home = () => {
     const [featuredMovie, setFeaturedMovie] = useState(null);
     const [searchTerm, setSearchTerm] = useState("");
     const [searchedMovie, setSearchedMovie] = useState(null);
+    const [profilePicture, setProfilePicture] = useState("");
+
+    useEffect(() => {
+        const fetchProfilePic = async () => {
+            const id = localStorage.getItem("userId");
+            const nameRes = await fetch(`http://localhost:${backendPort}/api/users/${id}`, {
+                headers: {"Authorization": `Bearer ${localStorage.getItem("authToken")}`}
+            });
+
+            const { username } = nameRes.json();
+            const response = await fetch(`http://localhost:${backendPort}/api/contents/users/${username}`, {
+                headers: {"Authorization": `Bearer ${localStorage.getItem("authToken")}`}
+            });
+
+            const blob = await response.blob();
+            const imageUrl = URL.createObjectURL(blob);
+            setProfilePicture(imageUrl);
+        };
+
+        fetchProfilePic();
+    }, [backendPort]);
 
     const fetchMovies = async () => {
         try {
@@ -142,6 +163,7 @@ const Home = () => {
                         Search
                     </button>
                 </form>
+                <img className="profile-pic" src={profilePicture} />
             </header>
 
             {/* Search Result Modal */}

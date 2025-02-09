@@ -15,7 +15,6 @@ const presentUser = async (user) => {
             imageFile: file.toString('base64')
         }
     } catch (err) {
-        console.log("here2 " + err)
         res.status(500).json({ error: 'Error displaying movie' });
     }
 }
@@ -43,7 +42,6 @@ const getUser = async (req, res) => {
 
         res.json(await presentUser(user));
     } catch (err) {
-        console.log("here1");
         res.status(err.statusCode).json({ error: err.message });
     }
 }

@@ -72,7 +72,7 @@ function LoginForm() {
                         <button type="submit" className="btn btn-primary btn-danger">Sign in</button>
                     </div>
                     <div className="col-12">
-                        <p>New to Nexflit? <Link to='/signup'>Sign Up</Link></p>
+                        <p className='new-to-nexflit'>New to Nexflit? <Link to='/signup'>Sign Up</Link></p>
                     </div>
                 </form>
                 {error && <div className="alert alert-danger">{error}</div>}

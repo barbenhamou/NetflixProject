@@ -64,7 +64,6 @@ const getUserFiles = async (id) => {
         const contentType = `image/${ext.slice(1)}`;
         return { file, contentType };
     } catch (err) {
-        console.log("here3 " + err)
         errorClass.filterError(err);
     }
 }

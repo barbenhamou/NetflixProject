@@ -26,7 +26,6 @@ function HomePageWrapper() {
 }
 
 function AdminWrapper() {
-  localStorage.setItem("isAdmin", "true"); // TODO
   if (localStorage.getItem("isAdmin") === "true") {
     return <Admin />;
   }
