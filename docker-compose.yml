@@ -31,8 +31,6 @@ services:
     container_name: third-server
     ports:
       - "3002:3002"
-    networks:
-      - app-network
     command: ["3002"]
 
   react-client:

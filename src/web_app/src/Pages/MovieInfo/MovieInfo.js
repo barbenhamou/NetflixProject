@@ -42,14 +42,14 @@ function MovieInfo({ id }) {
       <section className="movie-details">
         <section className="info-header">
           <h1>{title}</h1>
-          <Link to={`/movies/${id}/watch`}>
+          <Link target="_parent" to={`/movies/${id}/watch`}>
             <button
               className="btn btn-light play-btn-main"
               type="button"
-              aria-label="Play"
-            >
+              aria-label="Play" >
               ▶ Play Movie
-            </button></Link>
+            </button>
+          </Link>
         </section>
         <p>
           {releaseYear} | {Math.floor(lengthMinutes / 60)}h {lengthMinutes % 60}m
