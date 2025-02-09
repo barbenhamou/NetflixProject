@@ -111,6 +111,8 @@ public class SignUpActivity extends AppCompatActivity {
                                 @Override
                                 public void onUploadSuccess(ProfilePictureResponse response) {
                                     runOnUiThread(() -> Toast.makeText(SignUpActivity.this, response.getMessage(), Toast.LENGTH_SHORT).show());
+                                    Intent intent = new Intent(SignUpActivity.this, LoginActivity.class);
+                                    startActivity(intent);
                                 }
 
                                 @Override
@@ -145,40 +147,6 @@ public class SignUpActivity extends AppCompatActivity {
                     != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
             }
-        }
-    }
-
-    private File saveImageToInternalStorage(Uri uri) throws IOException {
-        if (uri == null) {
-            throw new IllegalArgumentException("URI cannot be null");
-        }
-
-        ContentResolver resolver = getContentResolver();
-
-        try (InputStream inputStream = resolver.openInputStream(uri)) {
-            if (inputStream == null) {
-                throw new IOException("Failed to open InputStream for URI: " + uri.toString());
-            }
-
-            Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-            if (bitmap == null) {
-                throw new IOException("Failed to decode image from URI: " + uri.toString());
-            }
-
-            File directory = new File(getFilesDir(), "uploads");
-            if (!directory.exists() && !directory.mkdirs()) {
-                throw new IOException("Failed to create directory: " + directory.getAbsolutePath());
-            }
-
-            File file = new File(directory, "profile_" + System.currentTimeMillis() + ".jpg");
-
-            try (FileOutputStream fileOutputStream = new FileOutputStream(file)) {
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 90, fileOutputStream);
-                fileOutputStream.flush();
-            }
-
-            Log.d("UPLOAD", "Saved image path: " + file.getAbsolutePath());
-            return file;
         }
     }
 
