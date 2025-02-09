@@ -57,11 +57,14 @@ const getMovieFiles = async (id, type, range) => {
 const getUserFiles = async (id) => {
     try {
         const user = await userService.getUserById(id);
-        const filePath = path.join(__dirname, '../contents/users', user.username + '.jpg');
+        const ext = path.extname(user.picture);
+        const filename = user.username + ext;
+        const filePath = path.join(__dirname, '../contents/users', filename);
         const file = fs.readFileSync(filePath);
-        const contentType = `image/${path.extname(fileName).slice(1)}`;
+        const contentType = `image/${ext.slice(1)}`;
         return { file, contentType };
     } catch (err) {
+        console.log("here3 " + err)
         errorClass.filterError(err);
     }
 }
