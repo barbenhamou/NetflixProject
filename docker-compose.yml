@@ -24,11 +24,11 @@ services:
     networks:
       - app-network
 
-  third-server:
+  recommend-server:
     build:
       context: .
       dockerfile: Dockerfile.server
-    container_name: third-server
+    container_name: recommend-server
     ports:
       - "3002:3002"
     command: ["3002"]

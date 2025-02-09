@@ -18,7 +18,7 @@ First you need to configure the docker-compose.yml:
 You have three servers:
     1. mongo
     2. nodejs
-    3. third server
+    3. recommend server
 Each need a unique port, use 27017 for the mongo server.
 in docker-compose.yml:
 ```bash
@@ -30,7 +30,7 @@ ports:
 
 For the other two you are welcome to choose any free port you'd like, except from 3000, used by your react client.
 ```bash
-third-server:
+recommend-server:
 ...
 ports:
 - "<CPP_PORT>:<CPP_PORT>"
