@@ -17,13 +17,7 @@ const Home = () => {
 
     useEffect(() => {
         const fetchProfilePic = async () => {
-            const id = localStorage.getItem("userId");
-            const nameRes = await fetch(`http://localhost:${backendPort}/api/users/${id}`, {
-                headers: {"Authorization": `Bearer ${localStorage.getItem("authToken")}`}
-            });
-
-            const { username } = nameRes.json();
-            const response = await fetch(`http://localhost:${backendPort}/api/contents/users/${username}`, {
+            const response = await fetch(`http://localhost:${backendPort}/api/contents/users/${localStorage.getItem('username')}`, {
                 headers: {"Authorization": `Bearer ${localStorage.getItem("authToken")}`}
             });
 

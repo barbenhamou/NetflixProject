@@ -122,3 +122,9 @@
     margin-bottom: 10px;
     text-align: left;
 }
+
+.profile-pic {
+    width: 55px;
+    height: auto;
+    margin: 15px;
+}

@@ -54,9 +54,9 @@ const getMovieFiles = async (id, type, range) => {
     }
 }
 
-const getUserFiles = async (id) => {
+const getUserFiles = async (name) => {
     try {
-        const user = await userService.getUserById(id);
+        const user = await userService.getUserByName(name);
         const ext = path.extname(user.picture);
         const filename = user.username + ext;
         const filePath = path.join(__dirname, '../contents/users', filename);

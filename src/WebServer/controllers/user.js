@@ -3,7 +3,7 @@ const contentService = require('../services/content');
 
 const presentUser = async (user) => {
     try {
-        const { file } = await contentService.getUserFiles(user._id);
+        const { file } = await contentService.getUserFiles(user.username);
 
         return {
             username: user.username,

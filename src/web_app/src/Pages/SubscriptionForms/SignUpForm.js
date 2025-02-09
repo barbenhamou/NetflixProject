@@ -11,6 +11,7 @@ function SignUpForm() {
     const [confirmPassword, setConfirmPassword] = useState('');
     const [phone, setPhone] = useState('');
     const [picture, setPicture] = useState('');
+    const [pictureName, setPictureName] = useState('');
     const [location, setLocation] = useState('');
     const [error, setError] = useState('');
 
@@ -23,6 +24,7 @@ function SignUpForm() {
 
     const handleFileChange = (e) => {
         setError('');
+        setPictureName(e.target.files[0].name);
         setPicture(e.target.files[0]);
     };
 
@@ -51,17 +53,18 @@ function SignUpForm() {
             email,
             password,
             phone,
-            location
+            location,
+            picture: pictureName
         };
 
         try {
             // Send data to the WebServer (POST request)
             const response = await fetch(`http://localhost:${backendPort}/api/users`, {
-                'method': 'POST',
-                'headers': {
+                method: 'POST',
+                headers: {
                     'Content-Type': 'application/json',
                 },
-                'body': JSON.stringify(userData),
+                body: JSON.stringify(userData)
             });
 
             if (!response.ok) {

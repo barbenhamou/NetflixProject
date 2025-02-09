@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './Form.css';
 import StandAloneField from './FieldItem';
@@ -38,6 +38,7 @@ function LoginForm() {
                 localStorage.setItem('authToken', data.tokenId.token);
                 localStorage.setItem('userId', data.tokenId.userId);
                 localStorage.setItem('isAdmin', data.tokenId.isAdmin);
+                localStorage.setItem('username', username);
 
                 navigate("/");
             } else {

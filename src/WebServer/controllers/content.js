@@ -126,7 +126,7 @@ const getMovieFiles = async (req, res) => {
 
 const getUserFiles = async (req, res) => {
 	try {
-		const result = await contentService.getUserFiles(req.params.id);
+		const result = await contentService.getUserFiles(req.params.name);
 		const { file, contentType } = result;
 
 		res.setHeader('Content-Type', contentType);
