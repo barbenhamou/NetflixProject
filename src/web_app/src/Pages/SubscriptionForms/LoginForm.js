@@ -49,8 +49,17 @@ function LoginForm() {
         }
     };
 
+    
+    const pageStyle = {
+        backgroundImage: `url(${process.env.PUBLIC_URL}/images/background.jpg)`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+        minHeight: "100vh",
+    };
+
     return (
-        <div className='form-container center'>
+        <div className='form-container center' style={pageStyle}>
             <Link to="/">
                 <i className="bi bi-arrow-left"></i>
             </Link>
