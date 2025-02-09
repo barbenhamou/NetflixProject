@@ -37,7 +37,7 @@ function LoginForm() {
 
                 localStorage.setItem('authToken', data.tokenId.token);
                 localStorage.setItem('userId', data.tokenId.userId);
-                loacalStorage.setItem('isAdmin', data.tokenId.isAdmin);
+                localStorage.setItem('isAdmin', data.tokenId.isAdmin);
 
                 navigate("/");
             } else {
