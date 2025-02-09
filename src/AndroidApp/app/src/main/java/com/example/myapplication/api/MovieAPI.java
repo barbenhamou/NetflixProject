@@ -49,7 +49,9 @@ public class MovieAPI {
             public void onResponse(@NonNull Call<List<Movie>> call, @NonNull Response<List<Movie>> response) {
                 new Thread(() -> {
                     movieDao.clear();
-                    movieDao.insert(response.body());
+                    if (response.body() != null) {
+                        movieDao.insert(response.body());
+                    }
                     movieListData.postValue(movieDao.index());
                 }).start();
             }
@@ -95,7 +97,8 @@ public class MovieAPI {
         Call<Void> call = webServiceAPI.watchMovie(movieId, "Bearer " + token);
         call.enqueue(new Callback<>() {
             @Override
-            public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {}
+            public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
+            }
 
             @Override
             public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {

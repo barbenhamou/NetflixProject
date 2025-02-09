@@ -144,7 +144,7 @@ public class HomePageActivity extends AppCompatActivity {
 
                 // Observe user data and load profile picture
                 MainActivity.userRepository.getStoredUser().observe(this, user -> {
-                    if (user != null && user.getPicture() != null) {
+                    if (user != null && !user.getPicture().isEmpty()) {
                         loadProfilePicture(user.getImageFile());
                     }
                 });

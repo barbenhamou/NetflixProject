@@ -99,9 +99,13 @@ public class MoviesRepository {
         movieAPI.get();
     }
 
-    public void reloadCategories() { movieAPI.getCategories(); }
+    public void reloadCategories() {
+        movieAPI.getCategories();
+    }
 
-    public LiveData<List<Category>> getCategories() { return categoryListData; }
+    public LiveData<List<Category>> getCategories() {
+        return categoryListData;
+    }
 
     public LiveData<List<Movie>> getMoviesByOldestCategory() {
         return Transformations.map(movieListData, movies -> {
@@ -110,7 +114,9 @@ public class MoviesRepository {
 
             Map<String, Integer> categoryOrderMap = new HashMap<>();
             for (int i = 0; i < categories.size(); i++) {
-                categoryOrderMap.put(categories.get(i).getName(), i);
+                if (categories.get(i).getPromoted()) {
+                    categoryOrderMap.put(categories.get(i).getName(), i);
+                }
             }
 
             List<Movie> filteredMovies = new ArrayList<>();
@@ -317,6 +323,7 @@ public class MoviesRepository {
                             callback.onFailure("Delete movie failed: " + response.message());
                         }
                     }
+
                     @Override
                     public void onFailure(Call<Void> call, Throwable t) {
                         callback.onFailure("Delete movie error: " + t.getMessage());

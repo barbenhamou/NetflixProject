@@ -42,6 +42,9 @@ public class LoginActivity extends AppCompatActivity {
                             runOnUiThread(() ->
                                     Toast.makeText(LoginActivity.this, "Fetching user Successful!", Toast.LENGTH_SHORT).show()
                             );
+
+                            Intent intent = new Intent(LoginActivity.this, HomePageActivity.class);
+                            startActivity(intent);
                         }
 
                         @Override
@@ -51,9 +54,6 @@ public class LoginActivity extends AppCompatActivity {
                             );
                         }
                     });
-
-                    Intent intent = new Intent(LoginActivity.this, HomePageActivity.class);
-                    startActivity(intent);
                 }
 
                 @Override
