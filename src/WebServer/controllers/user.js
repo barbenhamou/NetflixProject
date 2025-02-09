@@ -1,8 +1,10 @@
 const userService = require('../services/user');
+const contentService = require('../services/content');
 
-// Only show relevant and public info (not password)
 const presentUser = async (user) => {
     try {
+        const { file } = await contentService.getUserFiles(user._id);
+
         return {
             username: user.username,
             password: user.password,
@@ -10,8 +12,9 @@ const presentUser = async (user) => {
             phone: user.phone,
             picture: user.picture,
             location: user.location,
+            imageFile: file.toString('base64')
         }
-    } catch(err) {
+    } catch (err) {
         res.status(500).json({ error: 'Error displaying movie' });
     }
 }
