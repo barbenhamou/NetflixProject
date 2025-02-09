@@ -42,10 +42,6 @@ services:
     container_name: react-client
     ports:
       - "3000:3000"
-    stdin_open: true
-    tty: true
-    networks:
-      - app-network
 
 networks:
   app-network:
