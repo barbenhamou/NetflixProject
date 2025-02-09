@@ -92,6 +92,10 @@ public class SignUpActivity extends AppCompatActivity {
 
             User user = new User(username, email, password, phone, "", location, "");
 
+            if (imageUri != null) {
+                user.setPicture(getFileName(imageUri));
+            }
+
             repository.signUp(user, new UserRepository.UserCallBack() {
                 @Override
                 public void onSuccess(User user) {
