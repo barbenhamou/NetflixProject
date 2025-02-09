@@ -19,7 +19,13 @@ public class VerticalCategoryAdapter extends RecyclerView.Adapter<VerticalCatego
     private List<Movie> movies;
 
     public void setData(List<Category> categories, List<Movie> movies) {
-        this.categories = categories;
+        List<Category> promotedCategories = new ArrayList<>();
+        for (Category category : categories) {
+            if (category.getPromoted()) { // assuming getPromoted() returns a boolean
+                promotedCategories.add(category);
+            }
+        }
+        this.categories = promotedCategories;
         this.movies = movies;
         notifyDataSetChanged();
     }

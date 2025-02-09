@@ -41,6 +41,11 @@ ports:
 - "<WEB_PORT>:<WEB_PORT>"
 ```
 
+In order to run the react client, we added to the docker-compose the react-client container. It runs on port 3000 and you must not change it. In order to present the client,
+```bash
+http://<Your Computer IP (where you run the docker)>:3000
+```
+
 In order to build and run the servers execute the following command:
 ```bash
 docker-compose up --build

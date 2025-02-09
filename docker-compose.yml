@@ -33,6 +33,14 @@ services:
       - "3002:3002"
     command: ["3002"]
 
+  react-client:
+    build:
+      context: ./src/web_app
+      dockerfile: Dockerfile
+    container_name: react-client
+    ports:
+      - "3000:3000"
+
 networks:
   app-network:
     driver: bridge
