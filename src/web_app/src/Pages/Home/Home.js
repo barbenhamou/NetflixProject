@@ -148,8 +148,8 @@ const Home = () => {
             {searchedMovie && (
                 <div className="home-search-modal">
                     <MovieCard
-                        showDescription={true}
-                        infoButton={false}
+                        showInfo={false}
+                        infoButton={true}
                         {...searchedMovie}
                     />
                     <button onClick={closeSearchResult} className="home-close-button">
@@ -174,7 +174,7 @@ const Home = () => {
                         {categoryMovies.map((movie, index) => (
                             <MovieCard
                                 key={index}
-                                showDescription={false}
+                                showInfo={false}
                                 infoButton={true}
                                 {...movie}
                             />

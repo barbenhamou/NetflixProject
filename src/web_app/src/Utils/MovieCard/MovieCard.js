@@ -1,8 +1,9 @@
 import "./MovieCard.css";
 import { backendPort } from "../../config";
 import { useEffect, useState } from "react";
+import InfoButton from "./InfoButton";
 
-function MovieCard({ id, title, categories, lengthMinutes, releaseYear, description, showDescription, infoButton }) {
+function MovieCard({ id, title, categories, lengthMinutes, releaseYear, description, showInfo, infoButton }) {
     const [imageSrc, setImageSrc] = useState("");
 
     useEffect(() => {
@@ -32,17 +33,13 @@ function MovieCard({ id, title, categories, lengthMinutes, releaseYear, descript
             <div className="card-body">
                 <section className="title-container">
                     <h5 className="card-title">{title}</h5>
-                    {infoButton &&
-                        <i
-                            className="bi bi-info-circle info-btn"
-                            onClick={() => window.location.href = `/movies/${id}/info`}></i>
-                    }
+                    {infoButton && <InfoButton id={id} />}
                 </section>
-                {showDescription && <p className="card-text">
+                {showInfo && <p className="card-text">
                     {releaseYear} | {Math.floor(lengthMinutes / 60)}h {lengthMinutes % 60}m
                 </p>}
-                {showDescription && <p className="card-text">{categories.join(' • ')}</p>}
-                {showDescription && <p className="card-text description">{description}</p>}
+                {showInfo && <p className="card-text">{categories.join(' • ')}</p>}
+                {showInfo && <p className="card-text description">{description}</p>}
             </div>
         </div>
     );

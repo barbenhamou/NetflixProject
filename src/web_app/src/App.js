@@ -7,7 +7,7 @@ import MovieInfo from './Pages/MovieInfo/MovieInfo';
 import MovieWatch from './Pages/MovieWatch/MovieWatch';
 import Home from './Pages/Home/Home';
 import Admin from './Pages/Admin/Admin';
-import GuestPage from './Guest/Guest';
+import GuestPage from './Pages/Guest/Guest';
 function MovieInfoWrapper() {
   const { id } = useParams();
   return <MovieInfo id={id} />;

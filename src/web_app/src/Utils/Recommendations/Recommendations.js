@@ -49,7 +49,7 @@ function Recommendations({ id }) {
     }
 
     const movieList = movies.map((movie, key) => {
-        return <MovieCard key={key} showDescription={true} infoButton={false} {...movie} />
+        return <MovieCard key={key} showInfo={true} infoButton={false} {...movie} />
     });
 
     return (
