@@ -39,10 +39,10 @@ public class MainActivity extends AppCompatActivity {
         userRepository = new UserRepository(getApplication());
         tokenRepository = new TokenRepository(getApplication());
 
-        tokenRepository.getStoredToken().observe(this, token -> {
-            Intent intent = new Intent(this, HomePageActivity.class);
-            startActivity(intent);
-        });
+//        tokenRepository.getStoredToken().observe(this, token -> {
+//            Intent intent = new Intent(this, HomePageActivity.class);
+//            startActivity(intent);
+//        });
 
         Intent intent = new Intent(this, GuestActivity.class);
         startActivity(intent);

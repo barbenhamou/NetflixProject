@@ -11,7 +11,7 @@ import com.example.myapplication.entities.Movie;
 import com.example.myapplication.entities.Token;
 import com.example.myapplication.entities.User;
 
-@Database(entities = {Movie.class, Token.class, User.class}, version = 5, exportSchema = false)
+@Database(entities = {Movie.class, Token.class, User.class}, version = 6, exportSchema = false)
 @TypeConverters({Converters.class})
 public abstract class AppDB extends RoomDatabase {
     public abstract MovieDao movieDao();

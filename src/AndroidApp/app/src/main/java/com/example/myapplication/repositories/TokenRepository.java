@@ -55,7 +55,7 @@ public class TokenRepository {
                 if (response.isSuccessful() && response.body() != null) {
                     LoginResponse tokenResponse = response.body();
 
-                    Token token = new Token(tokenResponse.getTokenId().getToken(), tokenResponse.getTokenId().getAdmin());
+                    Token token = new Token(tokenResponse.getTokenId().getToken(), tokenResponse.getTokenId().getAdmin(), tokenResponse.getTokenId().getUserId());
                     saveTokenToDb(token);
 
                     callback.onSuccess(token);

@@ -70,7 +70,7 @@ public class UserRepository {
     }
 
     public void getUser(String userId, UserCallBack callback) {
-        webServiceAPI.getUser(userId).enqueue(new Callback<User>() {
+        webServiceAPI.getUser(userId).enqueue(new Callback<>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
                 if (response.isSuccessful()) {

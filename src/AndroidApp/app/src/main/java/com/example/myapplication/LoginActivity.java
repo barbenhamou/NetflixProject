@@ -2,13 +2,16 @@ package com.example.myapplication;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.myapplication.databinding.ActivityLoginBinding;
 import com.example.myapplication.entities.Token;
+import com.example.myapplication.entities.User;
 import com.example.myapplication.repositories.TokenRepository;
+import com.example.myapplication.repositories.UserRepository;
 
 public class LoginActivity extends AppCompatActivity {
     public static TokenRepository repository;
@@ -32,6 +35,22 @@ public class LoginActivity extends AppCompatActivity {
                     runOnUiThread(() ->
                             Toast.makeText(LoginActivity.this, "Login Successful!", Toast.LENGTH_SHORT).show()
                     );
+                    Log.d("Login", token.getUserId());
+                    MainActivity.userRepository.getUser(token.getUserId(), new UserRepository.UserCallBack() {
+                        @Override
+                        public void onSuccess(User user) {
+                            runOnUiThread(() ->
+                                    Toast.makeText(LoginActivity.this, "Fetching user Successful!", Toast.LENGTH_SHORT).show()
+                            );
+                        }
+
+                        @Override
+                        public void onFailure(String errorMessage) {
+                            runOnUiThread(() ->
+                                    Toast.makeText(LoginActivity.this, errorMessage, Toast.LENGTH_SHORT).show()
+                            );
+                        }
+                    });
 
                     Intent intent = new Intent(LoginActivity.this, HomePageActivity.class);
                     startActivity(intent);
