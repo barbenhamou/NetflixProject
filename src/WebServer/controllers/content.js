@@ -126,8 +126,24 @@ const getMovieFiles = async (req, res) => {
 
 const getUserFiles = async (req, res) => {
 	try {
+		const token = req.query.token;
+		if (!token) {
+			return res.status(401).json({ error: "Token is missing"});
+		}
 
+		try {
+			jwt.verify(token, key);
+		} catch (err) {
+			return res.status(401).json({ error: 'Token is invalid' });
+		}
+
+		const result = await contentService.getUserFiles(req.params.id);
+		const { file, contentType } = result;
+
+		res.setHeader('Content-Type', contentType);
+		return res.status(200).send(file);
 	} catch (err) {
+		console.log("here2");
 		return res.status(500).json({ error: (err || "Internal Server Error") });
 	}
 }

@@ -3,12 +3,14 @@ package com.example.myapplication;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.provider.OpenableColumns;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
@@ -28,6 +30,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 
 public class SignUpActivity extends AppCompatActivity {
 
@@ -87,7 +90,11 @@ public class SignUpActivity extends AppCompatActivity {
                 return;
             }
 
-            User user = new User(username, email, password, phone, "", location);
+            User user = new User(username, email, password, phone, "", location, "");
+
+            if (imageUri != null) {
+                user.setPicture(getFileName(imageUri));
+            }
 
             repository.signUp(user, new UserRepository.UserCallBack() {
                 @Override
@@ -99,11 +106,13 @@ public class SignUpActivity extends AppCompatActivity {
 
                     if (imageUri != null) {
                         try {
-                            imageFile = saveImageToInternalStorage(imageUri);
+                            imageFile = getFileFromUri(imageUri);
                             repository.uploadProfilePicture(user.getUsername(), imageFile, new UserRepository.UploadCallBack() {
                                 @Override
                                 public void onUploadSuccess(ProfilePictureResponse response) {
                                     runOnUiThread(() -> Toast.makeText(SignUpActivity.this, response.getMessage(), Toast.LENGTH_SHORT).show());
+                                    Intent intent = new Intent(SignUpActivity.this, LoginActivity.class);
+                                    startActivity(intent);
                                 }
 
                                 @Override
@@ -111,7 +120,7 @@ public class SignUpActivity extends AppCompatActivity {
                                     runOnUiThread(() -> Toast.makeText(SignUpActivity.this, "Image upload failed: " + errorMessage, Toast.LENGTH_SHORT).show());
                                 }
                             });
-                        } catch (IOException e) {
+                        } catch (RuntimeException e) {
                             runOnUiThread(() -> Toast.makeText(SignUpActivity.this, "Failed to save image", Toast.LENGTH_SHORT).show());
                         }
                     }
@@ -141,40 +150,47 @@ public class SignUpActivity extends AppCompatActivity {
         }
     }
 
-    private File saveImageToInternalStorage(Uri uri) throws IOException {
-        if (uri == null) {
-            throw new IllegalArgumentException("URI cannot be null");
-        }
-
-        ContentResolver resolver = getContentResolver();
-
-        try (InputStream inputStream = resolver.openInputStream(uri)) {
+    private File getFileFromUri(Uri uri) {
+        File file = null;
+        try {
+            InputStream inputStream = getContentResolver().openInputStream(uri);
             if (inputStream == null) {
-                throw new IOException("Failed to open InputStream for URI: " + uri.toString());
+                return null;
             }
-
-            Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-            if (bitmap == null) {
-                throw new IOException("Failed to decode image from URI: " + uri.toString());
+            String fileName = getFileName(uri);
+            file = new File(getCacheDir(), fileName);
+            OutputStream outputStream = new FileOutputStream(file);
+            byte[] buffer = new byte[1024];
+            int bytesRead;
+            while ((bytesRead = inputStream.read(buffer)) != -1) {
+                outputStream.write(buffer, 0, bytesRead);
             }
-
-            // ✅ Save in INTERNAL STORAGE (NOT Cache)
-            File directory = new File(getFilesDir(), "uploads");
-            if (!directory.exists() && !directory.mkdirs()) {
-                throw new IOException("Failed to create directory: " + directory.getAbsolutePath());
-            }
-
-            // Unique filename
-            File file = new File(directory, "profile_" + System.currentTimeMillis() + ".jpg");
-
-            // Save the bitmap to storage
-            try (FileOutputStream fileOutputStream = new FileOutputStream(file)) {
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 90, fileOutputStream);
-                fileOutputStream.flush();
-            }
-
-            Log.d("UPLOAD", "Saved image path: " + file.getAbsolutePath());
-            return file;
+            outputStream.close();
+            inputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+        return file;
+    }
+
+    private String getFileName(Uri uri) {
+        String result = null;
+        if ("content".equals(uri.getScheme())) {
+            Cursor cursor = getContentResolver().query(uri, null, null, null, null);
+            try {
+                if(cursor != null && cursor.moveToFirst()){
+                    int index = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
+                    if (index >= 0) {
+                        result = cursor.getString(index);
+                    }
+                }
+            } finally {
+                if(cursor != null) cursor.close();
+            }
+        }
+        if(result == null){
+            result = uri.getLastPathSegment();
+        }
+        return result;
     }
 }

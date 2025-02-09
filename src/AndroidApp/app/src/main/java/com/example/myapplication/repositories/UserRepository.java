@@ -69,13 +69,31 @@ public class UserRepository {
         });
     }
 
+    public void getUser(String userId, UserCallBack callback) {
+        webServiceAPI.getUser(userId).enqueue(new Callback<>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                if (response.isSuccessful()) {
+                    User user = response.body();
+                    saveUserToDb(user);
+                    callback.onSuccess(user);
+                } else {
+                    callback.onFailure("Get user failed" + response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+                callback.onFailure("API error: " + t.getMessage());
+            }
+        });
+    }
+
     public void uploadProfilePicture(String username, File imageFile, UploadCallBack callback) {
         if (imageFile == null || !imageFile.exists()) {
             callback.onUploadFailure("File does not exist: " + (imageFile != null ? imageFile.getAbsolutePath() : "null"));
             return;
         }
-
-        Log.d("UserRepository", "Uploading file: " + imageFile.getAbsolutePath()); // Remove
 
         RequestBody requestBody = RequestBody.create(MediaType.parse("image/*"), imageFile);
         MultipartBody.Part imagePart = MultipartBody.Part.createFormData("profilePicture", imageFile.getName(), requestBody);
@@ -84,10 +102,6 @@ public class UserRepository {
             @Override
             public void onResponse(Call<ProfilePictureResponse> call, Response<ProfilePictureResponse> response) {
                 if (response.isSuccessful()) {
-                    new Thread(() -> {
-                        userDao.updateProfilePicture(username, imageFile.getAbsolutePath());
-                        userData.postValue(userDao.getUser());
-                    }).start();
                     callback.onUploadSuccess(response.body());
                 } else {
                     callback.onUploadFailure("Image upload failed: " + response.message());
@@ -96,7 +110,6 @@ public class UserRepository {
 
             @Override
             public void onFailure(Call<ProfilePictureResponse> call, Throwable t) {
-                Log.d("UserRepository", "Upload failed", t); // Remove
                 callback.onUploadFailure("API error: " + t.getMessage());
             }
         });

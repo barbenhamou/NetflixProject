@@ -30,4 +30,5 @@
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
     <string name="back">Back</string>
+    <string name="movie_info">Movie Info</string>
 </resources>

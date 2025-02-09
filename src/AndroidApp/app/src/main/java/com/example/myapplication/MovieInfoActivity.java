@@ -60,7 +60,6 @@ public class MovieInfoActivity extends AppCompatActivity {
                 intent.putExtra("movieId", movie.getId());
                 startActivity(intent);
 
-                viewModel.watchMovie(movie.getId(), token);
                 finish();
             });
         });
@@ -147,7 +146,6 @@ public class MovieInfoActivity extends AppCompatActivity {
                         intent.putExtra("movieId", selectedMovie.getId());
                         startActivity(intent);
 
-                        viewModel.watchMovie(movie.getId(), token);
                         finish();
                     });
                 } else {

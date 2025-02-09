@@ -28,9 +28,6 @@ import retrofit2.http.PartMap;
 import retrofit2.http.Path;
 
 public interface WebServiceAPI {
-
-
-
     @GET("movies")
     Call<List<List<Movie>>> getMovies(
             @Header("Authorization") String authHeader
@@ -55,8 +52,6 @@ public interface WebServiceAPI {
 
     @POST("users")
     Call<Void> signUp(@Body User user);
-
-    // === CATEGORY ENDPOINTS ===
 
     @GET("categories")
     Call<List<Category>> getCategories();
@@ -89,13 +84,12 @@ public interface WebServiceAPI {
             @Path("username") String username,
             @Part MultipartBody.Part profilePicture);
 
-    // ========== MOVIE ENDPOINTS ==========
-
     @POST("movies")
     Call<Void> addMovie(
             @Body Movie movie,
             @Header("Authorization") String authToken
     );
+
 
     @PUT("movies/{id}")
     Call<Movie> updateMovie(
@@ -125,5 +119,8 @@ public interface WebServiceAPI {
             @Part("filmType") RequestBody filmType,
             @Part("filmName") RequestBody filmName
     );
+
+    @GET("users/{id}")
+    Call<User> getUser(@Path("id") String userId);
 
 }

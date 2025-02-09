@@ -28,28 +28,19 @@ public class AdminActivity extends AppCompatActivity {
 
     private ImageButton btnBack;
     private Spinner spinnerAction;
-    private LinearLayout layoutAddCategory, layoutDeleteCategory, layoutAddMovie,
-            layoutDeleteMovie, layoutEditCategory, layoutEditMovie;
+    private LinearLayout layoutAddCategory, layoutDeleteCategory, layoutAddMovie, layoutDeleteMovie, layoutEditCategory, layoutEditMovie;
     private Button buttonSubmit;
     private TextView textViewMessage;
-
-    // Buttons for file picking (movie-related actions)
     private Button buttonChooseImage, buttonChooseTrailer, buttonChooseFilm;
     private Button buttonEditChooseImage, buttonEditChooseTrailer, buttonEditChooseFilm;
-
     private String selectedAction;
-
-    // Request codes for file picking
     private static final int REQUEST_CODE_IMAGE = 100;
     private static final int REQUEST_CODE_TRAILER = 101;
     private static final int REQUEST_CODE_FILM = 102;
     private static final int REQUEST_CODE_EDIT_IMAGE = 103;
     private static final int REQUEST_CODE_EDIT_TRAILER = 104;
     private static final int REQUEST_CODE_EDIT_FILM = 105;
-
-    // URIs for add movie files
     private Uri addMovieImageUri, addMovieTrailerUri, addMovieFilmUri;
-    // URIs for edit movie files
     private Uri editMovieImageUri, editMovieTrailerUri, editMovieFilmUri;
 
     @Override
@@ -96,7 +87,6 @@ public class AdminActivity extends AppCompatActivity {
             public void onNothingSelected(AdapterView<?> parent) { }
         });
 
-        // File chooser listeners for movie actions
         buttonChooseImage.setOnClickListener(v -> chooseFile(REQUEST_CODE_IMAGE));
         buttonChooseTrailer.setOnClickListener(v -> chooseFile(REQUEST_CODE_TRAILER));
         buttonChooseFilm.setOnClickListener(v -> chooseFile(REQUEST_CODE_FILM));
@@ -131,16 +121,30 @@ public class AdminActivity extends AppCompatActivity {
         });
     }
 
-    // ===== CATEGORY HANDLERS =====
-
     private void handleAddCategory() {
         EditText categoryNameEditText = findViewById(R.id.editTextCategoryName);
+        EditText categoryPromoted = findViewById(R.id.editTextCategoryPromoted);
+
+        boolean flag;
+
         String categoryName = categoryNameEditText.getText().toString().trim();
+        String categoryPromotedStr = categoryPromoted.getText().toString().trim();
+
         if (categoryName.isEmpty()) {
             textViewMessage.setText("Category name cannot be empty");
             return;
         }
-        Category newCategory = new Category(categoryName, false);
+
+        if (categoryPromotedStr.equals("true")) {
+            flag = true;
+        } else if (categoryPromotedStr.equals("false")) {
+            flag = false;
+        } else {
+            textViewMessage.setText("Category name cannot be empty");
+            return;
+        }
+
+        Category newCategory = new Category(categoryName, flag);
         MainActivity.tokenRepository.getStoredToken().observe(this, token -> {
             new CategoryRepository(getApplication()).addCategory(token, newCategory, new CategoryRepository.CategoryCallback() {
                 @Override
@@ -179,13 +183,28 @@ public class AdminActivity extends AppCompatActivity {
     private void handleEditCategory() {
         EditText oldCategoryNameEditText = findViewById(R.id.editTextOldCategoryName);
         EditText newCategoryNameEditText = findViewById(R.id.editTextNewCategoryName);
+        EditText categoryPromoted = findViewById(R.id.editTextNewCategoryPromoted);
+
         String oldName = oldCategoryNameEditText.getText().toString().trim();
         String newName = newCategoryNameEditText.getText().toString().trim();
+        String categoryPromotedStr = categoryPromoted.getText().toString().trim();
+
+        boolean flag;
+
+        if (categoryPromotedStr.equals("true")) {
+            flag = true;
+        } else if (categoryPromotedStr.equals("false")) {
+            flag = false;
+        } else {
+            textViewMessage.setText("Category name cannot be empty");
+            return;
+        }
+
         if (oldName.isEmpty() || newName.isEmpty()) {
             textViewMessage.setText("Both old and new category names are required");
             return;
         }
-        Category updatedCategory = new Category(newName, false);
+        Category updatedCategory = new Category(newName, flag);
         MainActivity.tokenRepository.getStoredToken().observe(this, token -> {
             new CategoryRepository(getApplication()).updateCategory(token, oldName, updatedCategory, new CategoryRepository.CategoryCallback() {
                 @Override
@@ -200,8 +219,6 @@ public class AdminActivity extends AppCompatActivity {
         });
     }
 
-    // ===== MOVIE HANDLERS =====
-
     private void handleAddMovie() {
         // Retrieve values from the "add movie" layout (IDs as defined in your XML)
         EditText titleEditText = findViewById(R.id.editTextMovieTitle);
@@ -209,15 +226,16 @@ public class AdminActivity extends AppCompatActivity {
         EditText releaseYearEditText = findViewById(R.id.editTextReleaseYear);
         EditText descriptionEditText = findViewById(R.id.editTextDescription);
         EditText categoriesEditText = findViewById(R.id.editTextMovieCategory);
+        EditText castEditText = findViewById(R.id.editTextCast);
 
         String title = titleEditText.getText().toString().trim();
         String lengthStr = lengthEditText.getText().toString().trim();
         String releaseYearStr = releaseYearEditText.getText().toString().trim();
         String description = descriptionEditText.getText().toString().trim();
         String categoriesStr = categoriesEditText.getText().toString().trim();
+        String castStr = castEditText.getText().toString();
 
-        if (title.isEmpty() || lengthStr.isEmpty() || categoriesStr.isEmpty() ||
-                addMovieImageUri == null || addMovieTrailerUri == null || addMovieFilmUri == null) {
+        if (title.isEmpty() || lengthStr.isEmpty() || categoriesStr.isEmpty() || addMovieImageUri == null || addMovieTrailerUri == null || addMovieFilmUri == null || castStr.isEmpty()) {
             textViewMessage.setText("Title, length, categories and all files (image, trailer, film) are required");
             return;
         }
@@ -249,6 +267,14 @@ public class AdminActivity extends AppCompatActivity {
             }
         }
 
+        List<String> castList = new ArrayList<>();
+        for (String cat : castStr.split(",")) {
+            String trimmed = cat.trim();
+            if (!trimmed.isEmpty()) {
+                castList.add(trimmed);
+            }
+        }
+
         Movie newMovie = new Movie();
         newMovie.setTitle(title);
         newMovie.setLengthMinutes(lengthMinutes);
@@ -258,6 +284,7 @@ public class AdminActivity extends AppCompatActivity {
         newMovie.setImage(getFileName(addMovieImageUri));
         newMovie.setTrailer(getFileName(addMovieTrailerUri));
         newMovie.setFilm(getFileName(addMovieFilmUri));
+        newMovie.setCast(castList);
 
         File imageFile = getFileFromUri(addMovieImageUri);
         File trailerFile = getFileFromUri(addMovieTrailerUri);
@@ -340,7 +367,7 @@ public class AdminActivity extends AppCompatActivity {
         updatedMovie.setLengthMinutes(newLength);
         updatedMovie.setReleaseYear(newReleaseYear);
         updatedMovie.setDescription(newDescription);
-        // If new files were selected, update file names accordingly.
+
         if (editMovieImageUri != null) {
             updatedMovie.setImage(getFileName(editMovieImageUri));
         }
@@ -369,11 +396,6 @@ public class AdminActivity extends AppCompatActivity {
         });
     }
 
-    // ===== Helper Methods =====
-
-    /**
-     * Show/hide layouts based on the selected action.
-     */
     private void updateFormVisibility(String action) {
         layoutAddCategory.setVisibility(View.GONE);
         layoutDeleteCategory.setVisibility(View.GONE);
@@ -404,9 +426,6 @@ public class AdminActivity extends AppCompatActivity {
         }
     }
 
-    /**
-     * Opens a file chooser for the given request code.
-     */
     private void chooseFile(int requestCode) {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         if (requestCode == REQUEST_CODE_IMAGE || requestCode == REQUEST_CODE_EDIT_IMAGE) {
@@ -446,9 +465,6 @@ public class AdminActivity extends AppCompatActivity {
         }
     }
 
-    /**
-     * Returns the display name of the file given its Uri.
-     */
     private String getFileName(Uri uri) {
         String result = null;
         if ("content".equals(uri.getScheme())) {
@@ -470,11 +486,6 @@ public class AdminActivity extends AppCompatActivity {
         return result;
     }
 
-    /**
-     * Converts a Uri into a File.
-     * This implementation copies the file from the content provider
-     * into a temporary file in the app's cache directory.
-     */
     private File getFileFromUri(Uri uri) {
         File file = null;
         try {
