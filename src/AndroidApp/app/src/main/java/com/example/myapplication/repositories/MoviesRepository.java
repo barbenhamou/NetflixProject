@@ -304,13 +304,13 @@ public class MoviesRepository {
         });
     }
 
-    public void deleteMovieById(final Token token, final String movieId, final MovieCallback callback) {
+    public void deleteMovieById(String token, final String movieId, final MovieCallback callback) {
         if (movieId == null || movieId.isEmpty()) {
             callback.onFailure("Movie ID must not be empty.");
             return;
         }
 
-        webServiceAPI.deleteMovie("Bearer " + token.getToken(), movieId)
+        webServiceAPI.deleteMovie("Bearer " + token, movieId)
                 .enqueue(new Callback<Void>() {
                     @Override
                     public void onResponse(Call<Void> call, Response<Void> response) {

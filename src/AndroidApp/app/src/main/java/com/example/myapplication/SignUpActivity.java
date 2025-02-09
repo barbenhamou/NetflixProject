@@ -96,7 +96,7 @@ public class SignUpActivity extends AppCompatActivity {
                 user.setPicture(getFileName(imageUri));
             }
 
-            repository.signUp(user, new UserRepository.UserCallBack() {
+            MainActivity.userRepository.signUp(user, new UserRepository.UserCallBack() {
                 @Override
                 public void onSuccess(User user) {
 

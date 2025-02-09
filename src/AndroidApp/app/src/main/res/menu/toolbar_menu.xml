@@ -9,11 +9,11 @@
         app:showAsAction="ifRoom|collapseActionView"
         app:actionViewClass="androidx.appcompat.widget.SearchView"/>
 
-    <item
-        android:id="@+id/action_logout"
-        android:title="@string/logout"
-        app:showAsAction="always"
-        android:actionLayout="@layout/logout_text"/>
+<!--    <item-->
+<!--        android:id="@+id/action_logout"-->
+<!--        android:title="@string/logout"-->
+<!--        app:showAsAction="always"-->
+<!--        android:actionLayout="@layout/logout_text"/>-->
 
     <item
         android:id="@+id/action_admin"
