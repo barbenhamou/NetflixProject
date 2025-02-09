@@ -1,7 +1,7 @@
 import "./Recommendations.css";
 import { useState, useEffect } from "react";
 import MovieCard from "../MovieCard/MovieCard";
-import { backendPort } from "../config";
+import { backendPort } from "../../config";
 import { Link } from "react-router-dom"
 
 function Recommendations({ id }) {

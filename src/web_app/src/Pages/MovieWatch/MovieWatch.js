@@ -1,8 +1,8 @@
 import './MovieWatch.css';
-import VideoPlayer from '../VideoPlayer/VideoPlayer';
+import VideoPlayer from '../../Utils/VideoPlayer/VideoPlayer';
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { backendPort } from "../config";
+import { backendPort } from "../../config";
 
 function MovieWatch({ id }) {
     const [movie, setMovie] = useState(null);

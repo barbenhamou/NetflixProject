@@ -1,13 +1,13 @@
 import './App.css'
 import React from 'react';
 import { BrowserRouter, Route, Routes, useParams } from 'react-router-dom';
-import LoginForm from './SubscriptionForms/LoginForm';
-import SignUpForm from './SubscriptionForms/SignUpForm';
-import MovieInfo from './MovieInfo/MovieInfo';
-import MovieWatch from './MovieWatch/MovieWatch';
-import Home from './pages/Home';
-import Admin from './pages/Admin';
-import GuestPage from './pages/guest';
+import LoginForm from './Pages/SubscriptionForms/LoginForm';
+import SignUpForm from './Pages/SubscriptionForms/SignUpForm';
+import MovieInfo from './Pages/MovieInfo/MovieInfo';
+import MovieWatch from './Pages/MovieWatch/MovieWatch';
+import Home from './Pages/Home/Home';
+import Admin from './Pages/Admin/Admin';
+import GuestPage from './Guest/Guest';
 function MovieInfoWrapper() {
   const { id } = useParams();
   return <MovieInfo id={id} />;
@@ -23,6 +23,14 @@ function HomePageWrapper() {
     return <Home />;
   }
   return <GuestPage />;
+}
+
+function AdminWrapper() {
+  localStorage.setItem("isAdmin", "true"); // TODO
+  if (localStorage.getItem("isAdmin") === "true") {
+    return <Admin />;
+  }
+  return <NotFound />;
 }
 
 function NotFound() {
@@ -43,7 +51,7 @@ function App() {
           <Route path="/" element={<HomePageWrapper />} />
           <Route path="/login" element={<LoginForm />} />
           <Route path="/signup" element={<SignUpForm />} />
-          <Route path="/admin" element={<Admin />} />
+          <Route path="/admin" element={<AdminWrapper />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

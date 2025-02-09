@@ -4,12 +4,9 @@
   justify-content: center;
   align-items: center;
   height: 100vh;
-  /* Full viewport height */
   background-color: #141414;
-  /* Black background */
   text-align: center;
   padding: 20px;
-  /* In case screen is smaller, prevents squishing */
 }
 
 /* White card (rectangle) */
@@ -105,7 +102,7 @@
   color: #721c24;
 }
 
-/* Dropdown styling (re-use your existing styles) */
+/* Dropdown styling */
 .custom-dropdown {
   position: relative;
   margin-bottom: 15px;
@@ -133,7 +130,6 @@
   flex-direction: column;
   align-items: center;
   gap: 5px;
-  /* Space between buttons */
   padding: 10px 0;
   z-index: 10;
 }
@@ -159,12 +155,10 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  /* Adjust spacing as needed */
 }
 
 .checkbox-group input[type="checkbox"] {
   transform: scale(1.2);
-  /* Slightly larger checkbox */
   cursor: pointer;
 }
 

@@ -1,5 +1,5 @@
 import "./MovieCard.css";
-import { backendPort } from "../config";
+import { backendPort } from "../../config";
 import { useEffect, useState } from "react";
 
 function MovieCard({ id, title, categories, lengthMinutes, releaseYear, description, showDescription, infoButton }) {

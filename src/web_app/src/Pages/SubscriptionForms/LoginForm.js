@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './Form.css';
-import StandAloneField from './fieldItem';
-import { backendPort } from '../config';
+import StandAloneField from './FieldItem';
+import { backendPort } from '../../config';
 
 function LoginForm() {
     const [username, setUsername] = useState('');

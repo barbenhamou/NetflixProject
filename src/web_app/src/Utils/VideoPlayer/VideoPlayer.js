@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect } from "react";
 import { Link } from "react-router-dom"
 import "./VideoPlayer.css";
-import { backendPort } from "../config";
+import { backendPort } from "../../config";
 
 function VideoPlayer({ movieId, type }) {
     const videoRef = useRef(null);

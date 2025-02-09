@@ -15,8 +15,8 @@ You can choose to perform any of these admin actions:
 
 ![](../../PreviewImages/Web/AdminDrop.png)
 
-# Adding a Movie
-In order to add a movie, you first have to add at least one category:
+# Adding Categories and Movies
+In order to add a movie, you first need to add at least one category:
 
 ![](../../PreviewImages/Web/AddCategory.png)
 
@@ -53,9 +53,11 @@ If we click the 'Play Movie' button we will be redirected to the movie page:
 
 ![](../../PreviewImages/Web/MovieWatch.png)
 
-You can pause, play, seek 10 seconds forwards or backwards, mute or change the volume and go to fullscreen mode. You can also press the video itself to pause and play, or press the progress bar to go to a specific time in the movie.
+You can pause, play, seek 10 seconds forwards or backwards, mute or change the volume and go to fullscreen mode. You can also press the video itself to pause and play, or press the progress bar to go to a specific time in the video.
 
 You can ofcourse also go back to the home page.
 
 In fullscreen mode, the video controls will disappear when you don't hover over them.
 
+# Deleting or Editing Movies and Categories
+In the Admin panel you can also delete a movie:

@@ -1,9 +1,9 @@
 import "./MovieInfo.css";
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom"
-import Recommendations from "../Recommendations/Recommendations";
-import VideoPlayer from "../VideoPlayer/VideoPlayer";
-import { backendPort } from "../config";
+import Recommendations from "../../Utils/Recommendations/Recommendations";
+import VideoPlayer from "../../Utils/VideoPlayer/VideoPlayer";
+import { backendPort } from "../../config";
 
 function MovieInfo({ id }) {
   const [movie, setMovie] = useState(null);

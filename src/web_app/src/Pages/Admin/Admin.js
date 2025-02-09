@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { backendPort } from "../config";
+import { backendPort } from "../../config";
 import { Link } from "react-router-dom";
 import "./Admin.css";
 

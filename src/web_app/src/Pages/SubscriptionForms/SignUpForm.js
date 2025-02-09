@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { StandAloneField, SideBySideField } from './fieldItem';
+import { StandAloneField, SideBySideField } from './FieldItem';
 import './Form.css';
-import { backendPort } from '../config';
+import { backendPort } from '../../config';
 
 function SignUpForm() {
     const [username, setUsername] = useState('');

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import MovieCard from "../MovieCard/MovieCard";
-import VideoPlayer from "../VideoPlayer/VideoPlayer";
-import { backendPort } from "../config";
+import MovieCard from "../../Utils/MovieCard/MovieCard";
+import VideoPlayer from "../../Utils/VideoPlayer/VideoPlayer";
+import { backendPort } from "../../config";
 import { Link } from "react-router-dom";
 import "./Home.css";
 
@@ -119,7 +119,7 @@ const Home = () => {
                     <div className="home-nav-link">
                         <Link to='/'>Home</Link>
                     </div>
-                    {localStorage.getItem("isAdmin") === true ||
+                    {localStorage.getItem("isAdmin") === 'true' &&
                         <div className="home-nav-link">
                             <Link to='/admin'>Admin Panel</Link>
                         </div>}
