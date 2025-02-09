@@ -95,7 +95,7 @@ function SignUpForm() {
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
         minHeight: "100vh",
-        overflow: "hidden",
+        overflow: "scroll"
     };
 
     return (
