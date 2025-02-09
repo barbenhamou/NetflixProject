@@ -14,14 +14,16 @@ public class User {
     String phone;
     String picture;
     String location;
+    String imageFile;
 
-    public User(@NonNull String username, String email, String password, String phone, String picture, String location) {
+    public User(@NonNull String username, String email, String password, String phone, String picture, String location, String imageFile) {
         this.username = username;
-        this.email = email;
         this.password = password;
+        this.email = email;
         this.phone = phone;
         this.picture = picture;
         this.location = location;
+        this.imageFile = imageFile;
     }
 
     @NonNull
@@ -71,5 +73,13 @@ public class User {
 
     public void setLocation(String location) {
         this.location = location;
+    }
+
+    public String getImageFile() {
+        return imageFile;
+    }
+
+    public void setImageFile(String imageFile) {
+        this.imageFile = imageFile;
     }
 }

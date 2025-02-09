@@ -1,9 +1,12 @@
 package com.example.myapplication;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -92,22 +95,15 @@ public class HomePageActivity extends AppCompatActivity {
         binding.swipeRefresh.setOnRefreshListener(() -> movieViewModel.reload());
     }
 
-    private void loadProfilePicture(String uriString) {
-        if (profileImageView == null || uriString == null || uriString.isEmpty()) {
+    private void loadProfilePicture(String imageFile) {
+        if (profileImageView == null || imageFile == null || imageFile.isEmpty()) {
             Log.e("ProfileImage", "ProfileImageView is null or URI is empty");
             return;
         }
 
-        File imageFile = new File(uriString);
-        if (!imageFile.exists()) {
-            Log.e("ProfileImage", "File does not exist: " + uriString);
-            return;
-        } else {
-            Log.d("ProfileImage", "File exists: " + uriString);
-        }
-
-        Uri imageUri = Uri.fromFile(imageFile);
-        profileImageView.setImageURI(imageUri);
+        byte[] imageBytes = Base64.decode(imageFile, Base64.DEFAULT);
+        Bitmap decodedImage = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
+        profileImageView.setImageBitmap(decodedImage);
     }
 
 
@@ -149,7 +145,7 @@ public class HomePageActivity extends AppCompatActivity {
                 // Observe user data and load profile picture
                 MainActivity.userRepository.getStoredUser().observe(this, user -> {
                     if (user != null && user.getPicture() != null) {
-                        loadProfilePicture(user.getPicture());
+                        loadProfilePicture(user.getImageFile());
                     }
                 });
             } else {

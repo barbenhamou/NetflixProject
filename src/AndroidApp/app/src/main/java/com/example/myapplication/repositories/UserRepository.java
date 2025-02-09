@@ -102,10 +102,6 @@ public class UserRepository {
             @Override
             public void onResponse(Call<ProfilePictureResponse> call, Response<ProfilePictureResponse> response) {
                 if (response.isSuccessful()) {
-                    new Thread(() -> {
-                        userDao.updateProfilePicture(username, imageFile.getAbsolutePath());
-                        userData.postValue(userDao.getUser());
-                    }).start();
                     callback.onUploadSuccess(response.body());
                 } else {
                     callback.onUploadFailure("Image upload failed: " + response.message());
