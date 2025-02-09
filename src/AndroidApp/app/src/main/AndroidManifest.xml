@@ -29,9 +29,6 @@
             android:screenOrientation="landscape"
             android:theme="@style/Theme.MyApplication.Fullscreen" />
         <activity
-            android:name=".LogoutActivity"
-            android:exported="false" />
-        <activity
             android:name=".HomePageActivity"
             android:exported="false" />
         <activity
@@ -45,6 +42,8 @@
             android:exported="false" />
         <activity
             android:name=".LoginActivity"/>
+        <activity
+            android:name=".GuestActivity"/>
         <activity
             android:name=".MainActivity"
             android:exported="true">

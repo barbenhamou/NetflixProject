@@ -31,7 +31,6 @@ public class CategoryRepository {
                 .create(WebServiceAPI.class);
     }
 
-    /** Already updated by your teammate (no changes except passing auth header). */
     public void addCategory(Token token, Category category, CategoryCallback callback) {
         webServiceAPI.addCategory(category, "Bearer " + token.getToken()).enqueue(new Callback<Void>() {
             @Override
@@ -51,12 +50,6 @@ public class CategoryRepository {
         });
     }
 
-    /**
-     * Delete a category by name, requiring a Token for authorization.
-     * 1) GET /categories
-     * 2) Find matching category
-     * 3) DELETE /categories/{id} with "Bearer <token>"
-     */
     public void deleteCategory(Token token, String categoryName, CategoryCallback callback) {
         webServiceAPI.getCategories().enqueue(new Callback<List<Category>>() {
             @Override
@@ -71,7 +64,6 @@ public class CategoryRepository {
                         }
                     }
                     if (foundCategory != null) {
-                        // Make a final reference so we can use it inside the inner class
                         final Category finalFoundCategory = foundCategory;
                         String id = finalFoundCategory.getId();
                         webServiceAPI.deleteCategory("Bearer " + token.getToken(), id).enqueue(new Callback<Void>() {
@@ -102,12 +94,6 @@ public class CategoryRepository {
         });
     }
 
-    /**
-     * Update a category by name, requiring a Token for authorization.
-     * 1) GET /categories
-     * 2) Find matching category
-     * 3) PATCH /categories/{id} with "Bearer <token>"
-     */
     public void updateCategory(Token token, String categoryName, Category updatedCategory, CategoryCallback callback) {
         webServiceAPI.getCategories().enqueue(new Callback<List<Category>>() {
             @Override
