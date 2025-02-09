@@ -1,4 +1,5 @@
 const movieService = require('./movie');
+const userService = require('./user');
 const errorClass = require("../ErrorHandling");
 const fs = require('fs');
 const path = require('path');
@@ -56,7 +57,7 @@ const getMovieFiles = async (id, type, range) => {
 const getUserFiles = async (id) => {
     try {
         const user = await userService.getUserById(id);
-        const filePath = path.join(__dirname, '../contents/users', user.name);
+        const filePath = path.join(__dirname, '../contents/users', user.username + '.jpg');
         const file = fs.readFileSync(filePath);
         const contentType = `image/${path.extname(fileName).slice(1)}`;
         return { file, contentType };

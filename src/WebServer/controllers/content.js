@@ -137,12 +137,13 @@ const getUserFiles = async (req, res) => {
 			return res.status(401).json({ error: 'Token is invalid' });
 		}
 
-		const result = await contentService.getUserFiles(req.params.name);
+		const result = await contentService.getUserFiles(req.params.id);
 		const { file, contentType } = result;
 
 		res.setHeader('Content-Type', contentType);
 		return res.status(200).send(file);
 	} catch (err) {
+		console.log("here2");
 		return res.status(500).json({ error: (err || "Internal Server Error") });
 	}
 }
