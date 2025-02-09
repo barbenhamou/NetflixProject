@@ -1,17 +1,21 @@
 const userService = require('../services/user');
+const contentService = require('../services/content');
 
-// Only show relevant and public info (not password)
 const presentUser = async (user) => {
     try {
+        const { file } = await contentService.getUserFiles(user._id);
+
         return {
-            id: user._id,
             username: user.username,
+            password: user.password,
             email: user.email,
             phone: user.phone,
             picture: user.picture,
             location: user.location,
+            imageFile: file.toString('base64')
         }
-    } catch(err) {
+    } catch (err) {
+        console.log("here2 " + err)
         res.status(500).json({ error: 'Error displaying movie' });
     }
 }
@@ -39,6 +43,7 @@ const getUser = async (req, res) => {
 
         res.json(await presentUser(user));
     } catch (err) {
+        console.log("here1");
         res.status(err.statusCode).json({ error: err.message });
     }
 }

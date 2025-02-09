@@ -16,7 +16,7 @@ const authenticateUser = async (username, password) => {
 
         const token = jwt.sign({ userId: user._id, isAdmin: user.isAdmin }, secret);
 
-        return { userId: user._id, token: token }; // Return the user token + id if authentication succeeds
+        return { userId: user._id, token: token, isAdmin: user.isAdmin }; // Return the user token + id + role if authentication succeeds
     } catch (err) {
         throw {statusCode: 500, message: 'Failed to authenticate user'};
     }

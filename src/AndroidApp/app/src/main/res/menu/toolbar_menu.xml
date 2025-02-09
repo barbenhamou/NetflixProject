@@ -16,6 +16,14 @@
         android:actionLayout="@layout/logout_text"/>
 
     <item
+        android:id="@+id/action_admin"
+        android:icon="@android:drawable/ic_menu_manage"
+        android:title="Admin"
+        android:visibility="gone"
+        android:visible="false"
+        app:showAsAction="always" />
+
+    <item
         android:id="@+id/action_profile"
         android:title="Picture"
         app:showAsAction="always"

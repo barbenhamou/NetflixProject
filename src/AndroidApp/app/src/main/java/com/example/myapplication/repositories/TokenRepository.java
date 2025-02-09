@@ -55,7 +55,7 @@ public class TokenRepository {
                 if (response.isSuccessful() && response.body() != null) {
                     LoginResponse tokenResponse = response.body();
 
-                    Token token = new Token(tokenResponse.getTokenId().getToken());
+                    Token token = new Token(tokenResponse.getTokenId().getToken(), tokenResponse.getTokenId().getAdmin(), tokenResponse.getTokenId().getUserId());
                     saveTokenToDb(token);
 
                     callback.onSuccess(token);
@@ -74,7 +74,10 @@ public class TokenRepository {
     }
 
     public void logout() {
-        new Thread((() -> tokenDao.clear())).start();
+        new Thread(() -> {
+            tokenDao.clear();
+            tokenData.postValue(null);
+        }).start();
     }
 
     private void saveTokenToDb(Token token) {

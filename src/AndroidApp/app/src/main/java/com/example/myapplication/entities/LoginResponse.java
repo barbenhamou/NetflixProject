@@ -17,6 +17,10 @@ public class LoginResponse {
         @SerializedName("token")
         private String token;
 
+        @SerializedName("isAdmin")
+        private Boolean isAdmin;
+
+        public Boolean getAdmin() { return isAdmin; }
         public String getUserId() { return userId; }
         public String getToken() { return token; }
     }

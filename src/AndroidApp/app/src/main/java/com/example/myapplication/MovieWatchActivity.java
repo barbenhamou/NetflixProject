@@ -5,6 +5,7 @@ import android.view.View;
 
 import androidx.annotation.OptIn;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.media3.common.MediaItem;
 import androidx.media3.common.util.UnstableApi;
 import androidx.media3.exoplayer.ExoPlayer;
@@ -12,6 +13,7 @@ import androidx.media3.exoplayer.source.DefaultMediaSourceFactory;
 import androidx.media3.ui.PlayerView;
 
 import com.example.myapplication.databinding.ActivityMovieWatchBinding;
+import com.example.myapplication.viewmodels.MovieViewModel;
 
 public class MovieWatchActivity extends AppCompatActivity {
     private ActivityMovieWatchBinding binding;
@@ -34,12 +36,17 @@ public class MovieWatchActivity extends AppCompatActivity {
         // Set up movie
         playerView = binding.vvMovie;
 
+        MovieViewModel viewModel = new ViewModelProvider(this).get(MovieViewModel.class);
+        viewModel.setRepository(this.getApplication());
+
         String movieId = getIntent().getStringExtra("movieId");
         MainActivity.tokenRepository.getStoredToken().observe(this, tokenObj -> {
             String token = tokenObj.getToken();
             String link = getString(R.string.BaseUrl) + "contents/movies/" + movieId + "?type=film&token=" + token;
 
             initializePlayer(link);
+
+            viewModel.watchMovie(movieId, token);
         });
     }
 

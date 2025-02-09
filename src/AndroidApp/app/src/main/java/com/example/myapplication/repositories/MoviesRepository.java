@@ -2,11 +2,16 @@ package com.example.myapplication.repositories;
 
 import android.app.Application;
 
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Transformations;
+
 import com.example.myapplication.MyApplication;
 import com.example.myapplication.api.WebServiceAPI;
 import com.example.myapplication.api.MovieAPI;
 import com.example.myapplication.dao.AppDB;
 import com.example.myapplication.dao.MovieDao;
+import com.example.myapplication.entities.Category;
 import com.example.myapplication.entities.Movie;
 import com.example.myapplication.entities.Token;
 
@@ -14,6 +19,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Map;
 import java.util.concurrent.Executors;
 
@@ -30,10 +36,9 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MoviesRepository {
-
-
     private MovieListData movieListData;
     private MutableLiveData<List<Movie>> recommendations;
+    private MutableLiveData<List<Category>> categoryListData;
     private MovieDao movieDao;
     private MovieAPI movieAPI;
 
@@ -45,7 +50,8 @@ public class MoviesRepository {
         movieDao = db.movieDao();
         movieListData = new MovieListData();
         recommendations = new MutableLiveData<>();
-        movieAPI = new MovieAPI(movieListData, recommendations, movieDao);
+        categoryListData = new MutableLiveData<>();
+        movieAPI = new MovieAPI(movieListData, recommendations, movieDao, categoryListData);
         webServiceAPI = new Retrofit.Builder()
                 .baseUrl(MyApplication.context.getString(com.example.myapplication.R.string.BaseUrl))
                 .callbackExecutor(Executors.newSingleThreadExecutor())
@@ -56,7 +62,6 @@ public class MoviesRepository {
 
     public LiveData<List<Movie>> getRecommendations(String movieId, String token) {
         new Thread(() -> movieAPI.recommend(movieId, token)).start();
-
         return recommendations;
     }
 
@@ -79,12 +84,14 @@ public class MoviesRepository {
 
     public LiveData<Movie> getMovie(String id) {
         MutableLiveData<Movie> movieData = new MutableLiveData<>();
+
         new Thread(() -> {
             Movie movie = movieDao.getMovie(id);
             if (movie != null) {
                 movieData.postValue(movie);
             }
         }).start();
+
         return movieData;
     }
 
@@ -92,22 +99,58 @@ public class MoviesRepository {
         movieAPI.get();
     }
 
+    public void reloadCategories() {
+        movieAPI.getCategories();
+    }
+
+    public LiveData<List<Category>> getCategories() {
+        return categoryListData;
+    }
+
+    public LiveData<List<Movie>> getMoviesByOldestCategory() {
+        return Transformations.map(movieListData, movies -> {
+            List<Category> categories = categoryListData.getValue();
+            if (categories == null) return new ArrayList<>();
+
+            Map<String, Integer> categoryOrderMap = new HashMap<>();
+            for (int i = 0; i < categories.size(); i++) {
+                if (categories.get(i).getPromoted()) {
+                    categoryOrderMap.put(categories.get(i).getName(), i);
+                }
+            }
+
+            List<Movie> filteredMovies = new ArrayList<>();
+            for (Movie movie : movies) {
+                String oldestCategory = null;
+                int oldestIndex = Integer.MAX_VALUE;
+
+                for (String category : movie.getCategories()) {
+                    Integer index = categoryOrderMap.get(category);
+                    if (index != null && index < oldestIndex) {
+                        oldestCategory = category;
+                        oldestIndex = index;
+                    }
+                }
+
+                if (oldestCategory != null) {
+                    filteredMovies.add(movie);
+                }
+            }
+            return filteredMovies;
+        });
+    }
+
     public void watchMovie(String movieId, String token) {
         new Thread(() -> movieAPI.watchMovie(movieId, token)).start();
     }
 
-    // ==================== NEW MOVIE CRUD METHODS ====================
 
-    // Callback interface for movie operations.
     public interface MovieCallback {
         void onSuccess(Movie movie);
 
         void onFailure(String errorMessage);
     }
 
-    /**
-     * Adds a new movie and uploads its files.
-     */
     public void addMovieWithFiles(Token token, Movie movie, File filmFile, File trailerFile, File imageFile, MovieCallback callback) {
         webServiceAPI.addMovie(movie, "Bearer " + token.getToken()).enqueue(new Callback<Void>() {
             @Override
@@ -119,13 +162,9 @@ public class MoviesRepository {
                         callback.onFailure("Missing Location header in response.");
                         return;
                     }
-                    // Parse the movie ID (assuming the ID is at the end of the URL)
                     String movieId = location.substring(location.lastIndexOf("/") + 1);
-                    // Set the movie ID in your movie object (if applicable)
                     movie.setId(movieId);
 
-                    // Build the file upload parts.
-                    // Create file parts.
                     RequestBody imageRequestBody = RequestBody.create(MediaType.parse("image/*"), imageFile);
                     MultipartBody.Part imagePart = MultipartBody.Part.createFormData("image", imageFile.getName(), imageRequestBody);
 
@@ -135,7 +174,6 @@ public class MoviesRepository {
                     RequestBody filmRequestBody = RequestBody.create(MediaType.parse("video/*"), filmFile);
                     MultipartBody.Part filmPart = MultipartBody.Part.createFormData("film", filmFile.getName(), filmRequestBody);
 
-                    // Create extra parts for each file as expected by the backend.
                     RequestBody imageType = RequestBody.create(MediaType.parse("text/plain"), "image");
                     RequestBody imageName = RequestBody.create(MediaType.parse("text/plain"), imageFile.getName());
 
@@ -180,9 +218,6 @@ public class MoviesRepository {
         });
     }
 
-    /**
-     * Updates an existing movie (found by old title) and uploads its files.
-     */
     public void updateMovieWithFiles(Token token, String oldTitle, Movie updatedMovie, File filmFile, File trailerFile, File imageFile, MovieCallback callback) {
         webServiceAPI.getAllMovies().enqueue(new Callback<List<Movie>>() {
             @Override
@@ -269,9 +304,6 @@ public class MoviesRepository {
         });
     }
 
-    /**
-     * Deletes a movie by its title.
-     */
     public void deleteMovieById(final Token token, final String movieId, final MovieCallback callback) {
         if (movieId == null || movieId.isEmpty()) {
             callback.onFailure("Movie ID must not be empty.");
@@ -291,14 +323,13 @@ public class MoviesRepository {
                             callback.onFailure("Delete movie failed: " + response.message());
                         }
                     }
+
                     @Override
                     public void onFailure(Call<Void> call, Throwable t) {
                         callback.onFailure("Delete movie error: " + t.getMessage());
                     }
                 });
     }
-
-
 }
 
 
