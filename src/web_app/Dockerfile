@@ -15,4 +15,4 @@ COPY . .
 EXPOSE 3000
 
 # Start the app. 
-RUN npm start
+CMD ["npm", "start"]
