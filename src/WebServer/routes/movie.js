@@ -1,6 +1,5 @@
 const express = require('express');
 const router = express.Router();
-const { createMulterForMovie } = require("../controllers/content");
 const movieController = require('../controllers/movie');
 const tokenVerifier = require('../TokenVerifier');
 

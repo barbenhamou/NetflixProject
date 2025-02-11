@@ -1,5 +1,4 @@
 const contentService = require('../services/content')
-const tokenVerifier = require('../TokenVerifier');
 const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
@@ -50,6 +49,11 @@ function createMulterForUser() {
 				}
 
 				const baseFolder = path.join(__dirname, "../contents/users");
+
+				if (!fs.existsSync(baseFolder)) {
+					fs.mkdirSync(baseFolder, { recursive: true });
+				}
+
 				cb(null, baseFolder);
 			},
 			filename: (req, file, cb) => {

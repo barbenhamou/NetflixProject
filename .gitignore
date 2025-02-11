@@ -1,5 +1,4 @@
 .vscode/
-print.sh
-project_code_dump.txt
 src/WebServer/node_modules/
 src/WebServer/config/
+src/web_app/src/config.js

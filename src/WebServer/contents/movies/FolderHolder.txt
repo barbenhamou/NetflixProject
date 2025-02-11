@@ -1,1 +1,1 @@
-this is folder holder
+This file is here because we can't commit an empty folder. Have a good day! :)
