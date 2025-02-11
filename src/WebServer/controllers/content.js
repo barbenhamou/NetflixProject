@@ -81,7 +81,6 @@ function handleFileUpload(req, res) {
 				username: req.params.name,
 			});
 		}
-
 	} catch (err) {
 		return res.status(500).json({ error: (err || "Internal Server Error") });
 	}

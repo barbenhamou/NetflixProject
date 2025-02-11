@@ -83,37 +83,28 @@ const GuestPage = () => {
               </button>
               {dropdownOpen && (
                 <div className="dropdown-content">
-                  <a
-                    href="#"
-                    className="language-option"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      handleLanguageSelect("English");
-                    }}
-                  >
-                    English
-                  </a>
-                  <a
-                    href="#"
-                    className="language-option"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      handleLanguageSelect("Spanish");
-                    }}
-                  >
-                    Spanish
-                  </a>
-                  <a
-                    href="#"
-                    className="language-option"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      handleLanguageSelect("French");
-                    }}
-                  >
-                    French
-                  </a>
-                </div>
+                <button
+                  type="button"
+                  className="language-option"
+                  onClick={() => handleLanguageSelect("English")}
+                >
+                  English
+                </button>
+                <button
+                  type="button"
+                  className="language-option"
+                  onClick={() => handleLanguageSelect("Spanish")}
+                >
+                  Spanish
+                </button>
+                <button
+                  type="button"
+                  className="language-option"
+                  onClick={() => handleLanguageSelect("French")}
+                >
+                  French
+                </button>
+              </div>
               )}
             </div>
             <button className="theme-toggle-btn" onClick={toggleTheme}>

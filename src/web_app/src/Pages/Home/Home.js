@@ -27,7 +27,7 @@ const Home = () => {
         };
 
         fetchProfilePic();
-    }, [backendPort]);
+    }, []);
 
     const fetchMovies = async () => {
         try {
@@ -157,7 +157,7 @@ const Home = () => {
                         Search
                     </button>
                 </form>
-                <img className="profile-pic" src={profilePicture} />
+                <img alt="Profile" className="profile-pic" src={profilePicture} />
             </header>
 
             {/* Search Result Modal */}
@@ -177,8 +177,8 @@ const Home = () => {
             {/* Featured Movie Section */}
             {featuredMovie && (
                 <div className="home-featured-container">
-                    <h1 className="home-featured-header"></h1>
                     <VideoPlayer movieId={featuredMovie.id} type="trailer" />
+                    <h1 className="home-featured-header">{featuredMovie.title}</h1>
                 </div>
             )}
 

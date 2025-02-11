@@ -2,3 +2,4 @@
 src/WebServer/node_modules/
 src/WebServer/config/
 src/web_app/src/config.js
+.env

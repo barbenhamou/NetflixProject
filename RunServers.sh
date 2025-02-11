@@ -15,7 +15,7 @@ find_available_port() {
 read -p "Enter your IP address: " ip
 
 # Automatically choose ports
-port1=$(find_available_port 3000)
+port1=$(find_available_port 3001)
 port2=$(find_available_port $((port1 + 1)))
 port3=$(find_available_port $((port2 + 1)))
 
