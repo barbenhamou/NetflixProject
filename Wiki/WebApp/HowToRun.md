@@ -44,9 +44,10 @@ docker-compose up --build
 ```
 It may take a few minutes.
 
-And now the site will be available in:
-```bash
-http://localhost:3000
-```
+Once done, the terminal should look like this:
 
-![](PreviewImages/DockerCompose.png)
+![](../../PreviewImages/DockerCompose.png)
+
+And now the site will be available at `http://localhost:3000`. Enjoy!
+
+For further explanation about how to use the website, see [Signup&Login](Signup&Login.md).

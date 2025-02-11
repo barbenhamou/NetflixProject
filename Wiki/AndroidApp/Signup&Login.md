@@ -21,6 +21,6 @@ This is the log-in page:
 ![](../../PreviewImages/Android/Login.png)
 
 Enter your correct username and password to be directed to the home page.
-Since you haven't added any movies, the home page will be empty. To learn about that, see [Movies.md](Movies.md).
+Since you haven't added any movies, the home page will be empty. To learn about that, see [Movies&Admin](Movies&Admin.md).
 
 Once in the home page, you can also choose to log out with the button in the navigation bar.

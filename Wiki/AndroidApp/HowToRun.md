@@ -26,4 +26,4 @@ You are now ready to add movies - Press on the Run App button:
 
 The app is now running. Enjoy!
 
-Go to [Movies&Admin](Movies&Admin) for further explanations about our app.
+For further explanation about how to use the app, see [Signup&Login](Signup&Login.md).
