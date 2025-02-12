@@ -277,7 +277,7 @@ const AdminPanel = () => {
             setMessage("Action completed successfully!");
             setTimeout(() => {
                 window.location.reload();
-            }, 800); // Add a short delay for better user experience
+            }, 1000); // Add a short delay
         } catch (error) {
             setMessage(error.message);
         }
@@ -624,7 +624,7 @@ const AdminPanel = () => {
                 </form>
 
                 {/* Message Display */}
-                {message && <p className="alert">{message}</p>}
+                {message && <p className="alert-message">{message}</p>}
             </div>
         </div>
     );

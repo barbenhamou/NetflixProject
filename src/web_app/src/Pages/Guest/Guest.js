@@ -68,7 +68,7 @@ const GuestPage = () => {
       {/* Header Section */}
       <div className="header" style={headerStyle}>
         <nav>
-          <span className="logo-text">Nexflit</span>
+          <span className="logo-text">NEXFLIT</span>
           <div className="nav-right">
             <div className="dropdown">
               <button
