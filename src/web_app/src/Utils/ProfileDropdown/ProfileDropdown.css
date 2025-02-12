@@ -1,0 +1,25 @@
+.home-profile-info {
+    position: relative;
+    cursor: pointer;
+}
+
+.profile-pic {
+    width: 55px;
+    height: auto;
+    margin: 15px 5px 15px 15px;
+}
+
+.profile-dropdown-menu {
+    position: absolute;
+    background-color: #141414cc;
+    color: white;
+    border-radius: 5px;
+    padding: 10px;
+    z-index: 10;
+    border: white 1px solid;
+}
+
+.profile-dropdown-menu p {
+    padding: 5px;
+    cursor: pointer;
+}

@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import MovieCard from "../../Utils/MovieCard/MovieCard";
 import VideoPlayer from "../../Utils/VideoPlayer/VideoPlayer";
+import ProfileDropdown from "../../Utils/ProfileDropdown/ProfileDropdown";
 import { backendUrl } from "../../config";
-import { Link } from "react-router-dom";
 import "./Home.css";
 
 const Home = () => {
@@ -13,21 +14,6 @@ const Home = () => {
     const [featuredMovie, setFeaturedMovie] = useState(null);
     const [searchTerm, setSearchTerm] = useState("");
     const [searchedMovie, setSearchedMovie] = useState(null);
-    const [profilePicture, setProfilePicture] = useState("");
-
-    useEffect(() => {
-        const fetchProfilePic = async () => {
-            const response = await fetch(`${backendUrl}contents/users/${localStorage.getItem('username')}`, {
-                headers: { "Authorization": `Bearer ${localStorage.getItem("authToken")}` }
-            });
-
-            const blob = await response.blob();
-            const imageUrl = URL.createObjectURL(blob);
-            setProfilePicture(imageUrl);
-        };
-
-        fetchProfilePic();
-    }, []);
 
     const fetchMovies = async () => {
         try {
@@ -134,7 +120,6 @@ const Home = () => {
                     NEXFLIT
                 </span>
                 <nav className="home-nav">
-                    <Link className="home-nav-link" to='/'>Home</Link>
                     {localStorage.getItem("isAdmin") === 'true' &&
                         <Link className="home-nav-link" to='/admin'>Admin Panel</Link>
                     }
@@ -154,13 +139,10 @@ const Home = () => {
                         className="home-search-input"
                     />
                     <button className="home-search-button">
-                        <i type="submit" class="bi bi-search home-search-icon"></i>
+                        <i type="submit" className="bi bi-search home-search-icon"></i>
                     </button>
                 </form>
-                <div className="home-profile-info">
-                    <img alt="Profile" className="profile-pic" src={profilePicture} />
-                    ▼
-                </div>
+                <ProfileDropdown />
             </header>
 
             {/* Search Result Modal */}

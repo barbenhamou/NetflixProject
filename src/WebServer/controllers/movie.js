@@ -38,7 +38,6 @@ const getMovies = async (req, res) => {
                 )
             )
         );
-
     } catch (err) {
         res.status(err.statusCode).json({ error: err.message });
     }
@@ -47,7 +46,6 @@ const getMovies = async (req, res) => {
 const createMovie = async (req, res) => {
     try {
         const movie = await movieService.createMovie(req.body);
-
         res.status(201).set('Location', `/api/movies/${movie._id}`).end();
     } catch (err) {
         res.status(err.statusCode).json({ error: err.message });
@@ -57,7 +55,6 @@ const createMovie = async (req, res) => {
 const getMovie = async (req, res) => {
     try {
         const movie = await movieService.getMovieById(req.params.id);
-
         res.json(await presentMovie(movie));
     } catch (err) {
         res.status(err.statusCode).json({ error: err.message });
