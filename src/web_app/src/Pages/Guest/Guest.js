@@ -75,36 +75,29 @@ const GuestPage = () => {
                 className="language-btn"
                 onClick={() => setDropdownOpen(!dropdownOpen)}
               >
-                {language}{" "}
-                <img
-                  src={`${process.env.PUBLIC_URL}/images/down-icon.png`}
-                  alt="Dropdown"
-                />
+                {language}{" ▼"}
               </button>
               {dropdownOpen && (
                 <div className="dropdown-content">
-                <button
-                  type="button"
-                  className="language-option"
-                  onClick={() => handleLanguageSelect("English")}
-                >
-                  English
-                </button>
-                <button
-                  type="button"
-                  className="language-option"
-                  onClick={() => handleLanguageSelect("Spanish")}
-                >
-                  Spanish
-                </button>
-                <button
-                  type="button"
-                  className="language-option"
-                  onClick={() => handleLanguageSelect("French")}
-                >
-                  French
-                </button>
-              </div>
+                  <p
+                    className="language-option"
+                    onClick={() => handleLanguageSelect("English")}
+                  >
+                    English
+                  </p>
+                  <p
+                    className="language-option"
+                    onClick={() => handleLanguageSelect("Spanish")}
+                  >
+                    Spanish
+                  </p>
+                  <p
+                    className="language-option"
+                    onClick={() => handleLanguageSelect("French")}
+                  >
+                    French
+                  </p>
+                </div>
               )}
             </div>
             <button className="theme-toggle-btn" onClick={toggleTheme}>

@@ -157,7 +157,10 @@ const Home = () => {
                         <i type="submit" class="bi bi-search home-search-icon"></i>
                     </button>
                 </form>
-                <img alt="Profile" className="profile-pic" src={profilePicture} />
+                <div className="home-profile-info">
+                    <img alt="Profile" className="profile-pic" src={profilePicture} />
+                    ▼
+                </div>
             </header>
 
             {/* Search Result Modal */}

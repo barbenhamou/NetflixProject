@@ -38,34 +38,32 @@ body {
   z-index: 1;
 }
 
-.dropdown-content a {
+.dropdown-content p {
   color: black;
-  padding: 8px 12px;
-  text-decoration: none;
-  display: block;
+  padding: 7px 0px;
+  width: 80px;
+  margin: 0;
+  box-sizing: border-box;
 }
 
-.dropdown-content a:hover {
-  background-color: #f1f1f1;
+.dropdown-content p:hover {
+  background-color: #d7d5d5;
+  cursor: pointer;
 }
 
 .dropdown:hover .dropdown-content {
+  cursor: pointer;
   display: block;
 }
 
 .language-btn {
   background-color: white;
-  border: 1px solid #ccc;
-  padding: 8px 12px;
   cursor: pointer;
-  display: flex;
   align-items: center;
-}
-
-.language-btn img {
-  margin-left: 5px;
-  width: 10px;
-  height: 10px;
+  background: red;
+  padding: 7px 0px;
+  width: 80px;
+  border: none;
 }
 
 .header {
@@ -91,25 +89,12 @@ nav {
 nav button {
   border: 0;
   outline: 0;
-  background: #db0001;
+  background: red;
   color: #fff;
   padding: 7px 20px;
   font-size: 12px;
   border-radius: 4px;
   cursor: pointer;
-}
-
-.language-btn {
-  display: inline-flex;
-  align-items: center;
-  background: transparent;
-  border: 1px solid #fff;
-  padding: 7px 10px;
-}
-
-.language-btn img {
-  width: 10px;
-  margin-left: 10px;
 }
 
 .header-content {
@@ -139,7 +124,7 @@ nav button {
 }
 
 .get-started {
-  background: #db0001;
+  background: red;
   border: 0;
   outline: 0;
   color: #fff;
@@ -186,51 +171,6 @@ input[type="radio"] {
   display: none;
 }
 
-/* --------- Media Queries for Small Screens -------- */
-
-@media only screen and (max-width: 600px) {
-  .logo {
-    width: 100px;
-  }
-
-  nav button {
-    padding: 5px 10px;
-  }
-
-  nav .language-btn {
-    padding: 4px 8px;
-  }
-
-  .header-content {
-    position: unset;
-    transform: none;
-    padding-top: 150px;
-  }
-
-  .header-content h1 {
-    font-size: 30px;
-  }
-
-  .get-started button {
-    font-size: 12px;
-    padding: 10px 15px;
-  }
-
-  .text-col,
-  .img-col {
-    flex-basis: 100%;
-  }
-
-  .row:nth-child(2),
-  .row:nth-child(4) {
-    flex-direction: column-reverse;
-  }
-
-  label::after {
-    font-size: 22px;
-  }
-}
-
 /* ---------- Light Mode Overrides ---------- */
 
 body.light-mode {
@@ -260,6 +200,6 @@ body.light-mode nav button {
 .logo-text {
   font-size: 5rem;
   font-weight: 700;
-  color: #e50914;
+  color: red;
   margin-right: 10px;
 }
