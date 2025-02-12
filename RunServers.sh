@@ -31,7 +31,7 @@ SECRET="GiveUs100"
 EOF
 
 cat <<EOF > src/web_app/src/config.js
-export const backendPort = ${port1}
+export const backendUrl = \`http://localhost:${port1}/api/\`;
 EOF
 
 cat <<EOF > .env

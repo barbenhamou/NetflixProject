@@ -1,7 +1,7 @@
 import "./Recommendations.css";
 import { useState, useEffect } from "react";
 import MovieCard from "../MovieCard/MovieCard";
-import { backendPort } from "../../config";
+import { backendUrl } from "../../config";
 import { Link } from "react-router-dom"
 
 function Recommendations({ id }) {
@@ -10,7 +10,7 @@ function Recommendations({ id }) {
 
     useEffect(() => {
         async function fetchMovie() {
-            const response = await fetch(`http://localhost:${backendPort}/api/movies/${id}/recommend`, {
+            const response = await fetch(`${backendUrl}movies/${id}/recommend`, {
                 headers: {
                     "Authorization": `Bearer ${localStorage.getItem("authToken")}`,
                 }

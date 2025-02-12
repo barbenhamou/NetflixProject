@@ -3,14 +3,14 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom"
 import Recommendations from "../../Utils/Recommendations/Recommendations";
 import VideoPlayer from "../../Utils/VideoPlayer/VideoPlayer";
-import { backendPort } from "../../config";
+import { backendUrl } from "../../config";
 
 function MovieInfo({ id }) {
   const [movie, setMovie] = useState(null);
 
   useEffect(() => {
     async function fetchMovie() {
-      const response = await fetch(`http://localhost:${backendPort}/api/movies/${id}`);
+      const response = await fetch(`${backendUrl}movies/${id}`);
       const data = await response.json();
 
       setMovie(data);

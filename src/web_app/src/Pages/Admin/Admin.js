@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { backendPort } from "../../config";
+import { backendUrl } from "../../config";
 import { Link } from "react-router-dom";
 import "./Admin.css";
 
@@ -16,7 +16,7 @@ const AdminPanel = () => {
     useEffect(() => {
         const fetchCategories = async () => {
             try {
-                const res = await fetch(`http://localhost:${backendPort}/api/categories`, { headers });
+                const res = await fetch(`${backendUrl}categories`, { headers });
                 if (!res.ok) throw new Error("Failed to fetch categories");
                 setCategories(await res.json());
             } catch (error) {
@@ -26,7 +26,7 @@ const AdminPanel = () => {
 
         const fetchMovies = async () => {
             try {
-                const res = await fetch(`http://localhost:${backendPort}/api/movies`, { headers });
+                const res = await fetch(`${backendUrl}movies`, { headers });
                 if (!res.ok) throw new Error("Failed to fetch movies");
                 const data = await res.json();
                 setMovies(data);
@@ -52,7 +52,7 @@ const AdminPanel = () => {
         formData.append("filmType", "film");
         formData.append("filmName", filmFile.name);
 
-        await fetch(`http://localhost:${backendPort}/api/contents/movies/${movieId}`, {
+        await fetch(`${backendUrl}contents/movies/${movieId}`, {
             method: "POST",
             headers: { "Authorization": `Bearer ${localStorage.getItem("authToken")}` },
             body: formData
@@ -79,7 +79,7 @@ const AdminPanel = () => {
                         return;
                     }
 
-                    response = await fetch(`http://localhost:${backendPort}/api/categories`, {
+                    response = await fetch(`${backendUrl}categories`, {
                         method: "POST",
                         headers,
                         body: JSON.stringify({
@@ -95,7 +95,7 @@ const AdminPanel = () => {
                         setMessage("Category does not exist.");
                         return;
                     }
-                    response = await fetch(`http://localhost:${backendPort}/api/categories/${categoryToDelete.id}`, {
+                    response = await fetch(`${backendUrl}categories/${categoryToDelete.id}`, {
                         method: "DELETE",
                         headers,
                     });
@@ -111,7 +111,7 @@ const AdminPanel = () => {
                         setMessage("New category name already exists.");
                         return;
                     }
-                    response = await fetch(`http://localhost:${backendPort}/api/categories/${oldCategory.id}`, {
+                    response = await fetch(`${backendUrl}categories/${oldCategory.id}`, {
                         method: "PATCH",
                         headers,
                         body: JSON.stringify({ name: formData.newName }),
@@ -125,7 +125,7 @@ const AdminPanel = () => {
                         return;
                     }
 
-                    response = await fetch(`http://localhost:${backendPort}/api/movies/${movieId}`, {
+                    response = await fetch(`${backendUrl}movies/${movieId}`, {
                         method: "DELETE",
                         headers
                     });
@@ -179,7 +179,7 @@ const AdminPanel = () => {
                             ...(formData.cast?.length > 0 && { cast: formData.cast }),
                             ...(formData.description && { description: formData.description }),
                         };
-                        const response = await fetch(`http://localhost:${backendPort}/api/movies`, {
+                        const response = await fetch(`${backendUrl}movies`, {
                             method: "POST",
                             headers,
                             body: JSON.stringify(payload),
@@ -250,7 +250,7 @@ const AdminPanel = () => {
                         };
 
                         // Corrected fetch call with the proper URL format
-                        const response = await fetch(`http://localhost:${backendPort}/api/movies/${formData.oldid}`, {
+                        const response = await fetch(`${backendUrl}movies/${formData.oldid}`, {
                             method: "PUT",
                             headers,
                             body: JSON.stringify(payload),

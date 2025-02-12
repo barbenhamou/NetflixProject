@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import MovieCard from "../../Utils/MovieCard/MovieCard";
 import VideoPlayer from "../../Utils/VideoPlayer/VideoPlayer";
-import { backendPort } from "../../config";
+import { backendUrl } from "../../config";
 import { Link } from "react-router-dom";
 import "./Home.css";
 
@@ -17,7 +17,7 @@ const Home = () => {
 
     useEffect(() => {
         const fetchProfilePic = async () => {
-            const response = await fetch(`http://localhost:${backendPort}/api/contents/users/${localStorage.getItem('username')}`, {
+            const response = await fetch(`${backendUrl}contents/users/${localStorage.getItem('username')}`, {
                 headers: { "Authorization": `Bearer ${localStorage.getItem("authToken")}` }
             });
 
@@ -36,7 +36,7 @@ const Home = () => {
                 "Content-Type": "application/json",
             };
 
-            const response = await fetch(`http://localhost:${backendPort}/api/movies`, {
+            const response = await fetch(`${backendUrl}movies`, {
                 headers: headers,
             });
 
