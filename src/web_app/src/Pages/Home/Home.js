@@ -18,7 +18,7 @@ const Home = () => {
     useEffect(() => {
         const fetchProfilePic = async () => {
             const response = await fetch(`http://localhost:${backendPort}/api/contents/users/${localStorage.getItem('username')}`, {
-                headers: {"Authorization": `Bearer ${localStorage.getItem("authToken")}`}
+                headers: { "Authorization": `Bearer ${localStorage.getItem("authToken")}` }
             });
 
             const blob = await response.blob();
@@ -27,7 +27,7 @@ const Home = () => {
         };
 
         fetchProfilePic();
-    }, [backendPort]);
+    }, []);
 
     const fetchMovies = async () => {
         try {
@@ -129,15 +129,15 @@ const Home = () => {
         <div className="home-container">
             {/* Header Section */}
             <header className={`home-header ${headerHidden ? "hidden" : ""}`}>
-                <span className="logo-text">Nexflit</span>
+                <span className="logo-text-home">
+                    <img className="logo-home" alt="logo" src={`${process.env.PUBLIC_URL}/images/site-logo.png`}></img>
+                    NEXFLIT
+                </span>
                 <nav className="home-nav">
-                    <div className="home-nav-link">
-                        <Link to='/'>Home</Link>
-                    </div>
+                    <Link className="home-nav-link" to='/'>Home</Link>
                     {localStorage.getItem("isAdmin") === 'true' &&
-                        <div className="home-nav-link">
-                            <Link to='/admin'>Admin Panel</Link>
-                        </div>}
+                        <Link className="home-nav-link" to='/admin'>Admin Panel</Link>
+                    }
                     <div className="home-nav-link" onClick={() => {
                         localStorage.setItem("authToken", "");
                         localStorage.setItem("isAdmin", false);
@@ -153,11 +153,14 @@ const Home = () => {
                         onChange={(e) => setSearchTerm(e.target.value)}
                         className="home-search-input"
                     />
-                    <button type="submit" className="home-search-button">
-                        Search
+                    <button className="home-search-button">
+                        <i type="submit" class="bi bi-search home-search-icon"></i>
                     </button>
                 </form>
-                <img className="profile-pic" src={profilePicture} />
+                <div className="home-profile-info">
+                    <img alt="Profile" className="profile-pic" src={profilePicture} />
+                    ▼
+                </div>
             </header>
 
             {/* Search Result Modal */}
@@ -177,8 +180,18 @@ const Home = () => {
             {/* Featured Movie Section */}
             {featuredMovie && (
                 <div className="home-featured-container">
-                    <h1 className="home-featured-header"></h1>
                     <VideoPlayer movieId={featuredMovie.id} type="trailer" />
+                    <div className="home-featured-header">
+                        <h1>{featuredMovie.title}</h1>
+                        <Link to={`/movies/${featuredMovie.id}/watch`}>
+                            <button
+                                className="btn btn-light play-btn-home"
+                                type="button"
+                                aria-label="Play" >
+                                ▶ Play
+                            </button>
+                        </Link>
+                    </div>
                 </div>
             )}
 

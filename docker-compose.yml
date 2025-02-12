@@ -5,7 +5,7 @@ services:
     build: .
     container_name: nodejs-server
     ports:
-      - "3001:3001"
+      - "${WEB_PORT}:${WEB_PORT}"
     env_file:
       - ./src/WebServer/config/.env.main
     depends_on:
@@ -30,16 +30,18 @@ services:
       dockerfile: Dockerfile.server
     container_name: recommend-server
     ports:
-      - "3002:3002"
-    command: ["3002"]
-
-  react-client:
-    build:
-      context: ./src/web_app
-      dockerfile: Dockerfile
-    container_name: react-client
-    ports:
-      - "3000:3000"
+      - "${CPP_PORT}:${CPP_PORT}"
+    command: ["${CPP_PORT}"]
+#TODO
+  # react-client:
+  #   build:
+  #     context: ./src/web_app
+  #     dockerfile: Dockerfile
+  #   container_name: react-client
+  #   ports:
+  #     - "${REACT_PORT}:${REACT_PORT}"
+  #   environment:
+  #     - PORT=${REACT_PORT}
 
 networks:
   app-network:

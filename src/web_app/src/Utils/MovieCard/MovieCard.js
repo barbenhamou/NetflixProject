@@ -17,7 +17,7 @@ function MovieCard({ id, title, categories, lengthMinutes, releaseYear, descript
         };
 
         fetchImage();
-    }, [backendPort, id]);
+    }, [id]);
 
     return (
         <div className="card movie-card">

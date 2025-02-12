@@ -57,6 +57,16 @@ const getMovieFiles = async (id, type, range) => {
 const getUserFiles = async (name) => {
     try {
         const user = await userService.getUserByName(name);
+        if (!user) {
+            throw { statusCode: 404, message: 'User not found' };
+        }
+
+        if (!user.picture || user.picture === '') {
+            const filePath = path.join(__dirname, '../contents/users/default', 'default.png');
+            const file = fs.readFileSync(filePath);
+            return { file, contentType: 'image/png' };
+        }
+
         const ext = path.extname(user.picture);
         const filename = user.username + ext;
         const filePath = path.join(__dirname, '../contents/users', filename);

@@ -1,5 +1,4 @@
 import React, { useRef, useState, useEffect } from "react";
-import { Link } from "react-router-dom"
 import "./VideoPlayer.css";
 import { backendPort } from "../../config";
 
@@ -133,7 +132,7 @@ function VideoPlayer({ movieId, type }) {
     if (!localStorage.getItem("authToken")) {
         return (
             <div className="image-container">
-                <img src={`http://localhost:${backendPort}/api/contents/movies/${movieId}?type=image`} />
+                <img alt="Movie Poster" src={`http://localhost:${backendPort}/api/contents/movies/${movieId}?type=image`} />
             </div>
         );
     }

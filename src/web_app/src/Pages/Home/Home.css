@@ -10,7 +10,7 @@
     align-items: center;
     padding-left: 20px;
     padding-right: 20px;
-    background: rgba(0, 0, 0, 0.7);
+    background: #141414;
     position: fixed;
     top: 0;
     width: 100%;
@@ -20,10 +20,6 @@
 
 .home-header.hidden {
     top: -70px;
-}
-
-.home-logo {
-    height: 40px;
 }
 
 .home-nav {
@@ -54,18 +50,17 @@
     color: white;
 }
 
-.home-search-button {
-    background-color: #e50914;
-    border: none;
-    padding: 5px 10px;
-    font-size: 16px;
-    color: white;
-    border-radius: 4px;
-    margin-left: 5px;
-    cursor: pointer;
+.home-search-icon {
+    margin: 10px;
+    font-size: 26px;
 }
 
-/* Search modal styles */
+.home-search-button {
+    background-color: transparent;
+    border: none;
+    color: white;
+}
+
 .home-search-modal {
     position: fixed;
     top: 0;
@@ -108,9 +103,29 @@
 }
 
 .home-featured-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 25px;
+}
+
+.home-featured-header h1 {
     font-size: 36px;
-    margin-bottom: 20px;
     text-align: left;
+    margin: 0;
+}
+
+.play-btn-home {
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: black;
+    text-align: center;
+    transition: transform 0.3s ease;
+}
+
+.play-btn-home:hover {
+    transform: scale(1.1);
 }
 
 /* Category row styles */
@@ -126,5 +141,23 @@
 .profile-pic {
     width: 55px;
     height: auto;
-    margin: 15px;
+    margin: 15px 5px 15px 15px;
+}
+
+.logo-home {
+    height: 75px;
+    width: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 10px;
+}
+
+.logo-text-home {
+    font-size: 55px;
+    font-weight: bold;
+    color: red;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }

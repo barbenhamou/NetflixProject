@@ -68,51 +68,35 @@ const GuestPage = () => {
       {/* Header Section */}
       <div className="header" style={headerStyle}>
         <nav>
-          <span className="logo-text">Nexflit</span>
+          <span className="logo-text">NEXFLIT</span>
           <div className="nav-right">
             <div className="dropdown">
               <button
                 className="language-btn"
                 onClick={() => setDropdownOpen(!dropdownOpen)}
               >
-                {language}{" "}
-                <img
-                  src={`${process.env.PUBLIC_URL}/images/down-icon.png`}
-                  alt="Dropdown"
-                />
+                {language}{" ▼"}
               </button>
               {dropdownOpen && (
                 <div className="dropdown-content">
-                  <a
-                    href="#"
+                  <p
                     className="language-option"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      handleLanguageSelect("English");
-                    }}
+                    onClick={() => handleLanguageSelect("English")}
                   >
                     English
-                  </a>
-                  <a
-                    href="#"
+                  </p>
+                  <p
                     className="language-option"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      handleLanguageSelect("Spanish");
-                    }}
+                    onClick={() => handleLanguageSelect("Spanish")}
                   >
                     Spanish
-                  </a>
-                  <a
-                    href="#"
+                  </p>
+                  <p
                     className="language-option"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      handleLanguageSelect("French");
-                    }}
+                    onClick={() => handleLanguageSelect("French")}
                   >
                     French
-                  </a>
+                  </p>
                 </div>
               )}
             </div>

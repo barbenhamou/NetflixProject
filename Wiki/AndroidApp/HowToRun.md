@@ -1,9 +1,10 @@
 # Running The App
 
-Download the code from GitHub, and open it in android studio.
-Press 'Open' and choose the folder NetflixProject/src/AndroidApp. Configure your emulator, we recommend 'Medium Phone'.
-
-Before you start any actions on the app, you must add videos and photos to the emulator, in order to create movies.
+To run the app you need to install Android Studio.
+Once in Android Studio, click on 'Clone Repository' and paste the repository URL. Then, click 'Open' and choose the folder NetflixProject/src/AndroidApp. Configure your emulator, we recommend 'Medium Phone'.
+TODO: how to run on your own phone
+Before you run the app, you also need to run the backend servers. See [HowToRun](../WebApp/HowToRun.md) for explanation on how to do that.
+Another thing you need before you start is to upload images and videos to the emulator, in order to add a profile picture and movies to the app.
 
 Navigate to View -> Tool Windows -> Device Explorer
 
