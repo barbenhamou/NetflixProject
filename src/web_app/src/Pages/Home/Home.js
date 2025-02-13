@@ -12,7 +12,7 @@ function Home() {
     const [headerHidden, setHeaderHidden] = useState(false);
     const [featuredMovie, setFeaturedMovie] = useState(null);
     const [searchTerm, setSearchTerm] = useState("");
-    const [searchedMovie, setSearchedMovie] = useState(null);
+    const [searchedMovies, setSearchedMovies] = useState(null);
 
     const fetchMovies = async () => {
         try {
@@ -35,7 +35,7 @@ function Home() {
 
             const data = await response.json();
             setMovies(data);
-            
+
             // Get a random movie to feature from the list of movies 
             const allMovies = data.map((movieList) => movieList[1]).flat();
             const randomIndex = Math.floor(Math.random() * allMovies.length);
@@ -66,22 +66,13 @@ function Home() {
 
     async function handleSearch(e) {
         e.preventDefault();
-
-        // Perform a case-insensitive exact match search on the flat movies list
-        const movie = movies.find(
-            (movie) => movie.title.toLowerCase() === searchTerm.toLowerCase()
-        );
-
-        if (movie) {
-            setSearchedMovie(movie);
-        } else {
-            alert("Movie doesn't exist");
-            setSearchedMovie(null);
-        }
+        const search = await fetch(`${backendUrl}movies/search/${searchTerm}`);
+        const movies = await search.json();
+        setSearchedMovies(movies);
     }
 
     const closeSearchResult = () => {
-        setSearchedMovie(null);
+        setSearchedMovies(null);
         setSearchTerm("");
     };
 
@@ -113,13 +104,13 @@ function Home() {
                 <ProfileDropdown />
             </header>
 
-            {/* Search Result Modal */}
-            {searchedMovie && (
+            {/* Search Result */}
+            {searchedMovies && (
                 <div className="home-search-modal">
                     <MovieCard
                         showInfo={false}
                         infoButton={true}
-                        {...searchedMovie}
+                        {...searchedMovies}
                     />
                     <button onClick={closeSearchResult} className="home-close-button">
                         Close
@@ -127,7 +118,7 @@ function Home() {
                 </div>
             )}
 
-            {/* Featured Movie Section */}
+            {/* Featured Movie */}
             {featuredMovie && (
                 <div className="home-featured-container">
                     <VideoPlayer movieId={featuredMovie.id} type="trailer" />
@@ -145,19 +136,37 @@ function Home() {
                 </div>
             )}
 
-            {/* Category Rows */}
+            {/* Categories Rows */}
             {movies.map(([categoryName, movies]) => (
                 <div className="home-category-row" key={categoryName}>
-                    <h2 className="home-category-title">{categoryName}</h2>
-                    <div className="movie-cards-container">
-                        {movies.map((movie, index) => (
-                            <MovieCard
-                                key={index}
-                                showInfo={false}
-                                infoButton={true}
-                                {...movie}
-                            />
-                        ))}
+                    <h4 className="home-category-title">{categoryName}</h4>
+                    <div className="scroll-buttons">
+                        {(movies.length > 4) && <button
+                            className="scroll-left"
+                            onClick={() =>
+                                document.getElementById(`container-${categoryName}`).scrollBy({ left: -600, behavior: "smooth" })
+                            }
+                        >
+                            ◀
+                        </button>}
+                        <div id={`container-${categoryName}`} className="movie-cards-container">
+                            {movies.map((movie, index) => (
+                                <MovieCard
+                                    key={index}
+                                    showInfo={false}
+                                    infoButton={true}
+                                    {...movie}
+                                />
+                            ))}
+                        </div>
+                        {(movies.length > 4) && <button
+                            className="scroll-right"
+                            onClick={() =>
+                                document.getElementById(`container-${categoryName}`).scrollBy({ left: 600, behavior: "smooth" })
+                            }
+                        >
+                            ▶
+                        </button>}
                     </div>
                 </div>
             ))}

@@ -6,6 +6,7 @@
     overflow: hidden;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
+    flex: 0 0 auto;
 }
 
 .movie-card:hover {
@@ -45,7 +46,6 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 20px;
 }
 
 .title-container h5 {

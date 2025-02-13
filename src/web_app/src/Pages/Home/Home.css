@@ -95,10 +95,35 @@
 }
 
 .movie-cards-container {
-    display: flex;
-    flex-wrap: wrap;
     gap: 16px;
     justify-content: flex-start;
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: scroll;
+    scroll-behavior: smooth;
+    padding: 10px;
+    box-sizing: border-box;
+    scrollbar-width: none;
+}
+
+.scroll-buttons {
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+.scroll-left,
+.scroll-right {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    padding: 0 10px;
+    z-index: 1;
+}
+
+.movie-cards-container::-webkit-scrollbar {
+    display: none;
 }
 
 /* Featured movie styles */
@@ -133,12 +158,12 @@
     transform: scale(1.1);
 }
 
-/* Category row styles */
 .home-category-row {
     padding: 20px;
 }
 
 .home-category-title {
+    color: white;
     margin-bottom: 10px;
     text-align: left;
 }
