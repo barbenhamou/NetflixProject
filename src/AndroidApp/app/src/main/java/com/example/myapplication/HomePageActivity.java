@@ -48,6 +48,8 @@ public class HomePageActivity extends AppCompatActivity {
         binding = ActivityHomePageBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        playerView = binding.featuredMovie;
+
         navbarBinding = NavbarBinding.bind(binding.navbarLayout.getRoot());
 
         if (MainActivity.tokenRepository.getStoredToken().getValue() == null) {
