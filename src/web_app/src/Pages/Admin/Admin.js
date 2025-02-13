@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { backendUrl } from "../../config";
 import { Link } from "react-router-dom";
 import "./Admin.css";
@@ -11,7 +11,14 @@ const AdminPanel = () => {
     const [movies, setMovies] = useState([]);
     const [message, setMessage] = useState("");
 
-    const headers = { "Authorization": `Bearer ${localStorage.getItem("authToken")}`, "Content-Type": "application/json" };
+    const authToken = useMemo(() => localStorage.getItem("authToken"), []);
+    const headers = useMemo(() => {
+        return {
+            Authorization: `Bearer ${authToken}`,
+            "Content-Type": "application/json",
+        };
+    }, [authToken]);
+
     // Fetch categories & movies on load
     useEffect(() => {
         const fetchCategories = async () => {

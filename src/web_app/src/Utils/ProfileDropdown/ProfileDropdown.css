@@ -1,5 +1,8 @@
 .home-profile-info {
     position: relative;
+}
+
+.profile-dropdown {
     cursor: pointer;
 }
 
@@ -17,9 +20,33 @@
     padding: 10px;
     z-index: 10;
     border: white 1px solid;
+    width: 200px;
+    right: 0;
 }
 
 .profile-dropdown-menu p {
-    padding: 5px;
+    display: block;
+    align-items: center;
+    margin: 5px 0;
+    color: white;
+    font-size: small;
+}
+
+.profile-information {
+    font-weight: bold;
+    font-size: medium !important;
+}
+
+.logout-link {
     cursor: pointer;
+    text-decoration: none;
+    margin-top: 15px !important;
+    color: red !important;
+    font-weight: 600 !important;
+}
+
+.logout-link:hover {
+    text-decoration: underline;
+    text-decoration-color: red;
+    text-decoration-thickness: 1.5px;
 }

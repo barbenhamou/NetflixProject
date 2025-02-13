@@ -123,12 +123,6 @@ const Home = () => {
                     {localStorage.getItem("isAdmin") === 'true' &&
                         <Link className="home-nav-link" to='/admin'>Admin Panel</Link>
                     }
-                    <div className="home-nav-link" onClick={() => {
-                        localStorage.setItem("authToken", "");
-                        localStorage.setItem("isAdmin", false);
-                    }}>
-                        <Link to='/login'>Logout</Link>
-                    </div>
                 </nav>
                 <form onSubmit={handleSearch} className="home-search-form">
                     <input

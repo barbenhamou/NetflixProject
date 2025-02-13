@@ -23,16 +23,20 @@
 }
 
 .home-nav {
-    margin-left: 30px;
-    display: flex;
-    gap: 15px;
     flex-grow: 1;
+    display: block;
 }
 
 .home-nav-link {
     color: white;
     text-decoration: none;
     font-size: 20px;
+}
+
+.home-nav-link:hover {
+    text-decoration: underline;
+    text-decoration-color: white;
+    text-decoration-thickness: 1.5px;
 }
 
 /* Search form styles */
@@ -51,7 +55,8 @@
 }
 
 .home-search-icon {
-    margin: 10px;
+    margin-left: 10px;
+    margin-right: 20px;
     font-size: 26px;
 }
 
