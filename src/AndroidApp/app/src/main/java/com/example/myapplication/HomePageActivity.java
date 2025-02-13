@@ -84,11 +84,6 @@ public class HomePageActivity extends AppCompatActivity {
             }
         });
 
-        navbarBinding.homeLabel.setOnClickListener(v -> {
-            Toast.makeText(this, "Home clicked!", Toast.LENGTH_SHORT).show();
-            movieViewModel.reload();
-        });
-
         navbarBinding.searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
