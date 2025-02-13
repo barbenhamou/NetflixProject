@@ -16,8 +16,14 @@ import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.OptIn;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.media3.common.MediaItem;
+import androidx.media3.common.util.UnstableApi;
+import androidx.media3.exoplayer.ExoPlayer;
+import androidx.media3.exoplayer.source.DefaultMediaSourceFactory;
+import androidx.media3.ui.PlayerView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.myapplication.adapters.VerticalCategoryAdapter;
@@ -25,11 +31,15 @@ import com.example.myapplication.databinding.ActivityHomePageBinding;
 import com.example.myapplication.databinding.NavbarBinding;
 import com.example.myapplication.viewmodels.MovieViewModel;
 
+import java.util.Random;
+
 public class HomePageActivity extends AppCompatActivity {
 
     private ActivityHomePageBinding binding;
     private NavbarBinding navbarBinding;
     private MovieViewModel movieViewModel;
+    private ExoPlayer player;
+    private PlayerView playerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +67,18 @@ public class HomePageActivity extends AppCompatActivity {
             movieViewModel.getFilteredMoviesByOldestCategory().observe(this, movies -> {
                 verticalCategoryAdapter.setData(categories, movies);
                 binding.swipeRefresh.setRefreshing(false);
+
+                // Set featured movie player
+                Random rand = new Random();
+                if (movies != null && !movies.isEmpty()) {
+                    String featuredId = movies.get(rand.nextInt(movies.size())).getId();
+                    MainActivity.tokenRepository.getStoredToken().observe(this, tokenObj -> {
+                        String token = tokenObj.getToken();
+                        String link = getString(R.string.BaseUrl) + "contents/movies/" + featuredId + "?type=trailer&token=" + token;
+
+                        initializePlayer(link);
+                    });
+                }
             });
         });
 
@@ -143,13 +165,6 @@ public class HomePageActivity extends AppCompatActivity {
         popupWindow.showAsDropDown(anchor, -50, 10); // Adjust offsets to position correctly
     }
 
-    private void logoutUser() {
-        MainActivity.tokenRepository.logout(); // Clear the token
-        Intent intent = new Intent(this, LoginActivity.class); // Navigate to LoginActivity
-        startActivity(intent);
-        finish();
-    }
-
     private void loadProfilePicture(String imageFile) {
         if (navbarBinding.userImage == null || imageFile == null || imageFile.isEmpty()) {
             Log.e("ProfileImage", "ProfileImageView is null or URI is empty");
@@ -159,5 +174,27 @@ public class HomePageActivity extends AppCompatActivity {
         byte[] imageBytes = Base64.decode(imageFile, Base64.DEFAULT);
         Bitmap decodedImage = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
         navbarBinding.userImage.setImageBitmap(decodedImage);
+    }
+
+    @OptIn(markerClass = UnstableApi.class)
+    private void initializePlayer(String link) {
+        if (player == null) {
+            player = new ExoPlayer.Builder(this)
+                    .setMediaSourceFactory(new DefaultMediaSourceFactory(() ->
+                            new CustomHttpDataSourceFactory().createDataSourceInternal(null)))
+                    .build();
+
+            player.setVolume(1.0f);
+
+            if (playerView != null) {
+                playerView.setPlayer(player);
+            }
+
+            MediaItem mediaItem = MediaItem.fromUri(link);
+
+            player.setMediaItem(mediaItem);
+            player.prepare();
+            player.play();
+        }
     }
 }

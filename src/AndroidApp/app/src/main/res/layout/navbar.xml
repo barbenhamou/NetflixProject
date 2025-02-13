@@ -64,18 +64,17 @@
 
         <ImageView
             android:id="@+id/user_image"
-            android:layout_width="45dp"
-            android:layout_height="match_parent"
+            android:layout_width="46dp"
+            android:layout_height="46dp"
             android:layout_gravity="center"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:clipToOutline="true"
             android:contentDescription="User Image"
             android:padding="4dp"
             android:scaleType="centerCrop"
-            android:src="@drawable/ic_placeholder_signup"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.979"
+            app:layout_constraintHorizontal_bias="0.98"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.0" />
