@@ -12,14 +12,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <!-- Top Navbar -->
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="#141414"
-            app:titleTextAppearance="@style/ToolbarTextStyle"
-            android:title="@string/app_name" />
+        <include
+            android:id="@+id/navbarLayout"
+            layout="@layout/navbar" />
 
         <!-- Video View -->
         <androidx.media3.ui.PlayerView
