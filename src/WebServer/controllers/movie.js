@@ -24,7 +24,6 @@ const presentMovie = async (movie) => {
             imageFile: file.toString('base64')
         };
     } catch (err) {
-        console.log('10');
         throw { statusCode: 500, message: (err.message || 'Error displaying movie') };
     }
 };
