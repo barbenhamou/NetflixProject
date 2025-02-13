@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from "react";
 import "./VideoPlayer.css";
-import { backendPort } from "../../config";
+import { backendUrl } from "../../config";
 
 function VideoPlayer({ movieId, type }) {
     const videoRef = useRef(null);
@@ -132,7 +132,7 @@ function VideoPlayer({ movieId, type }) {
     if (!localStorage.getItem("authToken")) {
         return (
             <div className="image-container">
-                <img alt="Movie Poster" src={`http://localhost:${backendPort}/api/contents/movies/${movieId}?type=image`} />
+                <img alt="Movie Poster" src={`${backendUrl}contents/movies/${movieId}?type=image`} />
             </div>
         );
     }
@@ -156,7 +156,7 @@ function VideoPlayer({ movieId, type }) {
                 ref={videoRef}
                 onClick={togglePlay}
                 autoPlay
-                src={`http://localhost:${backendPort}/api/contents/movies/${movieId}?type=${type}&token=${localStorage.getItem("authToken")}`} />
+                src={`${backendUrl}contents/movies/${movieId}?type=${type}&token=${localStorage.getItem("authToken")}`} />
             <div className="video-controls">
                 <button className="skip-btn" onClick={() => skipTime(-10)}>
                     <i className="bi bi-arrow-counterclockwise"></i>

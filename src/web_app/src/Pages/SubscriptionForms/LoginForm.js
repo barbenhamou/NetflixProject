@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './Form.css';
 import StandAloneField from './FieldItem';
-import { backendPort } from '../../config';
+import { backendUrl } from '../../config';
 
 function LoginForm() {
     const [username, setUsername] = useState('');
@@ -26,7 +26,7 @@ function LoginForm() {
         }
 
         try {
-            const response = await fetch(`http://localhost:${backendPort}/api/tokens`, {
+            const response = await fetch(`${backendUrl}tokens`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', },
                 body: JSON.stringify({ username, password })

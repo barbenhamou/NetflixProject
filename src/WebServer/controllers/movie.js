@@ -24,6 +24,7 @@ const presentMovie = async (movie) => {
             imageFile: file.toString('base64')
         };
     } catch (err) {
+        console.log('10');
         throw { statusCode: 500, message: (err.message || 'Error displaying movie') };
     }
 };
@@ -31,14 +32,17 @@ const presentMovie = async (movie) => {
 const getMovies = async (req, res) => {
     try {
         const moviesLists = await movieService.getMovies(req.token);
+        
         res.json(
             await Promise.all(
-                moviesLists.map((moviesList) =>
-                    Promise.all(moviesList.map((movie) => presentMovie(movie)))
-                )
+                moviesLists.map(async (moviesList) => {
+                    return [
+                        moviesList[0],
+                        await Promise.all(moviesList[1].map((movie) => presentMovie(movie)))
+                    ];
+                })
             )
         );
-
     } catch (err) {
         res.status(err.statusCode).json({ error: err.message });
     }
@@ -47,7 +51,6 @@ const getMovies = async (req, res) => {
 const createMovie = async (req, res) => {
     try {
         const movie = await movieService.createMovie(req.body);
-
         res.status(201).set('Location', `/api/movies/${movie._id}`).end();
     } catch (err) {
         res.status(err.statusCode).json({ error: err.message });
@@ -57,7 +60,6 @@ const createMovie = async (req, res) => {
 const getMovie = async (req, res) => {
     try {
         const movie = await movieService.getMovieById(req.params.id);
-
         res.json(await presentMovie(movie));
     } catch (err) {
         res.status(err.statusCode).json({ error: err.message });

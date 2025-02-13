@@ -1,43 +1,32 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import MovieCard from "../../Utils/MovieCard/MovieCard";
 import VideoPlayer from "../../Utils/VideoPlayer/VideoPlayer";
-import { backendPort } from "../../config";
-import { Link } from "react-router-dom";
+import ProfileDropdown from "../../Utils/ProfileDropdown/ProfileDropdown";
+import { backendUrl } from "../../config";
 import "./Home.css";
 
-const Home = () => {
+function Home() {
     const [movies, setMovies] = useState([]);
-    const [categories, setCategories] = useState({});
     const [lastScrollY, setLastScrollY] = useState(0);
     const [headerHidden, setHeaderHidden] = useState(false);
     const [featuredMovie, setFeaturedMovie] = useState(null);
     const [searchTerm, setSearchTerm] = useState("");
-    const [searchedMovie, setSearchedMovie] = useState(null);
-    const [profilePicture, setProfilePicture] = useState("");
-
-    useEffect(() => {
-        const fetchProfilePic = async () => {
-            const response = await fetch(`http://localhost:${backendPort}/api/contents/users/${localStorage.getItem('username')}`, {
-                headers: { "Authorization": `Bearer ${localStorage.getItem("authToken")}` }
-            });
-
-            const blob = await response.blob();
-            const imageUrl = URL.createObjectURL(blob);
-            setProfilePicture(imageUrl);
-        };
-
-        fetchProfilePic();
-    }, []);
+    const [searchedMovies, setSearchedMovies] = useState(null);
 
     const fetchMovies = async () => {
         try {
-            const headers = {
-                "Authorization": `Bearer ${localStorage.getItem("authToken")}`,
-                "Content-Type": "application/json",
-            };
-
-            const response = await fetch(`http://localhost:${backendPort}/api/movies`, {
-                headers: headers,
+            // Get the list of movies by categories:
+            // [
+            //      [categoryName, [moviesOfCategory]],
+            //      [categoryName, [moviesOfCategory]],
+            //      ...
+            // ]
+            const response = await fetch(`${backendUrl}movies`, {
+                headers: {
+                    "Authorization": `Bearer ${localStorage.getItem("authToken")}`,
+                    "Content-Type": "application/json",
+                }
             });
 
             if (!response.ok) {
@@ -45,41 +34,12 @@ const Home = () => {
             }
 
             const data = await response.json();
+            setMovies(data);
 
-            const categorizedMovies = data.reduce((acc, category) => {
-                if (category.length > 0) {
-                    // Use the first category name found or default to "Uncategorized"
-                    const categoryName = category[0]?.categories[0] || "Uncategorized";
-                    acc[categoryName] = category.map((movie) => ({
-                        id: movie.id,
-                        title: movie.title,
-                        description: movie.description || "An amazing movie you shouldn't miss!",
-                        // Pass along categories (or default to an array with the categoryName)
-                        categories: movie.categories || [categoryName],
-                        // Provide default values if not available
-                        lengthMinutes: movie.lengthMinutes || 120,
-                        releaseYear: movie.releaseYear || 2020,
-                    }));
-                }
-                return acc;
-            }, {});
-
-            // Store the flat list of movies for search purposes
-            const flatMovies = data.flat();
-            setMovies(flatMovies);
-            setCategories(categorizedMovies);
-
-            // Pick a random featured movie from the flat list
-            const randomMovie =
-                flatMovies[Math.floor(Math.random() * flatMovies.length)];
-            setFeaturedMovie({
-                id: randomMovie.id,
-                title: randomMovie.title,
-                description: randomMovie.description || "Enjoy our featured selection!",
-                categories: randomMovie.categories || [],
-                lengthMinutes: randomMovie.lengthMinutes || 120,
-                releaseYear: randomMovie.releaseYear || 2020,
-            });
+            // Get a random movie to feature from the list of movies 
+            const allMovies = data.map((movieList) => movieList[1]).flat();
+            const randomIndex = Math.floor(Math.random() * allMovies.length);
+            setFeaturedMovie(allMovies[randomIndex]);
         } catch (error) {
             console.error("Error fetching movies:", error);
         }
@@ -104,24 +64,15 @@ const Home = () => {
         return () => window.removeEventListener("scroll", handleScroll);
     }, [lastScrollY]);
 
-    const handleSearch = (e) => {
+    async function handleSearch(e) {
         e.preventDefault();
-
-        // Perform a case-insensitive exact match search on the flat movies list
-        const movie = movies.find(
-            (movie) => movie.title.toLowerCase() === searchTerm.toLowerCase()
-        );
-
-        if (movie) {
-            setSearchedMovie(movie);
-        } else {
-            alert("Movie doesn't exist");
-            setSearchedMovie(null);
-        }
-    };
+        const search = await fetch(`${backendUrl}movies/search/${searchTerm}`);
+        const movies = await search.json();
+        setSearchedMovies(movies);
+    }
 
     const closeSearchResult = () => {
-        setSearchedMovie(null);
+        setSearchedMovies(null);
         setSearchTerm("");
     };
 
@@ -134,16 +85,9 @@ const Home = () => {
                     NEXFLIT
                 </span>
                 <nav className="home-nav">
-                    <Link className="home-nav-link" to='/'>Home</Link>
                     {localStorage.getItem("isAdmin") === 'true' &&
                         <Link className="home-nav-link" to='/admin'>Admin Panel</Link>
                     }
-                    <div className="home-nav-link" onClick={() => {
-                        localStorage.setItem("authToken", "");
-                        localStorage.setItem("isAdmin", false);
-                    }}>
-                        <Link to='/login'>Logout</Link>
-                    </div>
                 </nav>
                 <form onSubmit={handleSearch} className="home-search-form">
                     <input
@@ -154,30 +98,33 @@ const Home = () => {
                         className="home-search-input"
                     />
                     <button className="home-search-button">
-                        <i type="submit" class="bi bi-search home-search-icon"></i>
+                        <i type="submit" className="bi bi-search home-search-icon"></i>
                     </button>
                 </form>
-                <div className="home-profile-info">
-                    <img alt="Profile" className="profile-pic" src={profilePicture} />
-                    ▼
-                </div>
+                <ProfileDropdown />
             </header>
 
-            {/* Search Result Modal */}
-            {searchedMovie && (
+            {/* Search Result */}
+            {searchedMovies &&
                 <div className="home-search-modal">
-                    <MovieCard
-                        showInfo={false}
-                        infoButton={true}
-                        {...searchedMovie}
-                    />
+                    <div className="home-search-result">
+                        {searchedMovies.length > 0 ?
+                            searchedMovies.map((movie, index) => (
+                                <MovieCard
+                                    key={index}
+                                    showInfo={false}
+                                    infoButton={true}
+                                    {...movie}
+                                />
+                            )) : "No movies match the search."}
+                    </div>
                     <button onClick={closeSearchResult} className="home-close-button">
                         Close
                     </button>
                 </div>
-            )}
+            }
 
-            {/* Featured Movie Section */}
+            {/* Featured Movie */}
             {featuredMovie && (
                 <div className="home-featured-container">
                     <VideoPlayer movieId={featuredMovie.id} type="trailer" />
@@ -195,24 +142,42 @@ const Home = () => {
                 </div>
             )}
 
-            {/* Category Rows */}
-            {Object.entries(categories).map(([categoryName, categoryMovies]) => (
+            {/* Categories Rows */}
+            {movies.map(([categoryName, movies]) => (
                 <div className="home-category-row" key={categoryName}>
-                    <h2 className="home-category-title">{categoryName}</h2>
-                    <div className="movie-cards-container">
-                        {categoryMovies.map((movie, index) => (
-                            <MovieCard
-                                key={index}
-                                showInfo={false}
-                                infoButton={true}
-                                {...movie}
-                            />
-                        ))}
+                    <h4 className="home-category-title">{categoryName}</h4>
+                    <div className="scroll-buttons">
+                        {(movies.length > 4) && <button
+                            className="scroll-left"
+                            onClick={() =>
+                                document.getElementById(`container-${categoryName}`).scrollBy({ left: -600, behavior: "smooth" })
+                            }
+                        >
+                            ◀
+                        </button>}
+                        <div id={`container-${categoryName}`} className="movie-cards-container">
+                            {movies.map((movie, index) => (
+                                <MovieCard
+                                    key={index}
+                                    showInfo={false}
+                                    infoButton={true}
+                                    {...movie}
+                                />
+                            ))}
+                        </div>
+                        {(movies.length > 4) && <button
+                            className="scroll-right"
+                            onClick={() =>
+                                document.getElementById(`container-${categoryName}`).scrollBy({ left: 600, behavior: "smooth" })
+                            }
+                        >
+                            ▶
+                        </button>}
                     </div>
                 </div>
             ))}
         </div>
     );
-};
+}
 
 export default Home;
