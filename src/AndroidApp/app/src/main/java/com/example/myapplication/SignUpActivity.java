@@ -111,8 +111,6 @@ public class SignUpActivity extends AppCompatActivity {
                                 @Override
                                 public void onUploadSuccess(ProfilePictureResponse response) {
                                     runOnUiThread(() -> Toast.makeText(SignUpActivity.this, response.getMessage(), Toast.LENGTH_SHORT).show());
-                                    Intent intent = new Intent(SignUpActivity.this, LoginActivity.class);
-                                    startActivity(intent);
                                 }
 
                                 @Override
@@ -120,10 +118,14 @@ public class SignUpActivity extends AppCompatActivity {
                                     runOnUiThread(() -> Toast.makeText(SignUpActivity.this, "Image upload failed: " + errorMessage, Toast.LENGTH_SHORT).show());
                                 }
                             });
+
                         } catch (RuntimeException e) {
                             runOnUiThread(() -> Toast.makeText(SignUpActivity.this, "Failed to save image", Toast.LENGTH_SHORT).show());
                         }
                     }
+
+                    Intent intent = new Intent(SignUpActivity.this, LoginActivity.class);
+                    startActivity(intent);
                 }
 
                 @Override
