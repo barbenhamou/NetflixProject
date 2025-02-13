@@ -67,7 +67,6 @@
             android:layout_width="46dp"
             android:layout_height="46dp"
             android:layout_gravity="center"
-            android:background="?attr/selectableItemBackgroundBorderless"
             android:clipToOutline="true"
             android:contentDescription="User Image"
             android:padding="4dp"

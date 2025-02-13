@@ -91,7 +91,9 @@ public class HomePageActivity extends AppCompatActivity {
 
     private void setupNavbar() {
         MainActivity.userRepository.getStoredUser().observe(this, user -> {
-            loadProfilePicture(user.getImageFile());
+            if (user != null) {
+                loadProfilePicture(user.getImageFile());
+            }
         });
 
         MainActivity.tokenRepository.getStoredToken().observe(this, token -> {
@@ -166,7 +168,7 @@ public class HomePageActivity extends AppCompatActivity {
     }
 
     private void loadProfilePicture(String imageFile) {
-        if (navbarBinding.userImage == null || imageFile == null || imageFile.isEmpty()) {
+        if (imageFile == null || imageFile.isEmpty()) {
             Log.e("ProfileImage", "ProfileImageView is null or URI is empty");
             return;
         }
