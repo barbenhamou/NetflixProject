@@ -126,6 +126,12 @@
     display: none;
 }
 
+.home-search-result {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
 /* Featured movie styles */
 .home-featured-container {
     margin-top: 80px;

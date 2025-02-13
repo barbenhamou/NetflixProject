@@ -10,7 +10,7 @@ function Recommendations({ id }) {
 
     useEffect(() => {
         async function fetchMovie() {
-            const response = await fetch(`${backendUrl}movies/${id}/recommend`, {
+            let response = await fetch(`${backendUrl}movies/${id}/recommend`, {
                 headers: {
                     "Authorization": `Bearer ${localStorage.getItem("authToken")}`,
                 }
@@ -23,8 +23,14 @@ function Recommendations({ id }) {
                 setLoggedIn(true);
             }
 
+            response = await fetch(`${backendUrl}movies/${id}/`, {
+                headers: {
+                    "Authorization": `Bearer ${localStorage.getItem("authToken")}`,
+                }
+            });
+
             const data = await response.json();
-            setMovies(data);
+            setMovies([data, data, data, data]);
         }
 
         fetchMovie();

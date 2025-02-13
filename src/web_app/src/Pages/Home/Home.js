@@ -105,18 +105,24 @@ function Home() {
             </header>
 
             {/* Search Result */}
-            {searchedMovies && (
+            {searchedMovies &&
                 <div className="home-search-modal">
-                    <MovieCard
-                        showInfo={false}
-                        infoButton={true}
-                        {...searchedMovies}
-                    />
+                    <div className="home-search-result">
+                        {searchedMovies.length > 0 ?
+                            searchedMovies.map((movie, index) => (
+                                <MovieCard
+                                    key={index}
+                                    showInfo={false}
+                                    infoButton={true}
+                                    {...movie}
+                                />
+                            )) : "No movies match the search."}
+                    </div>
                     <button onClick={closeSearchResult} className="home-close-button">
                         Close
                     </button>
                 </div>
-            )}
+            }
 
             {/* Featured Movie */}
             {featuredMovie && (
