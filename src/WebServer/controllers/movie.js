@@ -24,6 +24,7 @@ const presentMovie = async (movie) => {
             imageFile: file.toString('base64')
         };
     } catch (err) {
+        console.log('10');
         throw { statusCode: 500, message: (err.message || 'Error displaying movie') };
     }
 };
@@ -31,11 +32,15 @@ const presentMovie = async (movie) => {
 const getMovies = async (req, res) => {
     try {
         const moviesLists = await movieService.getMovies(req.token);
+        
         res.json(
             await Promise.all(
-                moviesLists.map((moviesList) =>
-                    Promise.all(moviesList.map((movie) => presentMovie(movie)))
-                )
+                moviesLists.map(async (moviesList) => {
+                    return [
+                        moviesList[0],
+                        await Promise.all(moviesList[1].map((movie) => presentMovie(movie)))
+                    ];
+                })
             )
         );
     } catch (err) {

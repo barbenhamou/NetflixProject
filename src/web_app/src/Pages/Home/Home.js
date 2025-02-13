@@ -6,9 +6,8 @@ import ProfileDropdown from "../../Utils/ProfileDropdown/ProfileDropdown";
 import { backendUrl } from "../../config";
 import "./Home.css";
 
-const Home = () => {
+function Home() {
     const [movies, setMovies] = useState([]);
-    const [categories, setCategories] = useState({});
     const [lastScrollY, setLastScrollY] = useState(0);
     const [headerHidden, setHeaderHidden] = useState(false);
     const [featuredMovie, setFeaturedMovie] = useState(null);
@@ -17,13 +16,17 @@ const Home = () => {
 
     const fetchMovies = async () => {
         try {
-            const headers = {
-                "Authorization": `Bearer ${localStorage.getItem("authToken")}`,
-                "Content-Type": "application/json",
-            };
-
+            // Get the list of movies by categories:
+            // [
+            //      [categoryName, [moviesOfCategory]],
+            //      [categoryName, [moviesOfCategory]],
+            //      ...
+            // ]
             const response = await fetch(`${backendUrl}movies`, {
-                headers: headers,
+                headers: {
+                    "Authorization": `Bearer ${localStorage.getItem("authToken")}`,
+                    "Content-Type": "application/json",
+                }
             });
 
             if (!response.ok) {
@@ -31,41 +34,12 @@ const Home = () => {
             }
 
             const data = await response.json();
-
-            const categorizedMovies = data.reduce((acc, category) => {
-                if (category.length > 0) {
-                    // Use the first category name found or default to "Uncategorized"
-                    const categoryName = category[0]?.categories[0] || "Uncategorized";
-                    acc[categoryName] = category.map((movie) => ({
-                        id: movie.id,
-                        title: movie.title,
-                        description: movie.description || "An amazing movie you shouldn't miss!",
-                        // Pass along categories (or default to an array with the categoryName)
-                        categories: movie.categories || [categoryName],
-                        // Provide default values if not available
-                        lengthMinutes: movie.lengthMinutes || 120,
-                        releaseYear: movie.releaseYear || 2020,
-                    }));
-                }
-                return acc;
-            }, {});
-
-            // Store the flat list of movies for search purposes
-            const flatMovies = data.flat();
-            setMovies(flatMovies);
-            setCategories(categorizedMovies);
-
-            // Pick a random featured movie from the flat list
-            const randomMovie =
-                flatMovies[Math.floor(Math.random() * flatMovies.length)];
-            setFeaturedMovie({
-                id: randomMovie.id,
-                title: randomMovie.title,
-                description: randomMovie.description || "Enjoy our featured selection!",
-                categories: randomMovie.categories || [],
-                lengthMinutes: randomMovie.lengthMinutes || 120,
-                releaseYear: randomMovie.releaseYear || 2020,
-            });
+            setMovies(data);
+            
+            // Get a random movie to feature from the list of movies 
+            const allMovies = data.map((movieList) => movieList[1]).flat();
+            const randomIndex = Math.floor(Math.random() * allMovies.length);
+            setFeaturedMovie(allMovies[randomIndex]);
         } catch (error) {
             console.error("Error fetching movies:", error);
         }
@@ -90,7 +64,7 @@ const Home = () => {
         return () => window.removeEventListener("scroll", handleScroll);
     }, [lastScrollY]);
 
-    const handleSearch = (e) => {
+    async function handleSearch(e) {
         e.preventDefault();
 
         // Perform a case-insensitive exact match search on the flat movies list
@@ -104,7 +78,7 @@ const Home = () => {
             alert("Movie doesn't exist");
             setSearchedMovie(null);
         }
-    };
+    }
 
     const closeSearchResult = () => {
         setSearchedMovie(null);
@@ -172,11 +146,11 @@ const Home = () => {
             )}
 
             {/* Category Rows */}
-            {Object.entries(categories).map(([categoryName, categoryMovies]) => (
+            {movies.map(([categoryName, movies]) => (
                 <div className="home-category-row" key={categoryName}>
                     <h2 className="home-category-title">{categoryName}</h2>
                     <div className="movie-cards-container">
-                        {categoryMovies.map((movie, index) => (
+                        {movies.map((movie, index) => (
                             <MovieCard
                                 key={index}
                                 showInfo={false}
@@ -189,6 +163,6 @@ const Home = () => {
             ))}
         </div>
     );
-};
+}
 
 export default Home;
