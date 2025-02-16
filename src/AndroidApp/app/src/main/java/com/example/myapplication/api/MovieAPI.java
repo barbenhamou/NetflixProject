@@ -9,8 +9,16 @@ import com.example.myapplication.MyApplication;
 import com.example.myapplication.R;
 import com.example.myapplication.dao.MovieDao;
 import com.example.myapplication.entities.Category;
+import com.example.myapplication.entities.GetMoviesResponse;
 import com.example.myapplication.entities.Movie;
+import com.google.common.reflect.TypeToken;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonDeserializer;
 
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executors;
 
@@ -24,20 +32,41 @@ public class MovieAPI {
     private MutableLiveData<List<Movie>> movieListData;
     private MutableLiveData<List<Category>> categoryListData;
     private MutableLiveData<List<Movie>> recommendationData;
+    private MutableLiveData<List<GetMoviesResponse>> categorizedMovies;
     private MovieDao movieDao;
     Retrofit retrofit;
     WebServiceAPI webServiceAPI;
 
-    public MovieAPI(MutableLiveData<List<Movie>> movieListData, MutableLiveData<List<Movie>> recommendationData, MovieDao dao, MutableLiveData<List<Category>> categoryListData) {
+    public MovieAPI(MutableLiveData<List<Movie>> movieListData, MutableLiveData<List<Movie>> recommendationData, MovieDao dao,
+                    MutableLiveData<List<Category>> categoryListData, MutableLiveData<List<GetMoviesResponse>> categorizedMovies) {
         this.movieListData = movieListData;
         this.categoryListData = categoryListData;
         this.recommendationData = recommendationData;
+        this.categorizedMovies = categorizedMovies;
         this.movieDao = dao;
+
+        Gson gson = new GsonBuilder()
+                .registerTypeAdapter(new TypeToken<List<GetMoviesResponse>>() {}.getType(),
+                        (JsonDeserializer<List<GetMoviesResponse>>) (json, typeOfT, context) -> {
+                            List<GetMoviesResponse> result = new ArrayList<>();
+                            JsonArray jsonArray = json.getAsJsonArray();
+
+                            for (int i = 0; i < jsonArray.size(); i++) {
+                                JsonArray categoryArray = jsonArray.get(i).getAsJsonArray();
+                                String category = categoryArray.get(0).getAsString();
+                                Type movieListType = new TypeToken<List<Movie>>() {}.getType();
+                                List<Movie> movies = context.deserialize(categoryArray.get(1), movieListType);
+                                result.add(new GetMoviesResponse(category, movies));
+                            }
+                            return result;
+                        })
+                .create();
+
 
         retrofit = new Retrofit.Builder()
                 .baseUrl(MyApplication.context.getString(R.string.BaseUrl))
                 .callbackExecutor(Executors.newSingleThreadExecutor())
-                .addConverterFactory(GsonConverterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
         webServiceAPI = retrofit.create(WebServiceAPI.class);
     }
@@ -59,6 +88,25 @@ public class MovieAPI {
             @Override
             public void onFailure(@NonNull Call<List<Movie>> call, @NonNull Throwable t) {
                 Log.e("Movie", "API call failed: " + t.getMessage());
+            }
+        });
+    }
+
+    public void getCategorizedMovies(String token) {
+        Call<List<GetMoviesResponse>> call = webServiceAPI.getMovies("Bearer " + token);
+        call.enqueue(new Callback<>() {
+            @Override
+            public void onResponse(Call<List<GetMoviesResponse>> call, Response<List<GetMoviesResponse>> response) {
+                new Thread(() -> {
+                    if (response.isSuccessful() && response.body() != null) {
+                        categorizedMovies.postValue(response.body());
+                    }
+                }).start();
+            }
+
+            @Override
+            public void onFailure(Call<List<GetMoviesResponse>> call, Throwable t) {
+                Log.e("CategorizedMovies", "API call failed: " + t.getMessage());
             }
         });
     }

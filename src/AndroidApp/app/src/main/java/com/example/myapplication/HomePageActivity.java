@@ -29,8 +29,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.example.myapplication.adapters.VerticalCategoryAdapter;
 import com.example.myapplication.databinding.ActivityHomePageBinding;
 import com.example.myapplication.databinding.NavbarBinding;
+import com.example.myapplication.entities.GetMoviesResponse;
+import com.example.myapplication.entities.Movie;
 import com.example.myapplication.viewmodels.MovieViewModel;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public class HomePageActivity extends AppCompatActivity {
@@ -65,28 +69,29 @@ public class HomePageActivity extends AppCompatActivity {
         VerticalCategoryAdapter verticalCategoryAdapter = new VerticalCategoryAdapter();
         binding.recyclerView.setAdapter(verticalCategoryAdapter);
 
-        movieViewModel.getCategories().observe(this, categories -> {
-            movieViewModel.getFilteredMoviesByOldestCategory().observe(this, movies -> {
-                verticalCategoryAdapter.setData(categories, movies);
+        MainActivity.tokenRepository.getStoredToken().observe(this, token -> {
+            movieViewModel.getCategorizedMovies(token.getToken()).observe(this, categorizedMovies -> {
+                verticalCategoryAdapter.setData(categorizedMovies);
                 binding.swipeRefresh.setRefreshing(false);
 
-                // Set featured movie player
                 Random rand = new Random();
-                if (movies != null && !movies.isEmpty()) {
-                    String featuredId = movies.get(rand.nextInt(movies.size())).getId();
-                    MainActivity.tokenRepository.getStoredToken().observe(this, tokenObj -> {
-                        String token = tokenObj.getToken();
-                        String link = getString(R.string.BaseUrl) + "contents/movies/" + featuredId + "?type=trailer&token=" + token;
+                if (categorizedMovies != null && !categorizedMovies.isEmpty()) {
+                    ArrayList<Movie> movies = new ArrayList<>();
 
-                        initializePlayer(link);
-                    });
+                    for (GetMoviesResponse category : categorizedMovies) {
+                        movies.addAll(category.getMovies());
+                    }
+
+                    String featuredId = movies.get(rand.nextInt(movies.size())).getId();
+                    Log.d("ID", featuredId);
+                    String link = getString(R.string.BaseUrl) + "contents/movies/" + featuredId + "?type=trailer&token=" + token.getToken();
+                    initializePlayer(link);
                 }
             });
+
+            movieViewModel.reload(token.getToken());
+            binding.swipeRefresh.setOnRefreshListener(() -> movieViewModel.reload(token.getToken()));
         });
-
-        movieViewModel.reload();
-
-        binding.swipeRefresh.setOnRefreshListener(() -> movieViewModel.reload());
 
         setupNavbar();
     }

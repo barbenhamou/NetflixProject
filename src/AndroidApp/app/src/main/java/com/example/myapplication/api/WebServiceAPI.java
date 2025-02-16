@@ -1,6 +1,7 @@
 package com.example.myapplication.api;
 
 import com.example.myapplication.entities.Category;
+import com.example.myapplication.entities.GetMoviesResponse;
 import com.example.myapplication.entities.LoginRequest;
 import com.example.myapplication.entities.LoginResponse;
 import com.example.myapplication.entities.Movie;
@@ -29,7 +30,7 @@ import retrofit2.http.Path;
 
 public interface WebServiceAPI {
     @GET("movies")
-    Call<List<List<Movie>>> getMovies(
+    Call<List<GetMoviesResponse>> getMovies(
             @Header("Authorization") String authHeader
     );
 
