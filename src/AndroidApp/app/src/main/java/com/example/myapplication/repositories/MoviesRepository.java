@@ -12,6 +12,7 @@ import com.example.myapplication.api.MovieAPI;
 import com.example.myapplication.dao.AppDB;
 import com.example.myapplication.dao.MovieDao;
 import com.example.myapplication.entities.Category;
+import com.example.myapplication.entities.GetMoviesResponse;
 import com.example.myapplication.entities.Movie;
 import com.example.myapplication.entities.Token;
 
@@ -39,9 +40,9 @@ public class MoviesRepository {
     private MovieListData movieListData;
     private MutableLiveData<List<Movie>> recommendations;
     private MutableLiveData<List<Category>> categoryListData;
+    private MutableLiveData<List<GetMoviesResponse>> categorizedMovies;
     private MovieDao movieDao;
     private MovieAPI movieAPI;
-
     private WebServiceAPI webServiceAPI;
 
 
@@ -51,7 +52,8 @@ public class MoviesRepository {
         movieListData = new MovieListData();
         recommendations = new MutableLiveData<>();
         categoryListData = new MutableLiveData<>();
-        movieAPI = new MovieAPI(movieListData, recommendations, movieDao, categoryListData);
+        categorizedMovies = new MutableLiveData<>();
+        movieAPI = new MovieAPI(movieListData, recommendations, movieDao, categoryListData, categorizedMovies);
         webServiceAPI = new Retrofit.Builder()
                 .baseUrl(MyApplication.context.getString(com.example.myapplication.R.string.BaseUrl))
                 .callbackExecutor(Executors.newSingleThreadExecutor())
@@ -82,6 +84,11 @@ public class MoviesRepository {
         return movieListData;
     }
 
+    public LiveData<List<GetMoviesResponse>> getCategorizedMovies(String token) {
+        new Thread(() -> movieAPI.getCategorizedMovies(token)).start();
+        return categorizedMovies;
+    }
+
     public LiveData<Movie> getMovie(String id) {
         MutableLiveData<Movie> movieData = new MutableLiveData<>();
 
@@ -95,8 +102,8 @@ public class MoviesRepository {
         return movieData;
     }
 
-    public void reload() {
-        movieAPI.get();
+    public void reload(String token) {
+        movieAPI.getCategorizedMovies(token);
     }
 
     public void reloadCategories() {
@@ -219,7 +226,7 @@ public class MoviesRepository {
     }
 
     public void updateMovieWithFiles(Token token, String oldTitle, Movie updatedMovie, File filmFile, File trailerFile, File imageFile, MovieCallback callback) {
-        webServiceAPI.getAllMovies().enqueue(new Callback<List<Movie>>() {
+        webServiceAPI.getAllMovies().enqueue(new Callback<>() {
             @Override
             public void onResponse(Call<List<Movie>> call, Response<List<Movie>> response) {
                 if (response.isSuccessful() && response.body() != null) {
@@ -233,7 +240,7 @@ public class MoviesRepository {
                     }
                     if (movieToUpdate != null) {
                         String movieId = movieToUpdate.getId();
-                        webServiceAPI.updateMovie("Bearer " + token.getToken(), movieId, updatedMovie).enqueue(new Callback<Movie>() {
+                        webServiceAPI.updateMovie("Bearer " + token.getToken(), movieId, updatedMovie).enqueue(new Callback<>() {
                             @Override
                             public void onResponse(Call<Movie> call, Response<Movie> responseUpdate) {
                                 if (responseUpdate.isSuccessful() && responseUpdate.body() != null) {
