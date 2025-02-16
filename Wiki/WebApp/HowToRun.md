@@ -26,4 +26,4 @@ docker-compose start
 
 Enjoy!
 
-For explanation about how to use the website, see [Signup&Login](Signup&Login.md).
+For explanations about how to use the website, see [Signup&Login](Signup&Login.md).

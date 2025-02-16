@@ -3,13 +3,12 @@ When first opening the website you will be presented with our guest home page:
 
 ![](../../PreviewImages/Android/GuestPage.png)
 
-
 # Signing up
 This is the sign-up page:
 
 ![](../../PreviewImages/Android/Signup.png)
 
-You need to choose your username and a strong password, enter you information, and you can also upload a profile picture if you'd like.
+You need to choose your username and a strong password, enter your information, and you can also upload a profile picture if you'd like.
 
 After signing up, you will be notified that your account has been created, and transfered into the login page.
 
