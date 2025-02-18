@@ -34,12 +34,12 @@ We can now go back to the home screen and see our movie:
 
 Here we'll see all of the promoted categories and their movies. The last category will be movies that you watched. Our movie is currently the only movie, so it was also chosen as the featured movie and we see its trailer at the top of the screen.
 
-# User Information popup
+# User Information pop-up
 In the home screen we can present the user's info by clicking on its picture:
 
 ![](../../PreviewImages/Android/ProfileInfo.png)
 
-You can also use this popup to logout, and connect with other user of yours.
+You can also use this pop-up to logout, and connect with other user of yours.
 
 # Movie Information Screen
 Now we can press the `i` on below the movie and see its trailer and info:
