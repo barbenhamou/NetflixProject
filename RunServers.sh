@@ -15,7 +15,7 @@ next_free_port() {
 read -p "Enter your IP address: " ip
 
 # Automatically choose ports
-port1=$(next_free_port 3001)
+port1=$(next_free_port 3000)
 port2=$(next_free_port $((port1 + 1)))
 port3=$(next_free_port $((port2 + 1)))
 
@@ -31,7 +31,7 @@ SECRET="GiveUs100"
 EOF
 
 cat <<EOF > src/web_app/src/config.js
-export const backendPort = ${port1}
+export const backendUrl = \`http://localhost:${port1}/api/\`;
 EOF
 
 cat <<EOF > .env
@@ -39,6 +39,9 @@ WEB_PORT=${port1}
 CPP_PORT=${port2}
 REACT_PORT=${port3}
 EOF
+
+strings_file="src/AndroidApp/app/src/main/res/values/strings.xml"
+sed -i "s#http://10.0.2.2:[0-9]*/api/#http://10.0.2.2:${port1}/api/#" "$strings_file"
 
 echo "Once the compilation ends, the website will run at: http://localhost:${port3}"
 

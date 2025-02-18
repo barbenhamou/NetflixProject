@@ -32,24 +32,31 @@ const getMovies = async (userId) => {
 
         if (!promotedCategories || promotedCategories.length === 0) {
             // No promoted categories, return just the watched movies
-            return [watchedMovies];
+            return (watchedMovies && watchedMovies.length !== 0) ? [["Watch it again", watchedMovies]] : [];
         }
 
         // Get up to MOVIES_PER_CATEGORY unwatched movies of each promoted category
-        const moviesByCategory = await Promise.all(
+        const moviesByCategory = (await Promise.all(
             promotedCategories.map(async (category) => {
-                return movies = await Movie.find({
+                const movies = await Movie.find({
                     categories: category._id,
                     _id: { $nin: watchedMovieIds } // Exclude watched movies
                 }).limit(MOVIES_PER_CATEGORY).exec();
+                if (!movies || movies.length === 0) {
+                    return null;
+                }
+                return [category.name, movies];
             })
-        );
+        )).filter(Boolean); // Remove nulls
 
         if (!moviesByCategory) {
             throw {statusCode: 404, message: 'Movies could not be retrieved'};
         }
         
-        moviesByCategory.push(watchedMovies)
+        if (watchedMovies && watchedMovies.length !== 0) {
+            moviesByCategory.push(["Watch it again", watchedMovies])
+        }
+
         return moviesByCategory;
     } catch (err) {
         errorClass.filterError(err);

@@ -1,5 +1,5 @@
 import "./MovieCard.css";
-import { backendPort } from "../../config";
+import { backendUrl } from "../../config";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import InfoButton from "../InfoButton/InfoButton";
@@ -9,7 +9,7 @@ function MovieCard({ id, title, categories, lengthMinutes, releaseYear, descript
 
     useEffect(() => {
         const fetchImage = async () => {
-            const response = await fetch(`http://localhost:${backendPort}/api/contents/movies/${id}?type=image`);
+            const response = await fetch(`${backendUrl}contents/movies/${id}?type=image`);
 
             const blob = await response.blob();
             const imageUrl = URL.createObjectURL(blob);

@@ -9,24 +9,17 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myapplication.databinding.ItemVerticalBinding;
 import com.example.myapplication.entities.Category;
+import com.example.myapplication.entities.GetMoviesResponse;
 import com.example.myapplication.entities.Movie;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class VerticalCategoryAdapter extends RecyclerView.Adapter<VerticalCategoryAdapter.CategoryViewHolder> {
-    private List<Category> categories;
-    private List<Movie> movies;
+    private List<GetMoviesResponse> categorizedMovies;
 
-    public void setData(List<Category> categories, List<Movie> movies) {
-        List<Category> promotedCategories = new ArrayList<>();
-        for (Category category : categories) {
-            if (category.getPromoted()) { // assuming getPromoted() returns a boolean
-                promotedCategories.add(category);
-            }
-        }
-        this.categories = promotedCategories;
-        this.movies = movies;
+    public void setData(List<GetMoviesResponse> categorizedMovies) {
+        this.categorizedMovies = categorizedMovies;
         notifyDataSetChanged();
     }
 
@@ -40,15 +33,10 @@ public class VerticalCategoryAdapter extends RecyclerView.Adapter<VerticalCatego
 
     @Override
     public void onBindViewHolder(@NonNull CategoryViewHolder holder, int position) {
-        Category category = categories.get(position);
+        Category category = new Category(categorizedMovies.get(position).getCategory(), true);
         holder.binding.setCategory(category);
 
-        List<Movie> filteredMovies = new ArrayList<>();
-        for (Movie movie : movies) {
-            if (movie.getCategories().contains(category.getName())) {
-                filteredMovies.add(movie);
-            }
-        }
+        List<Movie> filteredMovies = categorizedMovies.get(position).getMovies();
 
         // Set up the horizontal RecyclerView
         HorizontalMovieAdapter adapter = new HorizontalMovieAdapter();
@@ -61,7 +49,7 @@ public class VerticalCategoryAdapter extends RecyclerView.Adapter<VerticalCatego
 
     @Override
     public int getItemCount() {
-        return (categories == null) ? 0 : categories.size();
+        return (categorizedMovies == null) ? 0 : categorizedMovies.size();
     }
 
     static class CategoryViewHolder extends RecyclerView.ViewHolder {

@@ -1,0 +1,52 @@
+.home-profile-info {
+    position: relative;
+}
+
+.profile-dropdown {
+    cursor: pointer;
+}
+
+.profile-pic {
+    width: 55px;
+    height: auto;
+    margin: 15px 5px 15px 15px;
+}
+
+.profile-dropdown-menu {
+    position: absolute;
+    background-color: #141414cc;
+    color: white;
+    border-radius: 5px;
+    padding: 10px;
+    z-index: 10;
+    border: white 1px solid;
+    width: 200px;
+    right: 0;
+}
+
+.profile-dropdown-menu p {
+    display: block;
+    align-items: center;
+    margin: 5px 0;
+    color: white;
+    font-size: small;
+}
+
+.profile-information {
+    font-weight: bold;
+    font-size: medium !important;
+}
+
+.logout-link {
+    cursor: pointer;
+    text-decoration: none;
+    margin-top: 15px !important;
+    color: red !important;
+    font-weight: 600 !important;
+}
+
+.logout-link:hover {
+    text-decoration: underline;
+    text-decoration-color: red;
+    text-decoration-thickness: 1.5px;
+}

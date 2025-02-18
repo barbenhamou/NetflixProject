@@ -2,7 +2,7 @@ import './MovieWatch.css';
 import VideoPlayer from '../../Utils/VideoPlayer/VideoPlayer';
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { backendPort } from "../../config";
+import { backendUrl } from "../../config";
 
 function MovieWatch({ id }) {
     const [movie, setMovie] = useState(null);
@@ -10,14 +10,14 @@ function MovieWatch({ id }) {
 
     useEffect(() => {
         async function fetchMovie() {
-            const response = await fetch(`http://localhost:${backendPort}/api/movies/${id}`);
+            const response = await fetch(`${backendUrl}movies/${id}`);
 
 
             const data = await response.json();
             setMovie(data);
 
             // Notify the recommendations system that the user watched this movie
-            const watchResponse = await fetch(`http://localhost:${backendPort}/api/movies/${id}/recommend`, {
+            const watchResponse = await fetch(`${backendUrl}movies/${id}/recommend`, {
                 method: 'POST',
                 headers: {
                     "Authorization": `Bearer ${localStorage.getItem("authToken")}`

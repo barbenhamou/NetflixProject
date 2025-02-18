@@ -1,5 +1,5 @@
 # Admins
-In order to add, edit, or delete movies or categories, you must be an admin. To become an admin you need to manually change your user to an admin. to do that, open MongoDBCompass and connect to the database with your IP. Then, change the `isAdmin` field to `true`:
+In order to add, edit, or delete movies or categories, you must be an admin. To become an admin you need to manually change your user to an admin. To do that, open MongoDBCompass and connect to the database with your IP. Then, change the `isAdmin` field to `true`:
 
 ![](../../PreviewImages/IsAdmin.png)
 
