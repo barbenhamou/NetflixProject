@@ -14,7 +14,7 @@ This is the sign-up page:
 
 ![](../../PreviewImages/Web/SignUp.png)
 
-You need to choose your username and a strong password, enter you information, and you can also upload a profile picture if you want.
+You need to choose your username and a strong password, enter your information, and you can also upload a profile picture if you want.
 
 After signing up, you will be notified that your account has been successfully created, and you'll be transfered to the login page.
 ![](../../PreviewImages/Web/SignedUp.png)
