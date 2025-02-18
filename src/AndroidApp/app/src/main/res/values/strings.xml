@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Nexflit</string>
     <string name="play_movie_btn">Play Movie</string>
-    <string name="BaseUrl">http://10.0.2.2:3001/api/</string>
+    <string name="BaseUrl">http://10.0.2.2:3000/api/</string>
     <string name="movie_year_length">%1$d | %2$dh %3$dm</string>
     <string name="movie_genres">Genres: %1$s</string>
     <string name="movie_cast">Cast: %1$s</string>

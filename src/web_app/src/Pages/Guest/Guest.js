@@ -68,7 +68,10 @@ const GuestPage = () => {
       {/* Header Section */}
       <div className="header" style={headerStyle}>
         <nav>
-          <span className="logo-text">NEXFLIT</span>
+          <span className="logo-text-guest">
+            <img className="logo-guest" alt="logo" src={`${process.env.PUBLIC_URL}/images/site-logo.png`}></img>
+            NEXFLIT
+          </span>
           <div className="nav-right">
             <div className="dropdown">
               <button

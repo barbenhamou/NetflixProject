@@ -5,6 +5,7 @@ import VideoPlayer from "../../Utils/VideoPlayer/VideoPlayer";
 import ProfileDropdown from "../../Utils/ProfileDropdown/ProfileDropdown";
 import { backendUrl } from "../../config";
 import "./Home.css";
+import InfoButton from "../../Utils/InfoButton/InfoButton";
 
 function Home() {
     const [movies, setMovies] = useState([]);
@@ -138,6 +139,7 @@ function Home() {
                                 ▶ Play
                             </button>
                         </Link>
+                        <InfoButton id={featuredMovie.id} />
                     </div>
                 </div>
             )}

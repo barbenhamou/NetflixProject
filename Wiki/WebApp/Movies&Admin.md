@@ -3,7 +3,11 @@ In order to add, edit, or delete movies or categories, you must be an admin. To 
 
 ![](../../PreviewImages/IsAdmin.png)
 
-and click on 'Update'. Once you did that, you will need to re-log to the website. Press the 'logout' button to log out and be smoothly redirected back to the login page. After you log in again you will see the 'Admin Panel' button in the top navigation bar:
+and click on 'Update'. Once you did that, you will need to re-log to the website. Hover over your profile picture and press the 'logout' button to log out and be smoothly redirected back to the login page:
+
+![](../../PreviewImages/Web/Logout.png)
+
+After you log in again you will see the 'Admin Panel' button in the top navigation bar (the navigation bar hides when you scroll down and shows when you scroll up):
 
 ![](../../PreviewImages/Web/HomeAdmin.png)
 
@@ -59,28 +63,18 @@ You can ofcourse also go back to the home page by pressing the house icon in the
 
 In fullscreen mode, the video controls will disappear when you don't hover over them.
 
+Once you've watched a movie, it will be moved to the 'Watch it again' category:
+
+![](../../PreviewImages/Web/Watched.png)
+
 # Other Admin Actions
 
-## Deleting a Movie
-In the Admin panel you can also delete a movie:
-
-![](../../PreviewImages/Web/DeleteMovie.png)
-
-You need to copy the movie's ID from MongoDBCompass, since there could be two movies with the same name.
-And now there are no movies again:
-
-![](../../PreviewImages/Web/Deleted.png)
-
 ## Editing a Movie
-I've added another movie:
-
-![](../../PreviewImages/Web/NewMovie.png)
-
-Let's edit it:
+We can edit the movie:
 
 ![](../../PreviewImages/Web/EditMovie.png)
 
-You need to fill in all of the new details, and now the movie will change:
+You need to copy the movie's ID from MongoDBCompass, since there could be two movies with the same name. You then need to fill in all of the new details, and the movie will change:
 
 ![](../../PreviewImages/Web/AfterEdit.png)
 
@@ -91,12 +85,21 @@ You can also edit a category:
 
 ![](../../PreviewImages/Web/AfterCatEdit.png)
 
+## Deleting a Movie
+In the Admin panel you can also delete a movie:
+
+![](../../PreviewImages/Web/DeleteMovie.png)
+
+And now there are no movies again:
+
+![](../../PreviewImages/Web/Deleted.png)
+
 ## Deleting a Category
 When deleting a category:
 
 ![](../../PreviewImages/Web/DeleteCategory.png)
 
-All of the movies that have that category will no longer have it. Now our movie has no categories. But you can edit it to add other categories.
+All of the movies that have that category will no longer have it. Now our movie has no categories, but you can edit it to add other categories.
 
 # Searching
 You can also search for movies, and even find movies that don't have promoted categories. This searches through all of the movies and all of their fields:
@@ -104,3 +107,5 @@ You can also search for movies, and even find movies that don't have promoted ca
 ![](../../PreviewImages/Web/Search.png)
 
 ![](../../PreviewImages/Web/SearchResult.png)
+
+Also, a category with too many movies have arrows that scroll horizontally to reveal more movies.
